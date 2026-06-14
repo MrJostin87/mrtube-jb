@@ -44,7 +44,7 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            background: rgba(0, 0, 0, 0.9);
+            background: rgba(0, 0, 0, 0.92);
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -56,23 +56,55 @@
         }
         #welcome-screen h1 {
             color: #ffcc00;
-            font-size: 36px;
-            margin-bottom: 10px;
+            font-size: 34px;
+            margin-bottom: 5px;
             text-shadow: 3px 3px #000;
             letter-spacing: 1px;
         }
         #welcome-screen p {
-            font-size: 18px;
-            max-width: 80%;
+            font-size: 16px;
+            max-width: 85%;
             line-height: 1.4;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             color: #ccc;
         }
+        
+        /* SECCIÓN DE REGISTRO DE NOMBRE DE USUARIO */
+        #user-setup {
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        #user-setup label {
+            font-size: 14px;
+            color: #00ff00;
+            text-shadow: 1px 1px #000;
+        }
+        #username-input {
+            background: #222;
+            border: 3px solid #ffcc00;
+            color: #fff;
+            padding: 10px 15px;
+            font-size: 16px;
+            border-radius: 10px;
+            text-align: center;
+            font-family: 'Arial', sans-serif;
+            font-weight: bold;
+            pointer-events: auto;
+            width: 220px;
+        }
+        #username-input:focus {
+            outline: none;
+            border-color: #00ff00;
+        }
+
         #start-button {
             background: #00ff00;
             color: #000;
             border: 4px solid #fff;
-            padding: 15px 40px;
+            padding: 12px 35px;
             font-size: 22px;
             font-family: 'Arial Black', sans-serif;
             border-radius: 15px;
@@ -80,10 +112,97 @@
             box-shadow: 0 5px 15px rgba(0,255,0,0.4);
             transition: transform 0.1s ease;
             pointer-events: auto;
+            margin-bottom: 20px;
         }
         #start-button:active {
             transform: scale(0.95);
         }
+
+        /* BOTÓN DE CONFIGURACIÓN */
+        #settings-toggle-btn {
+            background: #444;
+            color: #fff;
+            border: 2px solid #bbb;
+            padding: 8px 16px;
+            font-size: 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            pointer-events: auto;
+            font-family: sans-serif;
+            font-weight: bold;
+        }
+
+        /* PANEL DE CONFIGURACIONES DESPLEGABLE */
+        #settings-panel {
+            background: rgba(20, 20, 20, 0.95);
+            border: 3px solid #ffcc00;
+            border-radius: 15px;
+            padding: 15px;
+            margin-top: 15px;
+            width: 290px;
+            display: none;
+            flex-direction: column;
+            gap: 12px;
+            align-items: center;
+        }
+        .setting-row {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            gap: 5px;
+            align-items: center;
+        }
+        .setting-row label {
+            font-size: 13px;
+            color: #ffcc00;
+        }
+        .setting-select {
+            background: #333;
+            color: #fff;
+            border: 2px solid #555;
+            padding: 6px;
+            border-radius: 6px;
+            width: 90%;
+            font-size: 13px;
+            pointer-events: auto;
+            text-align: center;
+        }
+
+        /* SUBSECCIÓN DE CÓDIGOS DE RECOMPENSA */
+        #code-section {
+            border-top: 2px dashed #444;
+            padding-top: 10px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+        #code-input {
+            background: #000;
+            border: 2px solid #00ff00;
+            color: #00ff00;
+            padding: 6px;
+            font-size: 15px;
+            border-radius: 6px;
+            width: 70%;
+            text-align: center;
+            letter-spacing: 3px;
+            font-family: monospace;
+            pointer-events: auto;
+        }
+        #code-submit-btn {
+            background: #00ff00;
+            color: #000;
+            border: none;
+            padding: 6px 15px;
+            font-size: 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            pointer-events: auto;
+        }
+
         /* INTERFAZ (UI) */
         #ui-header {
             position: absolute;
@@ -177,11 +296,50 @@
 </head>
 <body>
 
-    <!-- Pantalla de bienvenida con el Nombre Oficial -->
+    <!-- Pantalla de bienvenida con Nombre, Idiomas y Códigos -->
     <div id="welcome-screen">
-        <h1>CHICKEN STRIKE NPC</h1>
-        <p>Versión Beta Oficial en desarrollo para la plataforma MrTube.<br>Diseñado por ABG Productions® y Sprunki Animations Studios.</p>
+        <h1 id="welcome-title">CHICKEN STRIKE NPC</h1>
+        <p id="welcome-desc">Versión Beta Oficial en desarrollo para la plataforma MrTube.<br>Diseñado por ABG Productions® y Sprunki Animations Studios.</p>
+        
+        <!-- Registro de progreso por Nombre -->
+        <div id="user-setup">
+            <label id="label-username" for="username-input">INGRESA TU NOMBRE DE PILOTO:</label>
+            <input type="text" id="username-input" placeholder="Ej: Pepe" maxlength="15">
+        </div>
+
         <button id="start-button">JUGAR BETA</button>
+        
+        <!-- Botón de ajustes -->
+        <button id="settings-toggle-btn">⚙️ CONFIGURACIÓN</button>
+
+        <!-- Panel Desplegable -->
+        <div id="settings-panel">
+            <div class="setting-row">
+                <label id="label-lang">IDIOMA / LANGUAGE:</label>
+                <select id="lang-select" class="setting-select">
+                    <option value="es">Español</option>
+                    <option value="en">English (Inglés)</option>
+                    <option value="fr">Français (Francés)</option>
+                    <option value="pt">Português (Portugués)</option>
+                    <option value="ru">Русский (Ruso)</option>
+                    <option value="de">Deutsch (Alemán)</option>
+                    <option value="es-la">Español Latinoamericano</option>
+                    <option value="es-es">Español de España</option>
+                    <option value="tr">Türkçe (Turco)</option>
+                    <option value="ar">العربية (Árabe)</option>
+                    <option value="hi">हिन्दी (Indio)</option>
+                    <option value="ja">日本語 (Japonés)</option>
+                    <option value="ko">한국어 (Coreano)</option>
+                </select>
+            </div>
+
+            <!-- Caja de códigos -->
+            <div id="code-section">
+                <label id="label-code">CÓDIGO DE MONEDAS (3 DÍGITOS):</label>
+                <input type="text" id="code-input" placeholder="000" maxlength="3">
+                <button id="code-submit-btn">ACEPTAR</button>
+            </div>
+        </div>
     </div>
 
     <div id="game-container">
@@ -193,10 +351,10 @@
                 <span id="score-text">0</span>
             </div>
             <div class="ui-box" id="ui-level">
-                Nivel: <span id="level-text">1</span>
+                <span id="label-ui-level">Nivel</span>: <span id="level-text">1</span>
             </div>
             <div class="ui-box" id="ui-kills">
-                Objetivos: <span id="kills-text">0/10</span>
+                <span id="label-ui-targets">Objetivos</span>: <span id="kills-text">0/10</span>
             </div>
         </div>
 
@@ -218,17 +376,147 @@
         const welcomeScreen = document.getElementById('welcome-screen');
         const startButton = document.getElementById('start-button');
         
+        // Elementos nuevos
+        const usernameInput = document.getElementById('username-input');
+        const settingsToggleBtn = document.getElementById('settings-toggle-btn');
+        const settingsPanel = document.getElementById('settings-panel');
+        const langSelect = document.getElementById('lang-select');
+        const codeInput = document.getElementById('code-input');
+        const codeSubmitBtn = document.getElementById('code-submit-btn');
+
+        // Textos para traducciones de idiomas
+        const translations = {
+            "es": { title: "CHICKEN STRIKE NPC", desc: "Versión Beta Oficial en desarrollo para la plataforma MrTube.<br>Diseñado por ABG Productions® y Sprunki Animations Studios.", user: "INGRESA TU NOMBRE DE PILOTO:", play: "JUGAR BETA", uiLvl: "Nivel", uiTgt: "Objetivos" },
+            "en": { title: "CHICKEN STRIKE NPC", desc: "Official Beta Version in development for the MrTube platform.<br>Designed by ABG Productions® and Sprunki Animations Studios.", user: "ENTER YOUR PILOT NAME:", play: "PLAY BETA", uiLvl: "Level", uiTgt: "Targets" },
+            "fr": { title: "CHICKEN STRIKE NPC", desc: "Version Bêta Officielle en développement pour la plateforme MrTube.<br>Conçu par ABG Productions® et Sprunki Animations Studios.", user: "ENTREZ VOTRE NOM DE PILOTE:", play: "JOUER BÊTA", uiLvl: "Niveau", uiTgt: "Cibles" },
+            "pt": { title: "CHICKEN STRIKE NPC", desc: "Versão Beta Oficial em desenvolvimento para a plataforma MrTube.<br>Desenvolvido por ABG Productions® e Sprunki Animations Studios.", user: "INSIRA SEU NOME DE PILOTO:", play: "JOGAR BETA", uiLvl: "Nível", uiTgt: "Objetivos" },
+            "ru": { title: "CHICKEN STRIKE NPC", desc: "Официальная бета-версия в разработке для платформы MrTube.<br>Разработано ABG Productions® и Sprunki Animations Studios.", user: "ВВЕДИТЕ ИМЯ ПИЛОТА:", play: "ИГРАТЬ В БЕТУ", uiLvl: "Уровень", uiTgt: "Цели" },
+            "de": { title: "CHICKEN STRIKE NPC", desc: "Offizielle Beta-Version in Entwicklung für die MrTube-Plattform.<br>Präsentiert von ABG Productions® und Sprunki Animations Studios.", user: "PILOTENNAME EINGEBEN:", play: "BETA SPIELEN", uiLvl: "Stufe", uiTgt: "Ziele" },
+            "es-la": { title: "CHICKEN STRIKE NPC", desc: "Versión Beta Oficial en desarrollo para la plataforma MrTube.<br>Diseñado por ABG Productions® y Sprunki Animations Studios.", user: "INGRESA TU NOMBRE DE PILOTO:", play: "JUGAR BETA", uiLvl: "Nivel", uiTgt: "Objetivos" },
+            "es-es": { title: "CHICKEN STRIKE NPC", desc: "Versión Beta Oficial en desarrollo para la plataforma MrTube.<br>Diseñado por ABG Productions® y Sprunki Animations Studios.", user: "INTRODUCE TU NOMBRE DE PILOTO:", play: "JUGAR BETA", uiLvl: "Nivel", uiTgt: "Objetivos" },
+            "tr": { title: "CHICKEN STRIKE NPC", desc: "MrTube platformu için geliştirilmekte olan Resmi Beta Sürümü.<br>ABG Productions® ve Sprunki Animations Studios tarafından tasarlandı.", user: "PİLOT ADINIZI GİRİN:", play: "BETA OYNA", uiLvl: "Seviye", uiTgt: "Hedefler" },
+            "ar": { title: "CHICKEN STRIKE NPC", desc: "نسخة بيتا الرسمية قيد التطوير لمنصة MrTube.<br>تم التصميم بواسطة ABG Productions® وSprunki Animations Studios.", user: "أدخل اسم الطيار الخاص بك:", play: "لعب البيتا", uiLvl: "المستوى", uiTgt: "الأهداف" },
+            "hi": { title: "CHICKEN STRIKE NPC", desc: "MrTube प्लेटफॉर्म के लिए विकास के चरण में आधिकारिक बीटा संस्करण।<br>ABG Productions® और Sprunki Animations Studios द्वारा डिज़ाइन किया गया।", user: "अपना पायलट नाम दर्ज करें:", play: "बीटा खेलें", uiLvl: "स्तर", uiTgt: "लक्ष्य" },
+            "ja": { title: "CHICKEN STRIKE NPC", desc: "MrTubeプラットフォーム向けに開発中の公式ベータ版。<br>ABG Productions®およびSprunki Animations Studiosによる設計。", user: "パイロット名を入力してください:", play: "ベータ版をプレイ", uiLvl: "レベル", uiTgt: "ターゲット" },
+            "ko": { title: "CHICKEN STRIKE NPC", desc: "MrTube 플랫폼을 위해 개발 중인 공식 베타 버전.<br>ABG Productions® 및 Sprunki Animations Studios 제작.", user: "조종사 이름을 입력하세요:", play: "베타 플레이", uiLvl: "레벨", uiTgt: "목표" }
+        };
+
         let score = 0;
         let kills = 0;
         let currentLevel = 1;
         let stageX = 0;
         let gameStarted = false;
+        let currentUsername = "";
         
         const scrollSpeed = 2.5; 
         const maxNPCs = 10;
         const distanceBetweenNPCs = 350; 
 
+        // --- CARGAR PROGRESO INICIAL ---
+        if(localStorage.getItem('cs_saved_username')) {
+            currentUsername = localStorage.getItem('cs_saved_username');
+            usernameInput.value = currentUsername;
+            loadPlayerProgress(currentUsername);
+        }
+
+        // Detectar cambio de nombre para guardar o cargar perfiles existentes
+        usernameInput.addEventListener('input', () => {
+            let name = usernameInput.value.trim();
+            if(name !== "") {
+                currentUsername = name;
+                localStorage.setItem('cs_saved_username', currentUsername);
+                loadPlayerProgress(currentUsername);
+            }
+        });
+
+        function loadPlayerProgress(name) {
+            let savedScore = localStorage.getItem('cs_score_' + name);
+            let savedLevel = localStorage.getItem('cs_level_' + name);
+            
+            if(savedScore !== null) {
+                score = parseInt(savedScore);
+                scoreText.textContent = score;
+            } else {
+                score = 0;
+                scoreText.textContent = score;
+            }
+
+            if(savedLevel !== null) {
+                currentLevel = parseInt(savedLevel);
+                levelText.textContent = currentLevel;
+                if(currentLevel > 1) {
+                    killsText.textContent = `${kills}`;
+                }
+            } else {
+                currentLevel = 1;
+                levelText.textContent = currentLevel;
+                killsText.textContent = `0/10`;
+            }
+        }
+
+        function savePlayerProgress() {
+            if(currentUsername !== "") {
+                localStorage.setItem('cs_score_' + currentUsername, score);
+                localStorage.setItem('cs_level_' + currentUsername, currentLevel);
+            }
+        }
+
+        // --- SISTEMA DE CONFIGURACIÓN E IDIOMAS ---
+        settingsToggleBtn.addEventListener('click', () => {
+            if(settingsPanel.style.display === "none" || settingsPanel.style.display === "") {
+                settingsPanel.style.display = "flex";
+            } else {
+                settingsPanel.style.display = "none";
+            }
+        });
+
+        langSelect.addEventListener('change', () => {
+            let lang = langSelect.value;
+            if(translations[lang]) {
+                document.getElementById('welcome-title').innerHTML = translations[lang].title;
+                document.getElementById('welcome-desc').innerHTML = translations[lang].desc;
+                document.getElementById('label-username').innerHTML = translations[lang].user;
+                startButton.innerHTML = translations[lang].play;
+                document.getElementById('label-ui-level').innerHTML = translations[lang].uiLvl;
+                document.getElementById('label-ui-targets').innerHTML = translations[lang].uiTgt;
+            }
+        });
+
+        // --- CANJEO DE CÓDIGO (238) ---
+        codeSubmitBtn.addEventListener('click', () => {
+            let inputCode = codeInput.value.trim();
+            if(currentUsername === "") {
+                alert("Por favor, introduce un nombre primero antes de usar un código.");
+                return;
+            }
+
+            if(inputCode === "238") {
+                let codeUsed = localStorage.getItem('cs_code_238_' + currentUsername);
+                if(codeUsed === "true") {
+                    alert("Este código ya fue utilizado por este usuario.");
+                } else {
+                    score += 90;
+                    scoreText.textContent = score;
+                    localStorage.setItem('cs_code_238_' + currentUsername, "true");
+                    savePlayerProgress();
+                    alert("¡Código Aceptado! Se han añadido +90 monedas a tu cuenta.");
+                    codeInput.value = "";
+                }
+            } else {
+                alert("Código incorrecto. Verifica los dígitos.");
+            }
+        });
+
+        // --- INICIAR JUEGO ---
         startButton.addEventListener('click', () => {
+            if(usernameInput.value.trim() === "") {
+                currentUsername = "Player";
+                localStorage.setItem('cs_saved_username', currentUsername);
+            } else {
+                currentUsername = usernameInput.value.trim();
+            }
+            savePlayerProgress();
+
             welcomeScreen.style.display = 'none';
             gameStarted = true;
             for(let i = 0; i < maxNPCs; i++) {
@@ -318,6 +606,7 @@
             
             score += 5;
             scoreText.textContent = score;
+            savePlayerProgress();
 
             if (currentLevel === 1) {
                 kills++;
@@ -344,6 +633,7 @@
             scoreText.textContent = score;
             levelText.textContent = currentLevel;
             killsText.textContent = `${kills}`; 
+            savePlayerProgress();
             
             announcement.innerHTML = "¡NIVEL 1 COMPLETADO!<br><span style='color: #ffcc00;'>🎁 RECOMPENSA: +50 MONEDAS</span>";
             announcement.style.transform = "translate(-50%, -50%) scale(1)";
