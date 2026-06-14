@@ -186,20 +186,20 @@
         #play-menu-screen h1 {
             color: #ffcc00;
             font-size: 42px;
-            margin-bottom: 60px;
+            margin-bottom: 30px;
             text-shadow: 4px 4px #000;
             letter-spacing: 1px;
         }
         .large-game-btn {
             width: 85%;
             max-width: 340px;
-            padding: 20px;
-            font-size: 32px;
+            padding: 18px;
+            font-size: 28px;
             font-family: 'Arial Black', sans-serif;
             border-radius: 20px;
             border: 4px solid #fff;
             cursor: pointer;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             box-shadow: 0 6px 15px rgba(0,0,0,0.4);
             transition: transform 0.1s ease;
             pointer-events: auto;
@@ -211,11 +211,102 @@
             background: #00ff00;
             color: #000;
         }
+        #tienda-main-btn {
+            background: #ffcc00;
+            color: #000;
+            box-shadow: 0 5px 15px rgba(255,204,0,0.4);
+        }
         #salir-main-btn {
             background: #ff3333;
             color: #fff;
             font-size: 22px;
             padding: 12px;
+        }
+
+        /* PANEL DE LA TIENDA OFICIAL TIMECHICKEN */
+        #shop-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(10, 10, 10, 0.95);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 130;
+            padding: 20px;
+        }
+        #shop-screen h2 {
+            color: #ffcc00;
+            font-size: 36px;
+            margin-bottom: 5px;
+            text-shadow: 3px 3px #000;
+        }
+        #shop-screen p.shop-subtitle {
+            color: #fff;
+            font-size: 14px;
+            margin-bottom: 25px;
+            font-family: sans-serif;
+        }
+        .shop-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+            max-width: 380px;
+            margin-bottom: 25px;
+        }
+        .shop-item {
+            background: #222;
+            border: 3px solid #ffcc00;
+            border-radius: 12px;
+            padding: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+        .shop-item-info {
+            text-align: left;
+        }
+        .shop-item-title {
+            color: #00ff00;
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+        .shop-item-desc {
+            color: #ccc;
+            font-size: 11px;
+            font-family: sans-serif;
+            line-height: 1.3;
+        }
+        .shop-buy-btn {
+            background: #ffcc00;
+            color: #000;
+            border: 2px solid #fff;
+            font-family: 'Arial Black', sans-serif;
+            font-size: 14px;
+            padding: 10px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            min-width: 110px;
+        }
+        .shop-buy-btn.owned {
+            background: #555;
+            color: #888;
+            border-color: #444;
+            cursor: not-allowed;
+        }
+        #close-shop-btn {
+            background: #ff3333;
+            color: #fff;
+            border: 3px solid #fff;
+            padding: 10px 30px;
+            font-size: 18px;
+            border-radius: 12px;
+            cursor: pointer;
         }
 
         /* PANEL DE SELECCIÓN DE NIVEL */
@@ -530,7 +621,6 @@
         </div>
     </div>
 
-    <!-- PANTALLA 1: LOGEO Y REGISTRO -->
     <div id="welcome-screen">
         <button id="settings-toggle-btn">⚙️ CONFIGURACIÓN</button>
 
@@ -578,14 +668,46 @@
         <button id="exit-button" class="menu-btn">SALIR DEL JUEGO</button>
     </div>
 
-    <!-- PANTALLA 2: MENÚ INTERMEDIO DE JUEGO (ESTILO IMAGE_16.PNG) -->
     <div id="play-menu-screen">
         <h1>CHICKEN STRIKE<br>NPC</h1>
         <button id="jugar-main-btn" class="large-game-btn">Jugar</button>
+        <button id="tienda-main-btn" class="large-game-btn">Tienda</button>
         <button id="salir-main-btn" class="large-game-btn">Salir del Juego</button>
     </div>
 
-    <!-- PANTALLA 3: SELECCIÓN DE NIVELES -->
+    <div id="shop-screen">
+        <h2>TimeChicken</h2>
+        <p class="shop-subtitle">Decoraciones de Armas y Súper Mejoras Especiales</p>
+        
+        <div class="shop-container">
+            <div class="shop-item">
+                <div class="shop-item-info">
+                    <div class="shop-item-title">Mejora 10.1 (Decorar Arma)</div>
+                    <div class="shop-item-desc">Dispara ráfagas continuas de balas muy rápido. Además activa Mejora 20 en Nivel 4 (NPCs se duplican por más monedas).</div>
+                </div>
+                <button id="buy-upgrade-1" class="shop-buy-btn" onclick="buyUpgrade(1, 100)">100 Monedas</button>
+            </div>
+
+            <div class="shop-item">
+                <div class="shop-item-info">
+                    <div class="shop-item-title">Mejora 20.2 (Decorar Arma)</div>
+                    <div class="shop-item-desc">En el Nivel 2, la ganancia base de 7 monedas se multiplica por 7 (49 monedas por baja).</div>
+                </div>
+                <button id="buy-upgrade-2" class="shop-buy-btn" onclick="buyUpgrade(2, 200)">200 Monedas</button>
+            </div>
+
+            <div class="shop-item">
+                <div class="shop-item-info">
+                    <div class="shop-item-title">Mejora 30.3 (Decorar Arma)</div>
+                    <div class="shop-item-desc">Último nivel: NPCs veloces en grupos de 3. ¡Si disparas a uno, mueren los 3 y te da 500 monedas!</div>
+                </div>
+                <button id="buy-upgrade-3" class="shop-buy-btn" onclick="buyUpgrade(3, 300)">300 Monedas</button>
+            </div>
+        </div>
+        
+        <button id="close-shop-btn">VOLVER AL MENÚ</button>
+    </div>
+
     <div id="level-selection-screen">
         <h2>SELECCIONA UN NIVEL</h2>
         <div class="levels-grid">
@@ -599,7 +721,6 @@
         <button id="back-to-menu-btn">VOLVER AL MENÚ</button>
     </div>
 
-    <!-- JUEGO PRINCIPAL -->
     <div id="game-container">
         <div id="stage"></div>
 
@@ -631,9 +752,11 @@
         const killsText = document.getElementById('kills-text');
         const announcement = document.getElementById('announcement');
         const weaponContainer = document.getElementById('weapon-container');
+        const weaponImage = document.getElementById('weapon');
         
         const welcomeScreen = document.getElementById('welcome-screen');
         const playMenuScreen = document.getElementById('play-menu-screen');
+        const shopScreen = document.getElementById('shop-screen');
         const levelSelectionScreen = document.getElementById('level-selection-screen');
         
         const startButton = document.getElementById('start-button');
@@ -641,7 +764,9 @@
         const readyCheckbox = document.getElementById('ready-checkbox');
         
         const jugarMainBtn = document.getElementById('jugar-main-btn');
+        const tiendaMainBtn = document.getElementById('tienda-main-btn');
         const salirMainBtn = document.getElementById('salir-main-btn');
+        const closeShopBtn = document.getElementById('close-shop-btn');
         const backToMenuBtn = document.getElementById('back-to-menu-btn');
         const levelButtons = document.querySelectorAll('.level-select-btn');
 
@@ -682,7 +807,16 @@
         
         let scrollSpeed = 1.8; 
         const maxNPCs = 10;
-        const distanceBetweenNPCs = 350; 
+        const distanceBetweenNPCs = 350;
+
+        // Estado del inventario de la tienda TimeChicken
+        let upgradesOwned = {
+            1: false,
+            2: false,
+            3: false
+        };
+        let lastShotTime = 0;
+        let shootCooldown = 400; // Cooldown por defecto en milisegundos
 
         function playSoundBoton() {
             audioBoton.currentTime = 0;
@@ -698,16 +832,16 @@
             "es": { title: "CHICKEN STRIKE NPC", desc: "¡Bienvenido! Esta es una versión beta oficial del juego, por lo que podría contener algunos errores y bugs en el mapa durante el desarrollo en la plataforma MrTube.<br>Diseñado por ABG Productions® y Sprunki Animations Studios.", user: "INGRESA TU NOMBRE DE PILOTO:", play: "EMPEZAR A PROBAR", uiLvl: "Nivel", uiTgt: "Objetivos" },
             "en": { title: "CHICKEN STRIKE NPC", desc: "Welcome! This is an official beta version of the game, so it may contain some errors and map bugs during development on the MrTube platform.<br>Designed by ABG Productions® and Sprunki Animations Studios.", user: "ENTER YOUR PILOT NAME:", play: "START TESTING", uiLvl: "Level", uiTgt: "Targets" },
             "fr": { title: "CHICKEN STRIKE NPC", desc: "Bienvenue ! Il s'agit d'une version bêta officielle du jeu, elle peut donc contenir des erreurs et des bugs de carte pendant le développement sur la plateforme MrTube.<br>Conçu par ABG Productions® y Sprunki Animations Studios.", user: "ENTREZ VOTRE NOM DE PILOTE:", play: "COMMENCER LE TEST", uiLvl: "Niveau", uiTgt: "Cibles" },
-            "pt": { title: "CHICKEN STRIKE NPC", desc: "Bem-vindo! Esta é uma versão beta oficial do jogo, por isso pode conter alguns erros e bugs de mapa durante o desenvolvimento na plataforma MrTube.<br>Desenvolvido por ABG Productions® e Sprunki Animations Studios.", user: "INSIRA SEU NOME DE PILOTO:", play: "INICIAR TESTE", uiLvl: "Nível", uiTgt: "Objetivos" },
+            "pt": { title: "CHICKEN STRIKE NPC", desc: "Bem-vindo! Esta é uma versão beta oficial del jogo, por isso pode conter alguns erros e bugs de mapa durante o desenvolvimento na plataforma MrTube.<br>Desenvolvido por ABG Productions® e Sprunki Animations Studios.", user: "INSIRA SEU NOME DE PILOTO:", play: "INICIAR TESTE", uiLvl: "Nível", uiTgt: "Objetivos" },
             "ru": { title: "CHICKEN STRIKE NPC", desc: "Добро пожаловать! Это официальная бета-версия игры, поэтому она может содержать некоторые ошибки и баги карты во время разработки на платформе MrTube.<br>Разработано ABG Productions® и Sprunki Animations Studios.", user: "ВВЕДИТЕ ИМЯ ПИЛОТА:", play: "НАЧАТЬ ТЕСТ", uiLvl: "Уровень", uiTgt: "Цели" },
             "de": { title: "CHICKEN STRIKE NPC", desc: "Willkommen! Dies ist eine offizielle Beta-Version des Spiels, daher kann es während der Entwicklung auf der MrTube-Plattform einige Fehler und Karten-Bugs enthalten.<br>Präsentiert von ABG Productions® und Sprunki Animations Studios.", user: "PILOTENNAME EINGEBEN:", play: "TEST STARTEN", uiLvl: "Stufe", uiTgt: "Ziele" },
             "es-la": { title: "CHICKEN STRIKE NPC", desc: "¡Bienvenido! Esta es una versión beta oficial del juego, por lo que podría contener algunos errores y bugs en el mapa durante el desarrollo en la plataforma MrTube.<br>Diseñado por ABG Productions® y Sprunki Animations Studios.", user: "INGRESA TU NOMBRE DE PILOTO:", play: "EMPEZAR A PROBAR", uiLvl: "Nivel", uiTgt: "Objetivos" },
             "es-es": { title: "CHICKEN STRIKE NPC", desc: "¡Bienvenido! Esta es una versión beta oficial del juego, por lo que podría contener algunos errores y bugs en el mapa durante el desarrollo en la plataforma MrTube.<br>Diseñado por ABG Productions® y Sprunki Animations Studios.", user: "INTRODUCE TU NOMBRE DE PILOTO:", play: "EMPEZAR A PROBAR", uiLvl: "Nivel", uiTgt: "Objetivos" },
             "tr": { title: "CHICKEN STRIKE NPC", desc: "Hoş geldiniz! Bu oyunun resmi bir beta sürümüdür, bu nedenle MrTube platformundaki geliştirme sırasında bazı hatalar ve harita hataları içerebilir.<br>ABG Productions® ve Sprunki Animations Studios tarafından tasarlandı.", user: "PİLOT ADINIZI GİRİN:", play: "TESTE BAŞLA", uiLvl: "Seviye", uiTgt: "Hedefler" },
             "ar": { title: "CHICKEN STRIKE NPC", desc: "مرحبًا! هذه نسخة بيتا رسمية من اللعبة، لذا قد تحتوي على some الأخطاء وعيوب الخريطة أثناء التطوير على منصة MrTube.<br>تم التصميم بواسطة ABG Productions® وSprunki Animations Studios.", user: "أدخل اسم الطيار الخاص بك:", play: "بدء الاختبار", uiLvl: "المستوى", uiTgt: "الأهداف" },
-            "hi": { title: "CHICKEN STRIKE NPC", desc: "स्वागत है! यह गेम का एक आधिकारिक बीटा संस्करण है, इसलिए MrTube प्लेटफॉर्म पर विकास के दौरान इसमें कुछ त्रुटियां और मानचित्र बग हो सकते हैं।<br>ABG Productions® और Sprunki Animations Studios द्वारा डिज़ाइन किया गया।", user: "अपना पायलट नाम दर्ज करें:", play: "परीक्षण शुरू करें", uiLvl: "स्तर", uiTgt: "लक्ष्य" },
-            "ja": { title: "CHICKEN STRIKE NPC", desc: "歓迎！ これはゲームの公式ベータ版であるため、MrTubeプラットフォームでの開発中にいくつかのエラーやマップのバグが含まれる可能性があります。<br>ABG Productions®およびSprunki Animations Studiosによる設計。", user: "パイロット名を入力してください:", play: "テストを開始", uiLvl: "レベル", uiTgt: "ターゲット" },
-            "ko": { title: "CHICKEN STRIKE NPC", desc: "환영합니다! 이것은 게임의 공식 베타 버전이므로 MrTube 플랫폼에서 개발하는 동안 일부 오류 및 맵 버그가 포함될 수 있습니다.<br>ABG Productions® 및 Sprunki Animations Studios 제작.", user: "조종사 이름을 입력하세요:", play: "테스트 시작", uiLvl: "레벨", uiTgt: "목표" }
+            "hi": { title: "CHICKEN STRIKE NPC", desc: "स्वागत है! यह गेम का एक आधिकारिक बीटा संस्करण है, इसलिए MrTube प्लेटफॉर्म पर विकास के दौरान इसमें कुछ त्रुटियां..." , user: "अपना पायलट नाम दर्ज करें:", play: "परीक्षण शुरू करें", uiLvl: "स्तर", uiTgt: "लक्ष्य" },
+            "ja": { title: "CHICKEN STRIKE NPC", desc: "歓迎！ これはゲームの公式ベータ版であるため...", user: "パイロット名を入力してください:", play: "テストを開始", uiLvl: "レベル", uiTgt: "ターゲット" },
+            "ko": { title: "CHICKEN STRIKE NPC", desc: "환영합니다! 이것은 게임의 공식 베타 버전이므로...", user: "조종사 이름을 입력하세요:", play: "테스트 시작", uiLvl: "레벨", uiTgt: "목표" }
         };
 
         if(localStorage.getItem('cs_saved_username')) {
@@ -773,7 +907,19 @@
             } else {
                 maxUnlockedLevel = 1;
             }
+
+            // Cargar estado de las mejoras guardadas
+            [1, 2, 3].forEach(id => {
+                let savedUpgrade = localStorage.getItem(`cs_upgrade_${id}_` + name);
+                if (savedUpgrade === "true") {
+                    upgradesOwned[id] = true;
+                } else {
+                    upgradesOwned[id] = false;
+                }
+            });
+
             updateLevelButtonsUI();
+            updateShopButtonsUI();
             checkSubscriptionTrigger();
         }
 
@@ -781,6 +927,9 @@
             if(currentUsername !== "") {
                 localStorage.setItem('cs_score_' + currentUsername, score);
                 localStorage.setItem('cs_max_level_' + currentUsername, maxUnlockedLevel);
+                [1, 2, 3].forEach(id => {
+                    localStorage.setItem(`cs_upgrade_${id}_` + currentUsername, upgradesOwned[id]);
+                });
             }
             checkSubscriptionTrigger();
         }
@@ -796,6 +945,45 @@
                     btn.setAttribute('disabled', 'true');
                 }
             });
+        }
+
+        function updateShopButtonsUI() {
+            [1, 2, 3].forEach(id => {
+                const btn = document.getElementById(`buy-upgrade-${id}`);
+                if (btn) {
+                    if (upgradesOwned[id]) {
+                        btn.textContent = "Comprado";
+                        btn.classList.add('owned');
+                    } else {
+                        btn.classList.remove('owned');
+                        if(id === 1) btn.textContent = "100 Monedas";
+                        if(id === 2) btn.textContent = "200 Monedas";
+                        if(id === 3) btn.textContent = "300 Monedas";
+                    }
+                }
+            });
+        }
+
+        function buyUpgrade(id, cost) {
+            playSoundBoton();
+            if (currentUsername === "") {
+                alert("Por favor, ingresa tu nombre de piloto primero.");
+                return;
+            }
+            if (upgradesOwned[id]) {
+                alert("¡Ya compraste y decoraste tu arma con esta mejora!");
+                return;
+            }
+            if (score >= cost) {
+                score -= cost;
+                upgradesOwned[id] = true;
+                scoreText.textContent = score;
+                savePlayerProgress();
+                updateShopButtonsUI();
+                alert(`🎉 ¡Compraste la Mejora con éxito! Tu arma ha sido decorada.`);
+            } else {
+                alert("❌ No tienes suficientes monedas en tu cuenta de piloto.");
+            }
         }
 
         readyCheckbox.addEventListener('change', () => {
@@ -904,7 +1092,6 @@
             subscribePopup.style.transform = "translate(-50%, -50%) scale(0)";
         });
 
-        // Al presionar el botón de inicio, se abre la Pantalla Estilo image_16.png
         startButton.addEventListener('click', () => {
             playSoundBoton();
             
@@ -940,6 +1127,19 @@
             updateLevelButtonsUI();
         });
 
+        tiendaMainBtn.addEventListener('click', () => {
+            playSoundBoton();
+            playMenuScreen.style.display = 'none';
+            shopScreen.style.display = 'flex';
+            updateShopButtonsUI();
+        });
+
+        closeShopBtn.addEventListener('click', () => {
+            playSoundBoton();
+            shopScreen.style.display = 'none';
+            playMenuScreen.style.display = 'flex';
+        });
+
         salirMainBtn.addEventListener('click', () => {
             playSoundBoton();
             window.location.reload();
@@ -951,7 +1151,6 @@
             playMenuScreen.style.display = 'flex';
         });
 
-        // Configurar botones de niveles individuales
         levelButtons.forEach(btn => {
             btn.addEventListener('click', () => {
                 playSoundBoton();
@@ -965,13 +1164,34 @@
             currentLevel = lvl;
             kills = 0;
             
-            // Cargar datos de velocidad y objetivos de la tabla
             scrollSpeed = levelsConfig[lvl].speed;
+            
+            // Lógica Mejora 30.3: En el último nivel los NPCs se mueven mucho más rápido
+            if (currentLevel === 6 && upgradesOwned[3]) {
+                scrollSpeed = 8.5; // Velocidad extrema
+            }
+
+            // Aplicar decoración visual al arma según la mejora comprada
+            if (upgradesOwned[3]) {
+                weaponImage.src = 'Manos_Mejora3.PNG';
+            } else if (upgradesOwned[2]) {
+                weaponImage.src = 'Manos_Mejora2.PNG';
+            } else if (upgradesOwned[1]) {
+                weaponImage.src = 'Manos_Mejora1.PNG';
+            } else {
+                weaponImage.src = 'Manos.PNG';
+            }
+
+            // Lógica Mejora 10.1: Permitir disparar muchísimas balas reduciendo cooldown
+            if (upgradesOwned[1]) {
+                shootCooldown = 60; // Súper rápido / Ráfaga automática
+            } else {
+                shootCooldown = 400; // Cooldown base normal
+            }
             
             levelText.textContent = currentLevel;
             killsText.textContent = `0/${levelsConfig[lvl].targets}`;
             
-            // Limpiar NPCs anteriores por si acaso
             clearAllNPCs();
             
             gameStarted = true;
@@ -1012,6 +1232,13 @@
         function fireWeapon() {
             if (!gameStarted) return;
 
+            // Comprobar la tasa de disparo según la mejora actual
+            let currentTime = Date.now();
+            if (currentTime - lastShotTime < shootCooldown) {
+                return; 
+            }
+            lastShotTime = currentTime;
+
             playSoundPistola();
 
             weaponContainer.style.transform = 'translateX(-50%) translateY(20px) scale(0.95)';
@@ -1031,7 +1258,18 @@
                 if (centerX >= rect.left && centerX <= rect.right &&
                     centerY >= rect.top && centerY <= rect.bottom) {
                     
-                    eliminateNPC(npc);
+                    // Lógica Mejora 30.3: Al disparar a un clon en nivel 6, mueren los tres juntos
+                    if (currentLevel === 6 && upgradesOwned[3] && npc.dataset.groupId) {
+                        let gid = npc.dataset.groupId;
+                        const groupMembers = document.querySelectorAll(`.target[data-group-id='${gid}']`);
+                        groupMembers.forEach(member => {
+                            if (member.dataset.dead !== "true") {
+                                eliminateNPC(member, true);
+                            }
+                        });
+                    } else {
+                        eliminateNPC(npc, false);
+                    }
                 }
             });
         }
@@ -1042,12 +1280,29 @@
         function spawnNPC(index) {
             if (!gameStarted) return;
             
+            // Lógica Mejora 30.3: En nivel 6 cada NPC genera 3 NPCs pegados
+            if (currentLevel === 6 && upgradesOwned[3]) {
+                let groupId = "group_" + Date.now() + "_" + index;
+                for (let k = 0; k < 3; k++) {
+                    createNPCElement(index, groupId, k * 45); // Desfase de píxeles entre ellos
+                }
+            } else {
+                createNPCElement(index, null, 0);
+            }
+        }
+
+        function createNPCElement(index, groupId, clusterOffset) {
             const npc = document.createElement('img');
             npc.src = 'NPC.PNG';
             npc.className = 'target';
 
+            if (groupId) {
+                npc.dataset.groupId = groupId;
+            }
+
             const screenOffset = -stageX;
-            const spawnX = screenOffset + window.innerWidth + 100 + (index * distanceBetweenNPCs);
+            // Añadimos clusterOffset por si se generan juntos con la mejora 3
+            const spawnX = screenOffset + window.innerWidth + 100 + (index * distanceBetweenNPCs) + clusterOffset;
             const spawnY = window.innerHeight / 2 + 30; 
 
             npc.style.left = spawnX + 'px';
@@ -1060,7 +1315,10 @@
                 if (rect.right < 0) {
                     clearInterval(checkInterval);
                     npc.remove();
-                    spawnNPC(maxNPCs - 1); 
+                    // Solo spawnea un reemplazo general si no es un clon de ráfaga
+                    if (!groupId || clusterOffset === 0) {
+                        spawnNPC(maxNPCs - 1); 
+                    }
                 }
             }, 1000);
             
@@ -1068,7 +1326,7 @@
             npc.dataset.intervalIndex = activeNPCIntervals.length - 1;
         }
 
-        function eliminateNPC(npc) {
+        function eliminateNPC(npc, isTripleKill) {
             npc.dataset.dead = "true";
             
             let idx = npc.dataset.intervalIndex;
@@ -1078,15 +1336,44 @@
 
             npc.src = 'Disparado.PNG';
             
-            // Dar monedas según la configuración del nivel actual
             let config = levelsConfig[currentLevel];
-            score += config.coinsPerKill;
+            let rawCoins = config.coinsPerKill;
+
+            // Lógica Mejora 20.2: En nivel 2 duplica las monedas por 7 (7 * 7 = 49)
+            if (currentLevel === 2 && upgradesOwned[2]) {
+                rawCoins = rawCoins * 7;
+            }
+
+            // Lógica Mejora 30.3: Dar 500 monedas adicionales si matas al grupo de 3 NPCs
+            if (isTripleKill) {
+                // Se otorgan 500 monedas de bono directo distribuidas por la baja del grupo
+                score += Math.floor(500 / 3); 
+            }
+
+            score += rawCoins;
             scoreText.textContent = score;
             
             kills++;
             killsText.textContent = `${kills}/${config.targets}`;
             
             savePlayerProgress();
+
+            // Lógica Mejora 10.1 (Mejora 20): En nivel 4, al disparar aparece dos NPCs más adelante
+            if (currentLevel === 4 && upgradesOwned[1] && !npc.dataset.wasDuplicated) {
+                setTimeout(() => {
+                    if (gameStarted) {
+                        // Spawnea 2 NPCs extra en posiciones cercanas para dar más monedas
+                        createNPCElement(1, null, 80);
+                        createNPCElement(1, null, 160);
+                        // Marcar para no causar duplicaciones infinitas en cadena
+                        const items = document.querySelectorAll('.target');
+                        if(items.length > 0) {
+                            items[items.length - 1].dataset.wasDuplicated = "true";
+                            if(items.length > 1) items[items.length - 2].dataset.wasDuplicated = "true";
+                        }
+                    }
+                }, 200);
+            }
 
             if (kills >= config.targets) {
                 gameStarted = false;
@@ -1097,7 +1384,7 @@
 
             setTimeout(() => {
                 npc.remove();
-                if (gameStarted) {
+                if (gameStarted && (!npc.dataset.groupId || npc.dataset.groupId === "")) {
                     spawnNPC(maxNPCs - 1);
                 }
             }, 300);
@@ -1111,7 +1398,6 @@
             
             let message = `¡NIVEL ${currentLevel} COMPLETADO!<br><span style='color: #ffcc00;'>🎁 RECOMPENSA: +${currentConfig.reward} MONEDAS</span>`;
             
-            // Si pasamos el nivel que teníamos como máximo, desbloqueamos el siguiente
             if (currentLevel === maxUnlockedLevel && maxUnlockedLevel < 6) {
                 maxUnlockedLevel++;
             }
@@ -1124,19 +1410,16 @@
             setTimeout(() => {
                 announcement.style.transform = "translate(-50%, -50%) scale(0)";
                 
-                // Si completó el nivel 6 (el último actual)
                 if (currentLevel === 6) {
                     setTimeout(() => {
                         announcement.innerHTML = "<span style='color: #00ff00; font-size: 24px;'>Próximamente vamos a añadir más niveles.</span>";
                         announcement.style.transform = "translate(-50%, -50%) scale(1)";
                         setTimeout(() => {
                             announcement.style.transform = "translate(-50%, -50%) scale(0)";
-                            // Volver a selección de niveles
                             levelSelectionScreen.style.display = 'flex';
                         }, 4000);
                     }, 500);
                 } else {
-                    // Volver a la pantalla de selección para jugar el nivel desbloqueado
                     levelSelectionScreen.style.display = 'flex';
                 }
             }, 3000);
