@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MrTube - Chicken Gun FPS Balance Beta</title>
+    <title>Chicken Strike NPC - Beta</title>
     <style>
         * {
             box-sizing: border-box;
@@ -27,7 +27,6 @@
             height: 100vh;
             overflow: hidden;
         }
-        /* Escenario automático de fondo */
         #stage {
             position: absolute;
             width: 600vw;
@@ -38,7 +37,7 @@
             background-position: center;
             will-change: transform;
         }
-        /* PANTALLA DE BIENVENIDA (MODAL BETA) */
+        /* PANTALLA DE BIENVENIDA CON EL NOMBRE OFICIAL */
         #welcome-screen {
             position: absolute;
             top: 0;
@@ -57,9 +56,10 @@
         }
         #welcome-screen h1 {
             color: #ffcc00;
-            font-size: 32px;
+            font-size: 36px;
             margin-bottom: 10px;
             text-shadow: 3px 3px #000;
+            letter-spacing: 1px;
         }
         #welcome-screen p {
             font-size: 18px;
@@ -84,7 +84,7 @@
         #start-button:active {
             transform: scale(0.95);
         }
-        /* Interfaz de Usuario */
+        /* INTERFAZ (UI) */
         #ui-header {
             position: absolute;
             top: 15px;
@@ -113,7 +113,7 @@
             margin-right: 8px;
             animation: spin 4s linear infinite;
         }
-        /* Anuncios de Nivel */
+        /* CARTEL DE RECOMPENSA */
         #announcement {
             position: absolute;
             top: 30%;
@@ -131,7 +131,6 @@
             transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             pointer-events: none;
         }
-        /* OBJETIVOS (NPC) EN LÍNEA RECTA */
         .target {
             position: absolute;
             width: 110px;
@@ -140,7 +139,6 @@
             z-index: 3;
             pointer-events: none;
         }
-        /* Mira Fija */
         #crosshair {
             position: absolute;
             top: 50%;
@@ -154,7 +152,6 @@
             pointer-events: none !important;
             z-index: 8;
         }
-        /* Pistola (Manos) */
         #weapon-container {
             position: absolute;
             bottom: 0;
@@ -180,18 +177,16 @@
 </head>
 <body>
 
-    <!-- Pantalla de bienvenida / Versión Beta -->
+    <!-- Pantalla de bienvenida con el Nombre Oficial -->
     <div id="welcome-screen">
-        <h1>¡BIENVENIDO A MRTUBE!</h1>
-        <p>Esta es una versión Beta Oficial en desarrollo.<br>Diseñado para ABG Productions® y Sprunki Animations Studios.</p>
+        <h1>CHICKEN STRIKE NPC</h1>
+        <p>Versión Beta Oficial en desarrollo para la plataforma MrTube.<br>Diseñado por ABG Productions® y Sprunki Animations Studios.</p>
         <button id="start-button">JUGAR BETA</button>
     </div>
 
     <div id="game-container">
-        <!-- Fondo móvil -->
         <div id="stage"></div>
 
-        <!-- Interfaz -->
         <div id="ui-header">
             <div class="ui-box" id="ui-score">
                 <img src="Moneda.PNG" alt="Moneda">
@@ -231,20 +226,16 @@
         
         const scrollSpeed = 2.5; 
         const maxNPCs = 10;
-        // Distancia en píxeles entre cada enemigo para dejar un espacio vacío de balance
         const distanceBetweenNPCs = 350; 
 
-        // Activar el juego al presionar el botón de la Beta
         startButton.addEventListener('click', () => {
             welcomeScreen.style.display = 'none';
             gameStarted = true;
-            // Generar los 10 personajes en fila india espaciada
             for(let i = 0; i < maxNPCs; i++) {
                 spawnNPC(i);
             }
         });
 
-        // --- SISTEMA DE MOVIMIENTO AUTOMÁTICO ---
         function updateCamera() {
             if (!gameStarted) {
                 requestAnimationFrame(updateCamera);
@@ -267,8 +258,6 @@
         }
         requestAnimationFrame(updateCamera);
 
-
-        // --- DISPARAR CON LA PISTOLA ---
         function fireWeapon() {
             if (!gameStarted) return;
 
@@ -297,19 +286,13 @@
         weaponContainer.addEventListener('mousedown', (e) => { e.stopPropagation(); fireWeapon(); });
         weaponContainer.addEventListener('touchstart', (e) => { e.stopPropagation(); e.preventDefault(); fireWeapon(); });
 
-
-        // --- NUEVO MOTOR BALANCEADO EN LÍNEA RECTA ---
         function spawnNPC(index) {
             const npc = document.createElement('img');
             npc.src = 'NPC.PNG';
             npc.className = 'target';
 
             const screenOffset = -stageX;
-            
-            // BALANCE DE ESPACIO: Se alinean uno detrás del otro usando el "index" multiplicado por la distancia fija
             const spawnX = screenOffset + window.innerWidth + 100 + (index * distanceBetweenNPCs);
-            
-            // LÍNEA RECTA PERFECTA: Colocados exactamente a la altura media de la pantalla
             const spawnY = window.innerHeight / 2 + 30; 
 
             npc.style.left = spawnX + 'px';
@@ -322,7 +305,6 @@
                 if (rect.right < 0) {
                     clearInterval(npc.checkBounds);
                     npc.remove();
-                    // Si se pasa de largo, se vuelve a formar al final de la fila de 10
                     spawnNPC(maxNPCs - 1); 
                 }
             }, 1000);
@@ -351,20 +333,19 @@
 
             setTimeout(() => {
                 npc.remove();
-                // Reaparece ordenadamente al final de la fila activa
                 spawnNPC(maxNPCs - 1); 
             }, 300);
         }
 
         function triggerLevelReward() {
             currentLevel = 2;
-            score += 100; 
+            score += 50; 
             
             scoreText.textContent = score;
             levelText.textContent = currentLevel;
             killsText.textContent = `${kills}`; 
             
-            announcement.innerHTML = "¡NIVEL 1 COMPLETADO!<br><span style='color: #ffcc00;'>🎁 RECOMPENSA: +100 MONEDAS</span>";
+            announcement.innerHTML = "¡NIVEL 1 COMPLETADO!<br><span style='color: #ffcc00;'>🎁 RECOMPENSA: +50 MONEDAS</span>";
             announcement.style.transform = "translate(-50%, -50%) scale(1)";
             
             setTimeout(() => {
