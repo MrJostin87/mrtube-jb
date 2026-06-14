@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MrTube - Chicken Gun Shooter Beta</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #000;
+            font-family: 'Arial Black', sans-serif;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        #game-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            background-image: url('Fondo.PNG');
+            background-size: cover;
+            background-position: center;
+            overflow: hidden;
+        }
+        /* Marcador de Monedas */
+        #ui-score {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 8px 16px;
+            border-radius: 30px;
+            border: 3px solid #ffcc00;
+            z-index: 10;
+        }
+        #ui-score img {
+            width: 35px;
+            height: 35px;
+            margin-right: 10px;
+            animation: spin 4s linear infinite;
+        }
+        #score-text {
+            color: #fff;
+            font-size: 24px;
+            text-shadow: 2px 2px #000;
+        }
+        /* Objetivos (NPC) */
+        .target {
+            position: absolute;
+            width: 110px;
+            height: auto;
+            transform: translate(-50%, -50%);
+            z-index: 3;
+            pointer-events: auto;
+            transition: transform 0.05s ease;
+        }
+        /* Custom Crosshair (Mira) */
+        #crosshair {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background-image: url('Mira.PNG');
+            background-size: contain;
+            background-repeat: no-repeat;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 8;
+        }
+        /* Arma (Manos) */
+        #weapon-container {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 280px;
+            height: auto;
+            pointer-events: none;
+            z-index: 5;
+            transition: transform 0.05s ease;
+        }
+        #weapon {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        /* Animaciones */
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="game-container">
+        <!-- Marcador superior con tu diseño de moneda -->
+        <div id="ui-score">
+            <img src="Moneda.PNG" alt="Moneda">
+            <span id="score-text">0</span>
+        </div>
+
+        <!-- Elemento de la mira personalizada -->
+        <div id="crosshair"></div>
+
+        <!-- Contenedor del arma en la base de la pantalla -->
+        <div id="weapon-container">
+            <img id="weapon" src="Manos.PNG" alt="Arma">
+        </div>
+    </div>
+
+    <script>
+        const container = document.getElementById('game-container');
+        const scoreText = document.getElementById('score-text');
+        const crosshair = document.getElementById('crosshair');
+        const weaponContainer = document.getElementById('weapon-container');
+        
+        let score = 0;
+
+        // Centrar la mira inicialmente en la pantalla
+        crosshair.style.left = '50%';
+        crosshair.style.top = '50%';
+
+        // Sistema para que la mira siga el dedo o mouse de forma fluida
+        function updateCrosshair(x, y) {
+            crosshair.style.left = x + 'px';
+            crosshair.style.top = y + 'px';
+        }
+
+        container.addEventListener('mousemove', (e) => {
+            updateCrosshair(e.clientX, e.clientY);
+        });
+
+        container.addEventListener('touchmove', (e) => {
+            if(e.touches.length > 0) {
+                updateCrosshair(e.touches[0].clientX, e.touches[0].clientY);
+            }
+        });
+
+        // Efecto visual de retroceso de la pistola (Shoot Animation)
+        function triggerWeaponRecoil() {
+            weaponContainer.style.transform = 'translateX(-50%) translateY(20px) scale(0.95)';
+            setTimeout(() => {
+                weaponContainer.style.transform = 'translateX(-50%) translateY(0) scale(1)';
+            }, 600);
+        }
+
+        // Registrar disparos globales en la pantalla
+        container.addEventListener('mousedown', (e) => {
+            if(e.target.classList.contains('target')) return; // Manejado por su propio evento
+            triggerWeaponRecoil();
+        });
+
+        container.addEventListener('touchstart', (e) => {
+            if(e.target.classList.contains('target')) return;
+            if(e.touches.length > 0) {
+                updateCrosshair(e.touches[0].clientX, e.touches[0].clientY);
+            }
+            triggerWeaponRecoil();
+        });
+
+        // Crear instancias de los objetivos de Chicken Gun
+        function spawnNPC() {
+            const npc = document.createElement('img');
+            npc.src = 'NPC.PNG';
+            npc.className = 'target';
+
+            // Márgenes para evitar que salgan fuera de la pantalla del iPhone
+            const padding = 80;
+            const spawnX = Math.random() * (window.innerWidth - padding * 2) + padding;
+            const spawnY = Math.random() * (window.innerHeight - padding * 3) + padding;
+
+            npc.style.left = spawnX + 'px';
+            npc.style.top = spawnY + 'px';
+
+            // Soporte táctil e interfaz mouse
+            npc.addEventListener('mousedown', (e) => {
+                e.stopPropagation();
+                eliminateNPC(npc, e.clientX, e.clientY);
+            });
+
+            npc.addEventListener('touchstart', (e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                if(e.touches.length > 0) {
+                    eliminateNPC(npc, e.touches[0].clientX, e.touches[0].clientY);
+                }
+            });
+
+            container.appendChild(npc);
+
+            // Ritmo de desaparición si no se le dispara a tiempo
+            npc.lifetime = setTimeout(() => {
+                npc.remove();
+                spawnNPC();
+            }, 1800);
+        }
+
+        // Lógica de impacto al blanco
+        function eliminateNPC(npc, hitX, hitY) {
+            if (npc.dataset.dead === "true") return;
+            npc.dataset.dead = "true";
+
+            clearTimeout(npc.lifetime);
+            updateCrosshair(hitX, hitY);
+            triggerWeaponRecoil();
+
+            // Cambiar textura instantáneamente a tu diseño de eliminación
+            npc.src = 'Disparado.PNG';
+            
+            score++;
+            scoreText.textContent = score;
+
+            // Retraso de desvanecimiento para poder apreciar la animación del cartel
+            setTimeout(() => {
+                npc.remove();
+                spawnNPC();
+            }, 450);
+        }
+
+        // Lanzamiento inicial del juego
+        spawnNPC();
+    </script>
+</body>
+</html>
