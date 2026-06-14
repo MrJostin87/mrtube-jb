@@ -44,7 +44,9 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            background: rgba(0, 0, 0, 0.94);
+            background-image: url('Fondo.PNG'); /* Integración de tu fondo real */
+            background-size: cover;
+            background-position: center;
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
@@ -55,6 +57,14 @@
             padding: 20px;
             overflow-y: auto; /* Permite scroll para ir hasta abajo */
             touch-action: pan-y; /* Permite deslizar en móviles */
+        }
+        /* Capa oscura superpuesta suave para que las letras sigan viéndose perfectas sobre el fondo azul */
+        #welcome-screen::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.45);
+            z-index: -1;
         }
         #welcome-screen h1 {
             color: #ffcc00;
@@ -69,7 +79,8 @@
             max-width: 85%;
             line-height: 1.4;
             margin-bottom: 20px;
-            color: #ccc;
+            color: #fff;
+            text-shadow: 2px 2px 4px #000;
         }
         
         /* REGISTRO DE NOMBRE DE USUARIO */
@@ -105,7 +116,7 @@
 
         /* SECCIÓN DE VERIFICACIÓN (ESTOY LISTO) */
         #ready-container {
-            background: rgba(255, 204, 0, 0.1);
+            background: rgba(0, 0, 0, 0.6);
             border: 2px solid #ffcc00;
             padding: 12px;
             border-radius: 10px;
@@ -141,7 +152,7 @@
             margin-bottom: 12px;
             width: 260px;
             text-align: center;
-            box-shadow: 0 4px 10px rgba(255,255,255,0.2);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
         }
         .menu-btn:active {
             transform: scale(0.95);
@@ -171,6 +182,7 @@
             font-weight: bold;
             margin-top: 10px;
             margin-bottom: 15px;
+            z-index: 10;
         }
 
         /* PANEL DE CONFIGURACIONES */
@@ -532,7 +544,7 @@
             "es-es": { title: "CHICKEN STRIKE NPC", desc: "Versión Beta Oficial en desarrollo para la plataforma MrTube.<br>Diseñado por ABG Productions® y Sprunki Animations Studios.", user: "INTRODUCE TU NOMBRE DE PILOTO:", play: "EMPEZAR A PROBAR", uiLvl: "Nivel", uiTgt: "Objetivos" },
             "tr": { title: "CHICKEN STRIKE NPC", desc: "MrTube platformu için geliştirilmekte olan Resmi Beta Sürümü.<br>ABG Productions® ve Sprunki Animations Studios tarafından tasarlandı.", user: "PİLOT ADINIZI GİRİN:", play: "TESTE BAŞLA", uiLvl: "Seviye", uiTgt: "Hedefler" },
             "ar": { title: "CHICKEN STRIKE NPC", desc: "نسخة بيتا الرسمية قيد التطوير لمنصة MrTube.<br>تم التصميم بواسطة ABG Productions® وSprunki Animations Studios.", user: "أدخل اسم الطيار الخاص بك:", play: "بدء الاختبار", uiLvl: "المستوى", uiTgt: "الأهداف" },
-            "hi": { title: "CHICKEN STRIKE NPC", desc: "MrTube प्लेटफॉर्म के लिए विकास के चरण में आधिकारिक बीटा संस्करण।<br>ABG Productions® और Sprunki Animations Studios द्वारा डिज़ाइन किया गया।", user: "अपना पायलट नाम दर्ज करें:", play: "परीक्षण शुरू करें", uiLvl: "स्तर", uiTgt: "लक्ष्य" },
+            "hi": { title: "CHICKEN STRIKE NPC", desc: "MrTube प्लेटफॉर्म के लिए विकास के चरण de आधिकारिक बीटा संस्करण।<br>ABG Productions® और Sprunki Animations Studios द्वारा डिज़ाइन किया गया।", user: "अपना पायलट नाम दर्ज करें:", play: "परीक्षण शुरू करें", uiLvl: "स्तर", uiTgt: "लक्ष्य" },
             "ja": { title: "CHICKEN STRIKE NPC", desc: "MrTubeプラットフォーム向けに開発中の公式ベータ版。<br>ABG Productions®およびSprunki Animations Studiosによる設計。", user: "パイロット名を入力してください:", play: "テストを開始", uiLvl: "レベル", uiTgt: "ターゲット" },
             "ko": { title: "CHICKEN STRIKE NPC", desc: "MrTube 플랫폼을 위해 개발 중인 공식 베타 버전.<br>ABG Productions® 및 Sprunki Animations Studios 제작.", user: "조종사 이름을 입력하세요:", play: "테스트 시작", uiLvl: "레벨", uiTgt: "목표" }
         };
