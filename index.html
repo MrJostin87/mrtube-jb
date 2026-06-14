@@ -3,10 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MrTube - Chicken Gun Auto-Scroll Beta</title>
+    <title>MrTube - Chicken Gun Niveles Beta</title>
     <style>
         * {
             box-sizing: border-box;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+            touch-action: none;
         }
         body, html {
             margin: 0;
@@ -16,8 +20,6 @@
             overflow: hidden;
             background-color: #000;
             font-family: 'Arial Black', sans-serif;
-            user-select: none;
-            -webkit-user-select: none;
         }
         #game-container {
             position: relative;
@@ -25,42 +27,65 @@
             height: 100vh;
             overflow: hidden;
         }
-        /* El escenario que se moverá solo automáticamente */
+        /* Escenario automático */
         #stage {
             position: absolute;
-            width: 500vw; /* Escenario bien ancho para el viaje infinito */
+            width: 500vw;
             height: 100vh;
             left: 0;
             background-image: url('Fondo.PNG');
-            background-size: repeat-x; /* Se repite para que nunca se acabe el fondo */
+            background-size: repeat-x;
             background-position: center;
             will-change: transform;
         }
-        /* Marcador de Monedas */
-        #ui-score {
+        /* Panel Superior de la Interfaz (UI) */
+        #ui-header {
             position: absolute;
-            top: 20px;
-            left: 20px;
+            top: 15px;
+            left: 15px;
+            right: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 10;
+            pointer-events: none;
+        }
+        .ui-box {
+            background: rgba(0, 0, 0, 0.65);
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 3px solid #ffcc00;
+            color: #fff;
+            font-size: 20px;
+            text-shadow: 2px 2px #000;
             display: flex;
             align-items: center;
-            background: rgba(0, 0, 0, 0.6);
-            padding: 8px 16px;
-            border-radius: 30px;
-            border: 3px solid #ffcc00;
-            z-index: 10;
         }
         #ui-score img {
-            width: 35px;
-            height: 35px;
-            margin-right: 10px;
+            width: 30px;
+            height: 30px;
+            margin-right: 8px;
             animation: spin 4s linear infinite;
         }
-        #score-text {
+        /* Letrero de Recompensa/Nivel en grande */
+        #announcement {
+            position: absolute;
+            top: 30%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
             color: #fff;
-            font-size: 24px;
-            text-shadow: 2px 2px #000;
+            font-size: 40px;
+            text-align: center;
+            text-shadow: 4px 4px #000;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 20px 40px;
+            border-radius: 15px;
+            border: 5px solid #00ff00;
+            z-index: 15;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            pointer-events: none;
         }
-        /* Objetivos (NPC) pegados al escenario móvil */
+        /* Objetivos (NPC) */
         .target {
             position: absolute;
             width: 110px;
@@ -69,7 +94,7 @@
             z-index: 3;
             pointer-events: none;
         }
-        /* Mira Fija en el Centro */
+        /* Mira Bloqueada */
         #crosshair {
             position: absolute;
             top: 50%;
@@ -80,7 +105,7 @@
             background-size: contain;
             background-repeat: no-repeat;
             transform: translate(-50%, -50%);
-            pointer-events: none;
+            pointer-events: none !important;
             z-index: 8;
         }
         /* Botón de la Pistola (Manos) */
@@ -100,6 +125,7 @@
             width: 100%;
             height: auto;
             display: block;
+            pointer-events: none;
         }
         @keyframes spin {
             100% { transform: rotate(360deg); }
@@ -109,17 +135,30 @@
 <body>
 
     <div id="game-container">
-        <!-- El mundo que se mueve solo -->
+        <!-- Fondo móvil -->
         <div id="stage"></div>
 
-        <!-- Interfaz quieta en la pantalla -->
-        <div id="ui-score">
-            <img src="Moneda.PNG" alt="Moneda">
-            <span id="score-text">0</span>
+        <!-- Interfaz de Usuario -->
+        <div id="ui-header">
+            <div class="ui-box" id="ui-score">
+                <img src="Moneda.PNG" alt="Moneda">
+                <span id="score-text">0</span>
+            </div>
+            <div class="ui-box" id="ui-level">
+                Nivel: <span id="level-text">1</span>
+            </div>
+            <div class="ui-box" id="ui-kills">
+                Objetivos: <span id="kills-text">0/10</span>
+            </div>
         </div>
 
+        <!-- Cartel de Premios -->
+        <div id="announcement"></div>
+
+        <!-- Mira fija -->
         <div id="crosshair"></div>
 
+        <!-- Disparador -->
         <div id="weapon-container">
             <img id="weapon" src="Manos.PNG" alt="Arma">
         </div>
@@ -128,23 +167,25 @@
     <script>
         const stage = document.getElementById('stage');
         const scoreText = document.getElementById('score-text');
+        const levelText = document.getElementById('level-text');
+        const killsText = document.getElementById('kills-text');
+        const announcement = document.getElementById('announcement');
         const weaponContainer = document.getElementById('weapon-container');
         
         let score = 0;
+        let kills = 0;
+        let currentLevel = 1;
         let stageX = 0;
         
-        // --- CONFIGURACIÓN DE VELOCIDAD ---
-        // Sube este número si quieres que la cámara avance más rápido
         const scrollSpeed = 2; 
+        const maxNPCs = 10;
 
-        // --- MOVIMIENTO AUTOMÁTICO DE LA CÁMARA ---
+        // --- MOVIMIENTO DE CÁMARA AUTOMÁTICO ---
         function updateCamera() {
             stageX -= scrollSpeed;
             
-            // Si el escenario se mueve demasiado, lo reiniciamos sutilmente para que sea infinito
             if (stageX <= -window.innerWidth * 3) {
                 stageX = 0;
-                // Reacomodar los NPCs activos para que no desaparezcan de golpe
                 const targets = document.querySelectorAll('.target');
                 targets.forEach(npc => {
                     let currentLeft = parseFloat(npc.style.left);
@@ -155,20 +196,16 @@
             stage.style.transform = `translateX(${stageX}px)`;
             requestAnimationFrame(updateCamera);
         }
-        
-        // Arranca el movimiento solo
         requestAnimationFrame(updateCamera);
 
 
         // --- SISTEMA DE DISPARO MANUAL ---
         function fireWeapon() {
-            // Retroceso visual de la pistola
             weaponContainer.style.transform = 'translateX(-50%) translateY(20px) scale(0.95)';
             setTimeout(() => {
                 weaponContainer.style.transform = 'translateX(-50%) translateY(0) scale(1)';
             }, 100);
 
-            // Centro de la pantalla
             const centerX = window.innerWidth / 2;
             const centerY = window.innerHeight / 2;
             
@@ -176,10 +213,8 @@
             targets.forEach((npc) => {
                 if (npc.dataset.dead === "true") return;
 
-                // Coordenadas del NPC en tiempo real
                 const rect = npc.getBoundingClientRect();
                 
-                // Si el NPC cruza justo por el centro donde está la mira
                 if (centerX >= rect.left && centerX <= rect.right &&
                     centerY >= rect.top && centerY <= rect.bottom) {
                     
@@ -188,27 +223,26 @@
             });
         }
 
-        // Eventos para disparar apachando las manos en PC o Celular
-        weaponContainer.addEventListener('mousedown', (e) => {
-            e.stopPropagation();
-            fireWeapon();
-        });
-        weaponContainer.addEventListener('touchstart', (e) => {
-            e.stopPropagation();
-            e.preventDefault();
-            fireWeapon();
-        });
+        weaponContainer.addEventListener('mousedown', (e) => { e.stopPropagation(); fireWeapon(); });
+        weaponContainer.addEventListener('touchstart', (e) => { e.stopPropagation(); e.preventDefault(); fireWeapon(); });
 
 
-        // --- LOGICA DE LOS ENEMIGOS (NPC) ---
-        function spawnNPC() {
+        // --- MOTOR DE ENEMIGOS E INFRAESTRUCTURA ---
+        function spawnNPC(isInitial = false) {
             const npc = document.createElement('img');
             npc.src = 'NPC.PNG';
             npc.className = 'target';
 
-            // Aparecen un poco más adelante en el camino oculto de la derecha
             const screenOffset = -stageX;
-            const spawnX = screenOffset + window.innerWidth + (Math.random() * window.innerWidth);
+            
+            let spawnX;
+            if (isInitial) {
+                spawnX = screenOffset + (Math.random() * (window.innerWidth * 2));
+            } else {
+                // Aparece de inmediato saliendo justo por el borde derecho de la pantalla
+                spawnX = screenOffset + window.innerWidth + 50;
+            }
+            
             const spawnY = Math.random() * (window.innerHeight - 300) + 150;
 
             npc.style.left = spawnX + 'px';
@@ -216,13 +250,12 @@
 
             stage.appendChild(npc);
 
-            // Si el jugador lo deja pasar y se sale de la pantalla por la izquierda, se borra solo
             npc.checkBounds = setInterval(() => {
                 const rect = npc.getBoundingClientRect();
                 if (rect.right < 0) {
                     clearInterval(npc.checkBounds);
                     npc.remove();
-                    spawnNPC();
+                    spawnNPC(false); // Si se escapa, reaparece otro inmediatamente atrás
                 }
             }, 1000);
         }
@@ -231,23 +264,62 @@
             npc.dataset.dead = "true";
             clearInterval(npc.checkBounds);
 
-            // Cambiar a textura eliminado
             npc.src = 'Disparado.PNG';
             
-            // Recompensa Trillonaria: de 5 en 5 monedas
+            // Sumar monedas base (+5)
             score += 5;
             scoreText.textContent = score;
 
+            // Avanzar contador de misiones
+            if (currentLevel === 1) {
+                kills++;
+                killsText.textContent = `${kills}/10`;
+                
+                // VERIFICACIÓN DEL NIVEL 1 COMPLETADO
+                if (kills === 10) {
+                    triggerLevelReward();
+                }
+            } else {
+                // En el nivel 2 el contador se vuelve infinito
+                kills++;
+                killsText.textContent = `${kills}`;
+            }
+
+            // Desaparece rápido y mete el reemplazo al instante
             setTimeout(() => {
                 npc.remove();
-                spawnNPC();
-            }, 500);
+                spawnNPC(false); 
+            }, 250);
         }
 
-        // Generar los primeros enemigos en cola
-        for(let i = 0; i < 4; i++) {
-            setTimeout(spawnNPC, i * 800);
+        // --- GRAN RECOMPENSA DE NIVEL ---
+        function triggerLevelReward() {
+            currentLevel = 2;
+            
+            // Otorgar bono de monedas brutal
+            score += 100; 
+            
+            // Actualizar textos en la pantalla
+            scoreText.textContent = score;
+            levelText.textContent = currentLevel;
+            killsText.textContent = `${kills}`; // Deja de pedir límite
+            
+            // Mostrar letrero de victoria en pantalla
+            announcement.innerHTML = "¡NIVEL 1 COMPLETADO!<br><span style='color: #ffcc00;'>🎁 RECOMPENSA: +100 MONEDAS</span>";
+            announcement.style.transform = "translate(-50%, -50%) scale(1)";
+            
+            // Quitar el letrero después de 3 segundos
+            setTimeout(() => {
+                announcement.style.transform = "translate(-50%, -50%) scale(0)";
+            }, 3000);
         }
+
+        // Crear los 10 NPCs iniciales para comenzar el combate
+        for(let i = 0; i < maxNPCs; i++) {
+            spawnNPC(true);
+        }
+
+        document.addEventListener('gesturestart', function (e) { e.preventDefault(); });
     </script>
 </body>
 </html>
