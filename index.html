@@ -44,7 +44,7 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            background-image: url('Fondo.PNG'); 
+            background-image: url('Fondo.PNG'); /* Integración de tu fondo real */
             background-size: cover;
             background-position: center;
             display: flex;
@@ -55,10 +55,10 @@
             color: #fff;
             text-align: center;
             padding: 20px;
-            overflow-y: auto; 
-            touch-action: pan-y; 
+            overflow-y: auto; /* Permite scroll para ir hasta abajo */
+            touch-action: pan-y; /* Permite deslizar en móviles */
         }
-        /* Capa oscura superpuesta suave */
+        /* Capa oscura superpuesta suave para que las letras sigan viéndose perfectas sobre el fondo azul */
         #welcome-screen::before {
             content: "";
             position: absolute;
@@ -160,7 +160,7 @@
         #start-button {
             background: #00ff00;
             box-shadow: 0 5px 15px rgba(0,255,0,0.4);
-            pointer-events: auto; /* Activado para procesar la advertencia si no marcan el checkbox */
+            opacity: 0.5; /* Opaco por defecto hasta activar casilla */
         }
         #exit-button {
             background: #ff3333;
@@ -536,16 +536,16 @@
             "es": { title: "CHICKEN STRIKE NPC", desc: "¡Bienvenido! Ten en cuenta que esta es una versión Beta Oficial en desarrollo para la plataforma MrTube, por lo que va a tener algunos errores.<br>Diseñado por ABG Productions® y Sprunki Animations Studios.", user: "INGRESA TU NOMBRE DE PILOTO:", play: "EMPEZAR AHORA", uiLvl: "Nivel", uiTgt: "Objetivos" },
             "en": { title: "CHICKEN STRIKE NPC", desc: "Welcome! Please note that this is an Official Beta Version in development for the MrTube platform, so it will have some bugs.<br>Designed by ABG Productions® and Sprunki Animations Studios.", user: "ENTER YOUR PILOT NAME:", play: "START NOW", uiLvl: "Level", uiTgt: "Targets" },
             "fr": { title: "CHICKEN STRIKE NPC", desc: "Bienvenue! Veuillez noter qu'il s'agit d'une version bêta officielle en développement pour la plateforme MrTube, elle présentera donc quelques bogues.<br>Conçu par ABG Productions® y Sprunki Animations Studios.", user: "ENTREZ VOTRE NOM DE PILOTE:", play: "COMMENCER MAINTENANT", uiLvl: "Niveau", uiTgt: "Cibles" },
-            "pt": { title: "CHICKEN STRIKE NPC", desc: "Bem-vindo! Observe que esta é uma versão Beta Oficial en desenvolvimento para a plataforma MrTube, por isso terá alguns erros.<br>Desenvolvido por ABG Productions® e Sprunki Animations Studios.", user: "INSIRA SEU NOME DE PILOTO:", play: "COMEÇAR AGORA", uiLvl: "Nível", uiTgt: "Objetivos" },
+            "pt": { title: "CHICKEN STRIKE NPC", desc: "Bem-vindo! Observe que esta é uma versão Beta Oficial em desenvolvimento para a plataforma MrTube, por isso terá alguns bugs.<br>Desenvolvido por ABG Productions® e Sprunki Animations Studios.", user: "INSIRA SEU NOME DE PILOTO:", play: "COMEÇAR AGORA", uiLvl: "Nível", uiTgt: "Objetivos" },
             "ru": { title: "CHICKEN STRIKE NPC", desc: "Добро пожаловать! Обратите внимание, что это официальная бета-версия, находящаяся в разработке для платформы MrTube, поэтому в ней будут некоторые ошибки.<br>Разработано ABG Productions® и Sprunki Animations Studios.", user: "ВВЕДИТЕ ИМЯ ПИЛОТА:", play: "НАЧАТЬ СЕЙЧАС", uiLvl: "Уровень", uiTgt: "Цели" },
-            "de": { title: "CHICKEN STRIKE NPC", desc: "Willkommen! Bitte beachten Sie, dass es sich hierbei um eine offizielle Beta-Version in der Entwicklung für die MrTube-Plattform handelt, die daher einige Fehler aufweisen wird.<br>Präsentiert von ABG Productions® und Sprunki Animations Studios.", user: "PILOTENNAME EINGEBEN:", play: "JETZT STARTEN", uiLvl: "Stufe", uiTgt: "Ziele" },
+            "de": { title: "CHICKEN STRIKE NPC", desc: "Willkommen! Bitte beachten Sie, dass es sich hierbei um eine offizielle Beta-Version in der Entwicklung für die MrTube-Plattform handelt, sodass einige Fehler auftreten können.<br>Präsentiert von ABG Productions® und Sprunki Animations Studios.", user: "PILOTENNAME EINGEBEN:", play: "JETZT STARTEN", uiLvl: "Stufe", uiTgt: "Ziele" },
             "es-la": { title: "CHICKEN STRIKE NPC", desc: "¡Bienvenido! Ten en cuenta que esta es una versión Beta Oficial en desarrollo para la plataforma MrTube, por lo que va a tener algunos errores.<br>Diseñado por ABG Productions® y Sprunki Animations Studios.", user: "INGRESA TU NOMBRE DE PILOTO:", play: "EMPEZAR AHORA", uiLvl: "Nivel", uiTgt: "Objetivos" },
             "es-es": { title: "CHICKEN STRIKE NPC", desc: "¡Bienvenido! Ten en cuenta que esta es una versión Beta Oficial en desarrollo para la plataforma MrTube, por lo que va a tener algunos errores.<br>Diseñado por ABG Productions® y Sprunki Animations Studios.", user: "INTRODUCE TU NOMBRE DE PILOTO:", play: "EMPEZAR AHORA", uiLvl: "Nivel", uiTgt: "Objetivos" },
             "tr": { title: "CHICKEN STRIKE NPC", desc: "Hoş geldiniz! Bunun MrTube platformu için geliştirilmekte olan Resmi Bir Beta Sürümü olduğunu, bu nedenle bazı hatalar olacağını lütfen unutmayın.<br>ABG Productions® ve Sprunki Animations Studios tarafından tasarlandı.", user: "PİLOT ADINIZI GİRİN:", play: "ŞİMDİ BAŞLA", uiLvl: "Seviye", uiTgt: "Hedefler" },
             "ar": { title: "CHICKEN STRIKE NPC", desc: "مرحباً! يرجى العلم أن هذه نسخة بيتا رسمية قيد التطوير لمنصة MrTube، لذا قد تحتوي على بعض الأخطاء.<br>تم التصميم بواسطة ABG Productions® وSprunki Animations Studios.", user: "أدخل اسم الطيار الخاص بك:", play: "ابدأ الآن", uiLvl: "المستوى", uiTgt: "الأهداف" },
-            "hi": { title: "CHICKEN STRIKE NPC", desc: "स्वागत है! कृपया ध्यान दें कि यह MrTube प्लेटफॉर्म के लिए विकास के चरण में एक आधिकारिक बीटा संस्करण है, इसलिए इसमें कुछ त्रुटियां होंगी।<br>ABG Productions® और Sprunki Animations Studios द्वारा डिज़ाइन किया गया।", user: "अपना पायलट नाम दर्ज करें:", play: "अब शुरू करें", uiLvl: "स्तर", uiTgt: "लक्ष्य" },
+            "hi": { title: "CHICKEN STRIKE NPC", desc: "स्वागत है! कृपया ध्यान दें कि यह MrTube प्लेटफॉर्म के लिए विकास के चरण में एक आधिकारिक बीटा संस्करण है, इसलिए इसमें कुछ त्रुटियां होंगी।<br>ABG Productions® और Sprunki Animations Studios द्वारा डिज़ाइन किया गया।", user: "अपना पायलट नाम दर्ज करें:", play: "अब शुरू करें", uiLvl: "स्तर", uiTgt: "लक्षय" },
             "ja": { title: "CHICKEN STRIKE NPC", desc: "ようこそ！これはMrTubeプラットフォーム向けに開発中の公式ベータ版であるため、いくつかのバグが発生することをご了承ください。<br>ABG Productions®およびSprunki Animations Studiosによる設計。", user: "パイロット名を入力してください:", play: "今すぐ開始", uiLvl: "レベル", uiTgt: "ターゲット" },
-            "ko": { title: "CHICKEN STRIKE NPC", desc: "환영합니다! 이 버전은 MrTube 플랫폼을 위해 개발 중인 공식 베타 버전이므로 일부 오류가 발생할 수 있습니다.<br>ABG Productions® 및 Sprunki Animations Studios 제작.", user: "조종사 이름을 입력하세요:", play: "지금 시작", uiLvl: "레벨", uiTgt: "목표" }
+            "ko": { title: "CHICKEN STRIKE NPC", desc: "환영합니다! 본 버전은 MrTube 플랫폼을 위해 개발 중인 공식 베타 버전이므로 일부 오류가 발생할 수 있습니다.<br>ABG Productions® 및 Sprunki Animations Studios 제작.", user: "조종사 이름을 입력하세요:", play: "지금 시작", uiLvl: "레벨", uiTgt: "목표" }
         };
 
         let score = 0;
@@ -554,7 +554,7 @@
         let stageX = 0;
         let gameStarted = false;
         let currentUsername = "";
-        let popupTriggered = false; 
+        let popupTriggered = false; // Control para que la ventana de suscripción salga solo una vez
         
         const scrollSpeed = 2.5; 
         const maxNPCs = 10;
@@ -571,10 +571,11 @@
         usernameInput.addEventListener('input', () => {
             let name = usernameInput.value.trim();
             
-            // FILTRO INVICTO: Nadie más puede llamarse Mr.Jostin
+            // FILTRO ABSOLUTO: Nadie más puede llamarse Mr.Jostin
             if (name.toLowerCase() === "mr.jostin" && name !== "Mr.Jostin") {
-                alert("❌ ¡Este nombre tiene derechos de autor del Creador!");
+                alert("❌ ¡Este nombre de usuario está bloqueado automáticamente! Solo el creador puede usarlo.");
                 usernameInput.value = "";
+                currentUsername = "";
                 return;
             }
 
@@ -641,7 +642,7 @@
             checkSubscriptionTrigger();
         }
 
-        // SISTEMA DE CONTROL VISUAL PARA LA CASILLA "ESTOY LISTO"
+        // SISTEMA DE CONTROL PARA LA CASILLA "ESTOY LISTO"
         readyCheckbox.addEventListener('change', () => {
             playSoundBoton();
             if (readyCheckbox.checked) {
@@ -654,6 +655,7 @@
         // BOTÓN SALIR DEL JUEGO
         exitButton.addEventListener('click', () => {
             playSoundBoton();
+            // Recarga la pestaña para simular la salida del juego de manera limpia
             window.location.reload();
         });
 
@@ -678,7 +680,7 @@
             }
         });
 
-        // --- SISTEMA DE CANJEO DE NUEVOS CÓDIGOS ---
+        // --- SISTEMA DE CANJEO DE NUEVOS CÓDIGOS ACTUALIZADOS ---
         codeSubmitBtn.addEventListener('click', () => {
             playSoundBoton();
             let inputCode = codeInput.value.trim();
@@ -687,6 +689,7 @@
                 return;
             }
 
+            // Listado oficial de recompensas configuradas por el programador
             let rewards = {
                 "328": 50,
                 "589": 200,
@@ -697,6 +700,7 @@
             if(rewards[inputCode] !== undefined) {
                 let rewardAmount = rewards[inputCode];
 
+                // REGLA SUPREMA: El creador Mr.Jostin los usa de forma ilimitada
                 if(currentUsername === "Mr.Jostin") {
                     score += rewardAmount;
                     scoreText.textContent = score;
@@ -704,6 +708,7 @@
                     alert(`👑 ¡Acceso Creador! Código válido. Se añadieron +${rewardAmount} monedas infinitamente.`);
                     codeInput.value = "";
                 } else {
+                    // Resto de usuarios bloqueados tras el primer uso
                     let codeUsed = localStorage.getItem(`cs_code_${inputCode}_` + currentUsername);
                     if(codeUsed === "true") {
                         alert("❌ Este código ya fue utilizado por este usuario.");
@@ -721,13 +726,16 @@
             }
         });
 
+        // DISPARADOR AUTOMÁTICO DE PESTAÑA DE SUSCRIPCIÓN
         function checkSubscriptionTrigger() {
             if (score >= 300 && !popupTriggered) {
                 popupTriggered = true;
+                // Detiene momentáneamente las acciones abriendo el popup
                 subscribePopup.style.transform = "translate(-50%, -50%) scale(1)";
             }
         }
 
+        // Acciones del Panel de Suscripción
         subYesBtn.addEventListener('click', () => {
             playSoundBoton();
             if (score >= 300) {
@@ -748,19 +756,21 @@
             subscribePopup.style.transform = "translate(-50%, -50%) scale(0)";
         });
 
-        // LÓGICA DE JUEGO OBLIGATORIA CON CHECKBOX
         startButton.addEventListener('click', () => {
             playSoundBoton();
             
-            // Si la casilla no está marcada, detiene el avance inmediatamente
+            // Obligatorio marcar la casilla para poder jugar
             if (!readyCheckbox.checked) {
-                alert("❌ No puedes jugar si no marcas la casilla 'Estoy listo'.");
+                alert("❌ Debes activar la casilla 'Estoy listo' antes de empezar.");
                 return;
             }
 
             let finalName = usernameInput.value.trim();
+
+            // Doble validación de seguridad para el nombre del creador
             if (finalName.toLowerCase() === "mr.jostin" && finalName !== "Mr.Jostin") {
                 alert("❌ Bloqueo de seguridad: No puedes usar el nombre del Creador.");
+                usernameInput.value = "";
                 return;
             }
 
