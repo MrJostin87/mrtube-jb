@@ -44,7 +44,7 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            background-image: url('Fondo.PNG'); /* Integración de tu fondo real */
+            background-image: url('Fondo.PNG'); 
             background-size: cover;
             background-position: center;
             display: flex;
@@ -55,10 +55,9 @@
             color: #fff;
             text-align: center;
             padding: 20px;
-            overflow-y: auto; /* Permite scroll para ir hasta abajo */
-            touch-action: pan-y; /* Permite deslizar en móviles */
+            overflow-y: auto; 
+            touch-action: pan-y; 
         }
-        /* Capa oscura superpuesta suave para que las letras sigan viéndose perfectas sobre el fondo azul */
         #welcome-screen::before {
             content: "";
             position: absolute;
@@ -160,7 +159,7 @@
         #start-button {
             background: #00ff00;
             box-shadow: 0 5px 15px rgba(0,255,0,0.4);
-            opacity: 0.5; /* Opaco por defecto hasta activar casilla */
+            opacity: 0.5; 
             pointer-events: none;
         }
         #exit-button {
@@ -168,7 +167,118 @@
             box-shadow: 0 5px 15px rgba(255,51,51,0.4);
         }
 
-        /* CONFIGURACIÓN (ENGRANAJE EN LA PARTE SUPERIOR) */
+        /* NUEVO MENÚ INTERMEDIO DE JUEGO (REPRESENTANDO IMAGE_16.PNG) */
+        #play-menu-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-image: linear-gradient(to bottom, #00bfff, #b0e0e6);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 110;
+            text-align: center;
+            padding: 20px;
+        }
+        #play-menu-screen h1 {
+            color: #ffcc00;
+            font-size: 42px;
+            margin-bottom: 60px;
+            text-shadow: 4px 4px #000;
+            letter-spacing: 1px;
+        }
+        .large-game-btn {
+            width: 85%;
+            max-width: 340px;
+            padding: 20px;
+            font-size: 32px;
+            font-family: 'Arial Black', sans-serif;
+            border-radius: 20px;
+            border: 4px solid #fff;
+            cursor: pointer;
+            margin-bottom: 20px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.4);
+            transition: transform 0.1s ease;
+            pointer-events: auto;
+        }
+        .large-game-btn:active {
+            transform: scale(0.95);
+        }
+        #jugar-main-btn {
+            background: #00ff00;
+            color: #000;
+        }
+        #salir-main-btn {
+            background: #ff3333;
+            color: #fff;
+            font-size: 22px;
+            padding: 12px;
+        }
+
+        /* PANEL DE SELECCIÓN DE NIVEL */
+        #level-selection-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 120;
+            padding: 20px;
+        }
+        #level-selection-screen h2 {
+            color: #ffcc00;
+            font-size: 28px;
+            margin-bottom: 25px;
+            text-shadow: 2px 2px #000;
+        }
+        .levels-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 140px);
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 25px;
+        }
+        .level-select-btn {
+            background: #333;
+            color: #fff;
+            border: 3px solid #ffcc00;
+            padding: 15px;
+            font-size: 18px;
+            font-family: 'Arial Black', sans-serif;
+            border-radius: 12px;
+            cursor: pointer;
+            pointer-events: auto;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            transition: all 0.2s ease;
+        }
+        .level-select-btn.locked {
+            background: #1a1a1a;
+            border-color: #555;
+            color: #777;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        #back-to-menu-btn {
+            background: #888;
+            color: #000;
+            border: 3px solid #fff;
+            padding: 10px 25px;
+            font-size: 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            pointer-events: auto;
+        }
+
+        /* CONFIGURACIÓN */
         #settings-toggle-btn {
             background: #444;
             color: #fff;
@@ -350,7 +460,7 @@
             left: 50%;
             transform: translate(-50%, -50%) scale(0);
             color: #fff;
-            font-size: 35px;
+            font-size: 32px;
             text-align: center;
             text-shadow: 4px 4px #000;
             background: rgba(0, 0, 0, 0.85);
@@ -420,6 +530,7 @@
         </div>
     </div>
 
+    <!-- PANTALLA 1: LOGEO Y REGISTRO -->
     <div id="welcome-screen">
         <button id="settings-toggle-btn">⚙️ CONFIGURACIÓN</button>
 
@@ -467,6 +578,28 @@
         <button id="exit-button" class="menu-btn">SALIR DEL JUEGO</button>
     </div>
 
+    <!-- PANTALLA 2: MENÚ INTERMEDIO DE JUEGO (ESTILO IMAGE_16.PNG) -->
+    <div id="play-menu-screen">
+        <h1>CHICKEN STRIKE<br>NPC</h1>
+        <button id="jugar-main-btn" class="large-game-btn">Jugar</button>
+        <button id="salir-main-btn" class="large-game-btn">Salir del Juego</button>
+    </div>
+
+    <!-- PANTALLA 3: SELECCIÓN DE NIVELES -->
+    <div id="level-selection-screen">
+        <h2>SELECCIONA UN NIVEL</h2>
+        <div class="levels-grid">
+            <button class="level-select-btn" data-lvl="1">Nivel 1</button>
+            <button class="level-select-btn locked" data-lvl="2" disabled>Nivel 2</button>
+            <button class="level-select-btn locked" data-lvl="3" disabled>Nivel 3</button>
+            <button class="level-select-btn locked" data-lvl="4" disabled>Nivel 4</button>
+            <button class="level-select-btn locked" data-lvl="5" disabled>Nivel 5</button>
+            <button class="level-select-btn locked" data-lvl="6" disabled>Nivel 6</button>
+        </div>
+        <button id="back-to-menu-btn">VOLVER AL MENÚ</button>
+    </div>
+
+    <!-- JUEGO PRINCIPAL -->
     <div id="game-container">
         <div id="stage"></div>
 
@@ -479,7 +612,7 @@
                 <span id="label-ui-level">Nivel</span>: <span id="level-text">1</span>
             </div>
             <div class="ui-box" id="ui-kills">
-                <span id="label-ui-targets">Objetivos</span>: <span id="kills-text">0/10</span>
+                <span id="label-ui-targets">Objetivos</span>: <span id="kills-text">0/5</span>
             </div>
         </div>
 
@@ -498,11 +631,20 @@
         const killsText = document.getElementById('kills-text');
         const announcement = document.getElementById('announcement');
         const weaponContainer = document.getElementById('weapon-container');
+        
         const welcomeScreen = document.getElementById('welcome-screen');
+        const playMenuScreen = document.getElementById('play-menu-screen');
+        const levelSelectionScreen = document.getElementById('level-selection-screen');
         
         const startButton = document.getElementById('start-button');
         const exitButton = document.getElementById('exit-button');
         const readyCheckbox = document.getElementById('ready-checkbox');
+        
+        const jugarMainBtn = document.getElementById('jugar-main-btn');
+        const salirMainBtn = document.getElementById('salir-main-btn');
+        const backToMenuBtn = document.getElementById('back-to-menu-btn');
+        const levelButtons = document.querySelectorAll('.level-select-btn');
+
         const subscribePopup = document.getElementById('subscribe-popup');
         const subYesBtn = document.getElementById('sub-yes-btn');
         const subNoBtn = document.getElementById('sub-no-btn');
@@ -517,6 +659,30 @@
         const audioMusic = document.getElementById('audio-music');
         const audioPistola = document.getElementById('audio-pistola');
         const audioBoton = document.getElementById('audio-boton');
+
+        // Configuración oficial de niveles según tus instrucciones directas
+        const levelsConfig = {
+            1: { targets: 5, speed: 1.8, coinsPerKill: 1, reward: 25 },
+            2: { targets: 10, speed: 2.6, coinsPerKill: 7, reward: 50 },
+            3: { targets: 15, speed: 3.2, coinsPerKill: 10, reward: 100 },
+            4: { targets: 20, speed: 3.8, coinsPerKill: 20, reward: 200 },
+            5: { targets: 25, speed: 4.4, coinsPerKill: 30, reward: 300 },
+            6: { targets: 40, speed: 5.2, coinsPerKill: 40, reward: 500 }
+        };
+
+        let score = 0;
+        let kills = 0;
+        let currentLevel = 1;
+        let maxUnlockedLevel = 1;
+        let stageX = 0;
+        let gameStarted = false;
+        let currentUsername = "";
+        let popupTriggered = false; 
+        let activeNPCIntervals = [];
+        
+        let scrollSpeed = 1.8; 
+        const maxNPCs = 10;
+        const distanceBetweenNPCs = 350; 
 
         function playSoundBoton() {
             audioBoton.currentTime = 0;
@@ -538,36 +704,21 @@
             "es-la": { title: "CHICKEN STRIKE NPC", desc: "¡Bienvenido! Esta es una versión beta oficial del juego, por lo que podría contener algunos errores y bugs en el mapa durante el desarrollo en la plataforma MrTube.<br>Diseñado por ABG Productions® y Sprunki Animations Studios.", user: "INGRESA TU NOMBRE DE PILOTO:", play: "EMPEZAR A PROBAR", uiLvl: "Nivel", uiTgt: "Objetivos" },
             "es-es": { title: "CHICKEN STRIKE NPC", desc: "¡Bienvenido! Esta es una versión beta oficial del juego, por lo que podría contener algunos errores y bugs en el mapa durante el desarrollo en la plataforma MrTube.<br>Diseñado por ABG Productions® y Sprunki Animations Studios.", user: "INTRODUCE TU NOMBRE DE PILOTO:", play: "EMPEZAR A PROBAR", uiLvl: "Nivel", uiTgt: "Objetivos" },
             "tr": { title: "CHICKEN STRIKE NPC", desc: "Hoş geldiniz! Bu oyunun resmi bir beta sürümüdür, bu nedenle MrTube platformundaki geliştirme sırasında bazı hatalar ve harita hataları içerebilir.<br>ABG Productions® ve Sprunki Animations Studios tarafından tasarlandı.", user: "PİLOT ADINIZI GİRİN:", play: "TESTE BAŞLA", uiLvl: "Seviye", uiTgt: "Hedefler" },
-            "ar": { title: "CHICKEN STRIKE NPC", desc: "مرحبًا! هذه نسخة بيتا رسمية من اللعبة، لذا قد تحتوي على بعض الأخطاء وعيوب الخريطة أثناء التطوير على منصة MrTube.<br>تم التصميم بواسطة ABG Productions® وSprunki Animations Studios.", user: "أدخل اسم الطيار الخاص بك:", play: "بدء الاختبار", uiLvl: "المستوى", uiTgt: "الأهداف" },
+            "ar": { title: "CHICKEN STRIKE NPC", desc: "مرحبًا! هذه نسخة بيتا رسمية من اللعبة، لذا قد تحتوي على some الأخطاء وعيوب الخريطة أثناء التطوير على منصة MrTube.<br>تم التصميم بواسطة ABG Productions® وSprunki Animations Studios.", user: "أدخل اسم الطيار الخاص بك:", play: "بدء الاختبار", uiLvl: "المستوى", uiTgt: "الأهداف" },
             "hi": { title: "CHICKEN STRIKE NPC", desc: "स्वागत है! यह गेम का एक आधिकारिक बीटा संस्करण है, इसलिए MrTube प्लेटफॉर्म पर विकास के दौरान इसमें कुछ त्रुटियां और मानचित्र बग हो सकते हैं।<br>ABG Productions® और Sprunki Animations Studios द्वारा डिज़ाइन किया गया।", user: "अपना पायलट नाम दर्ज करें:", play: "परीक्षण शुरू करें", uiLvl: "स्तर", uiTgt: "लक्ष्य" },
             "ja": { title: "CHICKEN STRIKE NPC", desc: "歓迎！ これはゲームの公式ベータ版であるため、MrTubeプラットフォームでの開発中にいくつかのエラーやマップのバグが含まれる可能性があります。<br>ABG Productions®およびSprunki Animations Studiosによる設計。", user: "パイロット名を入力してください:", play: "テストを開始", uiLvl: "レベル", uiTgt: "ターゲット" },
             "ko": { title: "CHICKEN STRIKE NPC", desc: "환영합니다! 이것은 게임의 공식 베타 버전이므로 MrTube 플랫폼에서 개발하는 동안 일부 오류 및 맵 버그가 포함될 수 있습니다.<br>ABG Productions® 및 Sprunki Animations Studios 제작.", user: "조종사 이름을 입력하세요:", play: "테스트 시작", uiLvl: "레벨", uiTgt: "목표" }
         };
 
-        let score = 0;
-        let kills = 0;
-        let currentLevel = 1;
-        let stageX = 0;
-        let gameStarted = false;
-        let currentUsername = "";
-        let popupTriggered = false; // Control para que la ventana de suscripción salga solo una vez
-        
-        const scrollSpeed = 2.5; 
-        const maxNPCs = 10;
-        const distanceBetweenNPCs = 350; 
-
-        // Cargar datos previos
         if(localStorage.getItem('cs_saved_username')) {
             currentUsername = localStorage.getItem('cs_saved_username');
             usernameInput.value = currentUsername;
             loadPlayerProgress(currentUsername);
         }
 
-        // CONTROL EXCLUSIVO DE NOMBRE DE USUARIO
         usernameInput.addEventListener('input', () => {
             let name = usernameInput.value.trim();
             
-            // FILTRO INVICTO: Nadie más puede llamarse Mr.Jostin (insensible a mayúsculas para evitar trampas)
             if (name.toLowerCase() === "mr.jostin" && name !== "Mr.Jostin") {
                 alert("❌ ¡Este nombre tiene derechos de autor del Creador!");
                 usernameInput.value = "";
@@ -576,7 +727,6 @@
             }
 
             if(name !== "") {
-                // Sistema de cobro por cambio de nombre
                 let oldName = localStorage.getItem('cs_saved_username') || "";
                 if (oldName !== "" && oldName !== name && name !== "Mr.Jostin") {
                     let changeCount = parseInt(localStorage.getItem('cs_name_changes_' + oldName) || "0");
@@ -608,7 +758,7 @@
             if(name.toLowerCase() === "mr.jostin" && name !== "Mr.Jostin") return;
 
             let savedScore = localStorage.getItem('cs_score_' + name);
-            let savedLevel = localStorage.getItem('cs_level_' + name);
+            let savedMaxLevel = localStorage.getItem('cs_max_level_' + name);
             
             if(savedScore !== null) {
                 score = parseInt(savedScore);
@@ -618,29 +768,36 @@
                 scoreText.textContent = score;
             }
 
-            if(savedLevel !== null) {
-                currentLevel = parseInt(savedLevel);
-                levelText.textContent = currentLevel;
-                if(currentLevel > 1) {
-                    killsText.textContent = `${kills}`;
-                }
+            if(savedMaxLevel !== null) {
+                maxUnlockedLevel = parseInt(savedMaxLevel);
             } else {
-                currentLevel = 1;
-                levelText.textContent = currentLevel;
-                killsText.textContent = `0/10`;
+                maxUnlockedLevel = 1;
             }
+            updateLevelButtonsUI();
             checkSubscriptionTrigger();
         }
 
         function savePlayerProgress() {
             if(currentUsername !== "") {
                 localStorage.setItem('cs_score_' + currentUsername, score);
-                localStorage.setItem('cs_level_' + currentUsername, currentLevel);
+                localStorage.setItem('cs_max_level_' + currentUsername, maxUnlockedLevel);
             }
             checkSubscriptionTrigger();
         }
 
-        // SISTEMA DE CONTROL PARA LA CASILLA "ESTOY LISTO"
+        function updateLevelButtonsUI() {
+            levelButtons.forEach(btn => {
+                let lvl = parseInt(btn.dataset.lvl);
+                if(lvl <= maxUnlockedLevel) {
+                    btn.classList.remove('locked');
+                    btn.removeAttribute('disabled');
+                } else {
+                    btn.classList.add('locked');
+                    btn.setAttribute('disabled', 'true');
+                }
+            });
+        }
+
         readyCheckbox.addEventListener('change', () => {
             playSoundBoton();
             if (readyCheckbox.checked) {
@@ -652,7 +809,6 @@
             }
         });
 
-        // BOTÓN SALIR DEL JUEGO
         exitButton.addEventListener('click', () => {
             playSoundBoton();
             window.location.reload();
@@ -679,7 +835,6 @@
             }
         });
 
-        // --- SISTEMA DE CANJEO DE NUEVOS CÓDIGOS ACTUALIZADOS ---
         codeSubmitBtn.addEventListener('click', () => {
             playSoundBoton();
             let inputCode = codeInput.value.trim();
@@ -698,7 +853,6 @@
             if(rewards[inputCode] !== undefined) {
                 let rewardAmount = rewards[inputCode];
 
-                // REGLA SUPREMA: El creador Mr.Jostin los usa de forma ilimitada
                 if(currentUsername === "Mr.Jostin") {
                     score += rewardAmount;
                     scoreText.textContent = score;
@@ -750,6 +904,7 @@
             subscribePopup.style.transform = "translate(-50%, -50%) scale(0)";
         });
 
+        // Al presionar el botón de inicio, se abre la Pantalla Estilo image_16.png
         startButton.addEventListener('click', () => {
             playSoundBoton();
             
@@ -764,7 +919,7 @@
                 return;
             }
 
-            audioMusic.play().catch(e => console.log("La interacción activó la música con éxito."));
+            audioMusic.play().catch(e => console.log("Música iniciada."));
 
             if(finalName === "") {
                 currentUsername = "Player";
@@ -775,11 +930,62 @@
             savePlayerProgress();
 
             welcomeScreen.style.display = 'none';
+            playMenuScreen.style.display = 'flex'; 
+        });
+
+        jugarMainBtn.addEventListener('click', () => {
+            playSoundBoton();
+            playMenuScreen.style.display = 'none';
+            levelSelectionScreen.style.display = 'flex';
+            updateLevelButtonsUI();
+        });
+
+        salirMainBtn.addEventListener('click', () => {
+            playSoundBoton();
+            window.location.reload();
+        });
+
+        backToMenuBtn.addEventListener('click', () => {
+            playSoundBoton();
+            levelSelectionScreen.style.display = 'none';
+            playMenuScreen.style.display = 'flex';
+        });
+
+        // Configurar botones de niveles individuales
+        levelButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                playSoundBoton();
+                let selectedLvl = parseInt(btn.dataset.lvl);
+                startLevel(selectedLvl);
+            });
+        });
+
+        function startLevel(lvl) {
+            levelSelectionScreen.style.display = 'none';
+            currentLevel = lvl;
+            kills = 0;
+            
+            // Cargar datos de velocidad y objetivos de la tabla
+            scrollSpeed = levelsConfig[lvl].speed;
+            
+            levelText.textContent = currentLevel;
+            killsText.textContent = `0/${levelsConfig[lvl].targets}`;
+            
+            // Limpiar NPCs anteriores por si acaso
+            clearAllNPCs();
+            
             gameStarted = true;
             for(let i = 0; i < maxNPCs; i++) {
                 spawnNPC(i);
             }
-        });
+        }
+
+        function clearAllNPCs() {
+            activeNPCIntervals.forEach(intervalId => clearInterval(intervalId));
+            activeNPCIntervals = [];
+            const targets = document.querySelectorAll('.target');
+            targets.forEach(t => t.remove());
+        }
 
         function updateCamera() {
             if (!gameStarted) {
@@ -834,6 +1040,8 @@
         weaponContainer.addEventListener('touchstart', (e) => { e.stopPropagation(); e.preventDefault(); fireWeapon(); });
 
         function spawnNPC(index) {
+            if (!gameStarted) return;
+            
             const npc = document.createElement('img');
             npc.src = 'NPC.PNG';
             npc.className = 'target';
@@ -847,58 +1055,90 @@
 
             stage.appendChild(npc);
 
-            npc.checkBounds = setInterval(() => {
+            let checkInterval = setInterval(() => {
                 const rect = npc.getBoundingClientRect();
                 if (rect.right < 0) {
-                    clearInterval(npc.checkBounds);
+                    clearInterval(checkInterval);
                     npc.remove();
                     spawnNPC(maxNPCs - 1); 
                 }
             }, 1000);
+            
+            activeNPCIntervals.push(checkInterval);
+            npc.dataset.intervalIndex = activeNPCIntervals.length - 1;
         }
 
         function eliminateNPC(npc) {
             npc.dataset.dead = "true";
-            clearInterval(npc.checkBounds);
+            
+            let idx = npc.dataset.intervalIndex;
+            if(idx !== undefined && activeNPCIntervals[idx]) {
+                clearInterval(activeNPCIntervals[idx]);
+            }
 
             npc.src = 'Disparado.PNG';
             
-            score += 5;
+            // Dar monedas según la configuración del nivel actual
+            let config = levelsConfig[currentLevel];
+            score += config.coinsPerKill;
             scoreText.textContent = score;
+            
+            kills++;
+            killsText.textContent = `${kills}/${config.targets}`;
+            
             savePlayerProgress();
 
-            if (currentLevel === 1) {
-                kills++;
-                killsText.textContent = `${kills}/10`;
-                
-                if (kills === 10) {
+            if (kills >= config.targets) {
+                gameStarted = false;
+                setTimeout(() => {
                     triggerLevelReward();
-                }
-            } else {
-                kills++;
-                killsText.textContent = `${kills}`;
+                }, 150);
             }
 
             setTimeout(() => {
                 npc.remove();
-                spawnNPC(maxNPCs - 1); 
+                if (gameStarted) {
+                    spawnNPC(maxNPCs - 1);
+                }
             }, 300);
         }
 
         function triggerLevelReward() {
-            currentLevel = 2;
-            score += 50; 
-            
+            clearAllNPCs();
+            let currentConfig = levelsConfig[currentLevel];
+            score += currentConfig.reward;
             scoreText.textContent = score;
-            levelText.textContent = currentLevel;
-            killsText.textContent = `${kills}`; 
+            
+            let message = `¡NIVEL ${currentLevel} COMPLETADO!<br><span style='color: #ffcc00;'>🎁 RECOMPENSA: +${currentConfig.reward} MONEDAS</span>`;
+            
+            // Si pasamos el nivel que teníamos como máximo, desbloqueamos el siguiente
+            if (currentLevel === maxUnlockedLevel && maxUnlockedLevel < 6) {
+                maxUnlockedLevel++;
+            }
+            
             savePlayerProgress();
             
-            announcement.innerHTML = "¡NIVEL 1 COMPLETADO!<br><span style='color: #ffcc00;'>🎁 RECOMPENSA: +50 MONEDAS</span>";
+            announcement.innerHTML = message;
             announcement.style.transform = "translate(-50%, -50%) scale(1)";
             
             setTimeout(() => {
                 announcement.style.transform = "translate(-50%, -50%) scale(0)";
+                
+                // Si completó el nivel 6 (el último actual)
+                if (currentLevel === 6) {
+                    setTimeout(() => {
+                        announcement.innerHTML = "<span style='color: #00ff00; font-size: 24px;'>Próximamente vamos a añadir más niveles.</span>";
+                        announcement.style.transform = "translate(-50%, -50%) scale(1)";
+                        setTimeout(() => {
+                            announcement.style.transform = "translate(-50%, -50%) scale(0)";
+                            // Volver a selección de niveles
+                            levelSelectionScreen.style.display = 'flex';
+                        }, 4000);
+                    }, 500);
+                } else {
+                    // Volver a la pantalla de selección para jugar el nivel desbloqueado
+                    levelSelectionScreen.style.display = 'flex';
+                }
             }, 3000);
         }
 
