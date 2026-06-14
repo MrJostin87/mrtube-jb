@@ -37,26 +37,29 @@
             background-position: center;
             will-change: transform;
         }
-        /* PANTALLA DE BIENVENIDA */
+        /* PANTALLA DE BIENVENIDA Y MENÚ PRINCIPAL */
         #welcome-screen {
             position: absolute;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
-            background: rgba(0, 0, 0, 0.92);
+            background: rgba(0, 0, 0, 0.94);
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: flex-start;
             align-items: center;
             z-index: 100;
             color: #fff;
             text-align: center;
             padding: 20px;
+            overflow-y: auto; /* Permite scroll para ir hasta abajo */
+            touch-action: pan-y; /* Permite deslizar en móviles */
         }
         #welcome-screen h1 {
             color: #ffcc00;
             font-size: 34px;
+            margin-top: 20px;
             margin-bottom: 5px;
             text-shadow: 3px 3px #000;
             letter-spacing: 1px;
@@ -100,36 +103,74 @@
             border-color: #00ff00;
         }
 
-        #start-button {
-            background: #00ff00;
+        /* SECCIÓN DE VERIFICACIÓN (ESTOY LISTO) */
+        #ready-container {
+            background: rgba(255, 204, 0, 0.1);
+            border: 2px solid #ffcc00;
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            pointer-events: auto;
+        }
+        #ready-checkbox {
+            width: 22px;
+            height: 22px;
+            cursor: pointer;
+        }
+        #ready-label {
+            font-size: 16px;
+            color: #fff;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* BOTONES DEL MENÚ PRINCIPAL */
+        .menu-btn {
             color: #000;
             border: 4px solid #fff;
             padding: 12px 35px;
-            font-size: 22px;
+            font-size: 20px;
             font-family: 'Arial Black', sans-serif;
             border-radius: 15px;
             cursor: pointer;
-            box-shadow: 0 5px 15px rgba(0,255,0,0.4);
             transition: transform 0.1s ease;
             pointer-events: auto;
-            margin-bottom: 20px;
+            margin-bottom: 12px;
+            width: 260px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(255,255,255,0.2);
         }
-        #start-button:active {
+        .menu-btn:active {
             transform: scale(0.95);
         }
+        #start-button {
+            background: #00ff00;
+            box-shadow: 0 5px 15px rgba(0,255,0,0.4);
+            opacity: 0.5; /* Opaco por defecto hasta activar casilla */
+            pointer-events: none;
+        }
+        #exit-button {
+            background: #ff3333;
+            box-shadow: 0 5px 15px rgba(255,51,51,0.4);
+        }
 
-        /* BOTÓN DE CONFIGURACIÓN */
+        /* CONFIGURACIÓN (ENGRANAJE EN LA PARTE SUPERIOR) */
         #settings-toggle-btn {
             background: #444;
             color: #fff;
             border: 2px solid #bbb;
             padding: 8px 16px;
-            font-size: 14px;
+            font-size: 16px;
             border-radius: 8px;
             cursor: pointer;
             pointer-events: auto;
             font-family: sans-serif;
             font-weight: bold;
+            margin-top: 10px;
+            margin-bottom: 15px;
         }
 
         /* PANEL DE CONFIGURACIONES */
@@ -138,7 +179,7 @@
             border: 3px solid #ffcc00;
             border-radius: 15px;
             padding: 15px;
-            margin-top: 15px;
+            margin-bottom: 25px;
             width: 290px;
             display: none;
             flex-direction: column;
@@ -232,6 +273,64 @@
             margin-right: 8px;
             animation: spin 4s linear infinite;
         }
+
+        /* VENTANA FLOTANTE DE SUSCRIPCIÓN */
+        #subscribe-popup {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            width: 310px;
+            background: rgba(15, 15, 15, 0.98);
+            border: 4px solid #ff0000;
+            border-radius: 20px;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+            z-index: 150;
+            box-shadow: 0 0 25px rgba(255,0,0,0.7);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            pointer-events: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+        #subscribe-popup h2 {
+            color: #ff0000;
+            margin: 0;
+            font-size: 22px;
+            text-shadow: 2px 2px #000;
+        }
+        #subscribe-popup p {
+            font-size: 14px;
+            margin: 0;
+            line-height: 1.4;
+            font-family: sans-serif;
+        }
+        .popup-btn-container {
+            display: flex;
+            gap: 15px;
+            width: 100%;
+            justify-content: center;
+        }
+        .popup-btn {
+            padding: 10px 25px;
+            font-size: 16px;
+            font-family: 'Arial Black', sans-serif;
+            border-radius: 10px;
+            border: 2px solid #fff;
+            cursor: pointer;
+        }
+        #sub-yes-btn {
+            background: #00ff00;
+            color: #000;
+        }
+        #sub-no-btn {
+            background: #ff3333;
+            color: #fff;
+        }
+
         /* CARTEL DE RECOMPENSA */
         #announcement {
             position: absolute;
@@ -296,22 +395,23 @@
 </head>
 <body>
 
-    <!-- CONTROLADORES DE AUDIO NATIVOS (Archivos de la carpeta raíz) -->
+    <!-- CONTROLADORES DE AUDIO NATIVOS -->
     <audio id="audio-music" src="Music.mp3" loop></audio>
     <audio id="audio-pistola" src="Pistola.mp3"></audio>
     <audio id="audio-boton" src="Boton.mp3"></audio>
 
-    <div id="welcome-screen">
-        <h1 id="welcome-title">CHICKEN STRIKE NPC</h1>
-        <p id="welcome-desc">Versión Beta Oficial en desarrollo para la plataforma MrTube.<br>Diseñado por ABG Productions® y Sprunki Animations Studios.</p>
-        
-        <div id="user-setup">
-            <label id="label-username" for="username-input">INGRESA TU NOMBRE DE PILOTO:</label>
-            <input type="text" id="username-input" placeholder="Ej: Pepe" maxlength="15">
+    <!-- VENTANA POPUP DE SUSCRIPCIÓN -->
+    <div id="subscribe-popup">
+        <h2>📢 ¡SÚPER PROMO!</h2>
+        <p>¡Suscríbete al canal oficial de <b>Mr.Jostin</b>!<br>Cuesta exactamente <b>300 monedas</b> del juego.</p>
+        <div class="popup-btn-container">
+            <button id="sub-yes-btn" class="popup-btn">SÍ</button>
+            <button id="sub-no-btn" class="popup-btn">NO</button>
         </div>
+    </div>
 
-        <button id="start-button">JUGAR BETA</button>
-        
+    <!-- PANTALLA DE BIENVENIDA / MENÚ PRINCIPAL -->
+    <div id="welcome-screen">
         <button id="settings-toggle-btn">⚙️ CONFIGURACIÓN</button>
 
         <div id="settings-panel">
@@ -340,6 +440,24 @@
                 <button id="code-submit-btn">ACEPTAR</button>
             </div>
         </div>
+
+        <h1 id="welcome-title">CHICKEN STRIKE NPC</h1>
+        <p id="welcome-desc">Versión Beta Oficial en desarrollo para la plataforma MrTube.<br>Diseñado por ABG Productions® y Sprunki Animations Studios.</p>
+        
+        <div id="user-setup">
+            <label id="label-username" for="username-input">INGRESA TU NOMBRE DE PILOTO:</label>
+            <input type="text" id="username-input" placeholder="Ej: Pepe" maxlength="15">
+        </div>
+
+        <!-- Casilla Obligatoria de Verificación -->
+        <div id="ready-container">
+            <input type="checkbox" id="ready-checkbox">
+            <label for="ready-checkbox" id="ready-label">Estoy listo</label>
+        </div>
+
+        <!-- Botones del Menú Principal -->
+        <button id="start-button" class="menu-btn">EMPEZAR A PROBAR</button>
+        <button id="exit-button" class="menu-btn">SALIR DEL JUEGO</button>
     </div>
 
     <div id="game-container">
@@ -374,7 +492,13 @@
         const announcement = document.getElementById('announcement');
         const weaponContainer = document.getElementById('weapon-container');
         const welcomeScreen = document.getElementById('welcome-screen');
+        
         const startButton = document.getElementById('start-button');
+        const exitButton = document.getElementById('exit-button');
+        const readyCheckbox = document.getElementById('ready-checkbox');
+        const subscribePopup = document.getElementById('subscribe-popup');
+        const subYesBtn = document.getElementById('sub-yes-btn');
+        const subNoBtn = document.getElementById('sub-no-btn');
         
         const usernameInput = document.getElementById('username-input');
         const settingsToggleBtn = document.getElementById('settings-toggle-btn');
@@ -383,36 +507,34 @@
         const codeInput = document.getElementById('code-input');
         const codeSubmitBtn = document.getElementById('code-submit-btn');
 
-        // Referencias a los elementos de sonido instanciados
         const audioMusic = document.getElementById('audio-music');
         const audioPistola = document.getElementById('audio-pistola');
         const audioBoton = document.getElementById('audio-boton');
 
-        // Funciones auxiliares para reproducir los efectos de sonido de forma limpia
         function playSoundBoton() {
             audioBoton.currentTime = 0;
-            audioBoton.play().catch(e => console.log("Audio block prevented immediate play"));
+            audioBoton.play().catch(e => console.log("Audio block prevented play"));
         }
 
         function playSoundPistola() {
             audioPistola.currentTime = 0;
-            audioPistola.play().catch(e => console.log("Audio block prevented immediate play"));
+            audioPistola.play().catch(e => console.log("Audio block prevented play"));
         }
 
         const translations = {
-            "es": { title: "CHICKEN STRIKE NPC", desc: "Versión Beta Oficial en desarrollo para la plataforma MrTube.<br>Diseñado por ABG Productions® y Sprunki Animations Studios.", user: "INGRESA TU NOMBRE DE PILOTO:", play: "JUGAR BETA", uiLvl: "Nivel", uiTgt: "Objetivos" },
-            "en": { title: "CHICKEN STRIKE NPC", desc: "Official Beta Version in development for the MrTube platform.<br>Designed by ABG Productions® and Sprunki Animations Studios.", user: "ENTER YOUR PILOT NAME:", play: "PLAY BETA", uiLvl: "Level", uiTgt: "Targets" },
-            "fr": { title: "CHICKEN STRIKE NPC", desc: "Version Bêta Officielle en développement pour la plateforme MrTube.<br>Conçu par ABG Productions® y Sprunki Animations Studios.", user: "ENTREZ VOTRE NOM DE PILOTE:", play: "JOUER BÊTA", uiLvl: "Niveau", uiTgt: "Cibles" },
-            "pt": { title: "CHICKEN STRIKE NPC", desc: "Versão Beta Oficial em desenvolvimento para a plataforma MrTube.<br>Desenvolvido por ABG Productions® e Sprunki Animations Studios.", user: "INSIRA SEU NOME DE PILOTO:", play: "JOGAR BETA", uiLvl: "Nível", uiTgt: "Objetivos" },
-            "ru": { title: "CHICKEN STRIKE NPC", desc: "Официальная бета-версия в разработке для платформы MrTube.<br>Разработано ABG Productions® и Sprunki Animations Studios.", user: "ВВЕДИТЕ ИМЯ ПИЛОТА:", play: "ИГРАТЬ В БЕТУ", uiLvl: "Уровень", uiTgt: "Цели" },
-            "de": { title: "CHICKEN STRIKE NPC", desc: "Offizielle Beta-Version in Entwicklung für die MrTube-Plattform.<br>Präsentiert von ABG Productions® und Sprunki Animations Studios.", user: "PILOTENNAME EINGEBEN:", play: "BETA SPIELEN", uiLvl: "Stufe", uiTgt: "Ziele" },
-            "es-la": { title: "CHICKEN STRIKE NPC", desc: "Versión Beta Oficial en desarrollo para la plataforma MrTube.<br>Diseñado por ABG Productions® y Sprunki Animations Studios.", user: "INGRESA TU NOMBRE DE PILOTO:", play: "JUGAR BETA", uiLvl: "Nivel", uiTgt: "Objetivos" },
-            "es-es": { title: "CHICKEN STRIKE NPC", desc: "Versión Beta Oficial en desarrollo para la plataforma MrTube.<br>Diseñado por ABG Productions® y Sprunki Animations Studios.", user: "INTRODUCE TU NOMBRE DE PILOTO:", play: "JUGAR BETA", uiLvl: "Nivel", uiTgt: "Objetivos" },
-            "tr": { title: "CHICKEN STRIKE NPC", desc: "MrTube platformu için geliştirilmekte olan Resmi Beta Sürümü.<br>ABG Productions® ve Sprunki Animations Studios tarafından tasarlandı.", user: "PİLOT ADINIZI GİRİN:", play: "BETA OYNA", uiLvl: "Seviye", uiTgt: "Hedefler" },
-            "ar": { title: "CHICKEN STRIKE NPC", desc: "نسخة بيتا الرسمية قيد التطوير لمنصة MrTube.<br>تم التصميم بواسطة ABG Productions® وSprunki Animations Studios.", user: "أدخل اسم الطيار الخاص بك:", play: "لعب البيتا", uiLvl: "المستوى", uiTgt: "الأهداف" },
-            "hi": { title: "CHICKEN STRIKE NPC", desc: "MrTube प्लेटफॉर्म के लिए विकास के चरण में आधिकारिक बीटा संस्करण।<br>ABG Productions® और Sprunki Animations Studios द्वारा डिज़ाइन किया गया।", user: "अपना पायलट नाम दर्ज करें:", play: "बीटा खेलें", uiLvl: "स्तर", uiTgt: "लक्ष्य" },
-            "ja": { title: "CHICKEN STRIKE NPC", desc: "MrTubeプラットフォーム向けに開発中の公式ベータ版。<br>ABG Productions®およびSprunki Animations Studiosによる設計。", user: "パイロット名を入力してください:", play: "ベータ版 te をプレイ", uiLvl: "レベル", uiTgt: "ターゲット" },
-            "ko": { title: "CHICKEN STRIKE NPC", desc: "MrTube 플랫폼을 위해 개발 중인 공식 베타 버전.<br>ABG Productions® 및 Sprunki Animations Studios 제작.", user: "조종사 이름을 입력하세요:", play: "베타 플레이", uiLvl: "레벨", uiTgt: "목표" }
+            "es": { title: "CHICKEN STRIKE NPC", desc: "Versión Beta Oficial en desarrollo para la plataforma MrTube.<br>Diseñado por ABG Productions® y Sprunki Animations Studios.", user: "INGRESA TU NOMBRE DE PILOTO:", play: "EMPEZAR A PROBAR", uiLvl: "Nivel", uiTgt: "Objetivos" },
+            "en": { title: "CHICKEN STRIKE NPC", desc: "Official Beta Version in development for the MrTube platform.<br>Designed by ABG Productions® and Sprunki Animations Studios.", user: "ENTER YOUR PILOT NAME:", play: "START TESTING", uiLvl: "Level", uiTgt: "Targets" },
+            "fr": { title: "CHICKEN STRIKE NPC", desc: "Version Bêta Officielle en développement pour la plateforme MrTube.<br>Conçu par ABG Productions® y Sprunki Animations Studios.", user: "ENTREZ VOTRE NOM DE PILOTE:", play: "COMMENCER LE TEST", uiLvl: "Niveau", uiTgt: "Cibles" },
+            "pt": { title: "CHICKEN STRIKE NPC", desc: "Versão Beta Oficial em desenvolvimento para a plataforma MrTube.<br>Desenvolvido por ABG Productions® e Sprunki Animations Studios.", user: "INSIRA SEU NOME DE PILOTO:", play: "INICIAR TESTE", uiLvl: "Nível", uiTgt: "Objetivos" },
+            "ru": { title: "CHICKEN STRIKE NPC", desc: "Официальная бета-версия в разработке для платформы MrTube.<br>Разработано ABG Productions® и Sprunki Animations Studios.", user: "ВВЕДИТЕ ИМЯ ПИЛОТА:", play: "НАЧАТЬ ТЕСТ", uiLvl: "Уровень", uiTgt: "Цели" },
+            "de": { title: "CHICKEN STRIKE NPC", desc: "Offizielle Beta-Version in Entwicklung für die MrTube-Plattform.<br>Präsentiert von ABG Productions® und Sprunki Animations Studios.", user: "PILOTENNAME EINGEBEN:", play: "TEST STARTEN", uiLvl: "Stufe", uiTgt: "Ziele" },
+            "es-la": { title: "CHICKEN STRIKE NPC", desc: "Versión Beta Oficial en desarrollo para la plataforma MrTube.<br>Diseñado por ABG Productions® y Sprunki Animations Studios.", user: "INGRESA TU NOMBRE DE PILOTO:", play: "EMPEZAR A PROBAR", uiLvl: "Nivel", uiTgt: "Objetivos" },
+            "es-es": { title: "CHICKEN STRIKE NPC", desc: "Versión Beta Oficial en desarrollo para la plataforma MrTube.<br>Diseñado por ABG Productions® y Sprunki Animations Studios.", user: "INTRODUCE TU NOMBRE DE PILOTO:", play: "EMPEZAR A PROBAR", uiLvl: "Nivel", uiTgt: "Objetivos" },
+            "tr": { title: "CHICKEN STRIKE NPC", desc: "MrTube platformu için geliştirilmekte olan Resmi Beta Sürümü.<br>ABG Productions® ve Sprunki Animations Studios tarafından tasarlandı.", user: "PİLOT ADINIZI GİRİN:", play: "TESTE BAŞLA", uiLvl: "Seviye", uiTgt: "Hedefler" },
+            "ar": { title: "CHICKEN STRIKE NPC", desc: "نسخة بيتا الرسمية قيد التطوير لمنصة MrTube.<br>تم التصميم بواسطة ABG Productions® وSprunki Animations Studios.", user: "أدخل اسم الطيار الخاص بك:", play: "بدء الاختبار", uiLvl: "المستوى", uiTgt: "الأهداف" },
+            "hi": { title: "CHICKEN STRIKE NPC", desc: "MrTube प्लेटफॉर्म के लिए विकास के चरण में आधिकारिक बीटा संस्करण।<br>ABG Productions® और Sprunki Animations Studios द्वारा डिज़ाइन किया गया।", user: "अपना पायलट नाम दर्ज करें:", play: "परीक्षण शुरू करें", uiLvl: "स्तर", uiTgt: "लक्ष्य" },
+            "ja": { title: "CHICKEN STRIKE NPC", desc: "MrTubeプラットフォーム向けに開発中の公式ベータ版。<br>ABG Productions®およびSprunki Animations Studiosによる設計。", user: "パイロット名を入力してください:", play: "テストを開始", uiLvl: "レベル", uiTgt: "ターゲット" },
+            "ko": { title: "CHICKEN STRIKE NPC", desc: "MrTube 플랫폼을 위해 개발 중인 공식 베타 버전.<br>ABG Productions® 및 Sprunki Animations Studios 제작.", user: "조종사 이름을 입력하세요:", play: "테스트 시작", uiLvl: "레벨", uiTgt: "목표" }
         };
 
         let score = 0;
@@ -421,20 +543,53 @@
         let stageX = 0;
         let gameStarted = false;
         let currentUsername = "";
+        let popupTriggered = false; // Control para que la ventana de suscripción salga solo una vez
         
         const scrollSpeed = 2.5; 
         const maxNPCs = 10;
         const distanceBetweenNPCs = 350; 
 
+        // Cargar datos previos
         if(localStorage.getItem('cs_saved_username')) {
             currentUsername = localStorage.getItem('cs_saved_username');
             usernameInput.value = currentUsername;
             loadPlayerProgress(currentUsername);
         }
 
+        // CONTROL EXCLUSIVO DE NOMBRE DE USUARIO
         usernameInput.addEventListener('input', () => {
             let name = usernameInput.value.trim();
+            
+            // FILTRO INVICTO: Nadie más puede llamarse Mr.Jostin
+            if (name.toLowerCase() === "mr.jostin" && name !== "Mr.Jostin") {
+                alert("❌ ¡Este nombre tiene derechos de autor del Creador!");
+                usernameInput.value = "";
+                return;
+            }
+
             if(name !== "") {
+                // Sistema de cobro por cambio de nombre
+                let oldName = localStorage.getItem('cs_saved_username') || "";
+                if (oldName !== "" && oldName !== name && name !== "Mr.Jostin") {
+                    let changeCount = parseInt(localStorage.getItem('cs_name_changes_' + oldName) || "0");
+                    if (changeCount >= 1) {
+                        if (score < 1000) {
+                            alert("❌ Necesitas 1000 monedas para cambiar tu nombre de usuario de nuevo.");
+                            usernameInput.value = oldName;
+                            return;
+                        } else {
+                            score -= 1000;
+                            scoreText.textContent = score;
+                            alert("💰 Se han descontado 1000 monedas por cambio de nombre.");
+                            changeCount++;
+                            localStorage.setItem('cs_name_changes_' + name, changeCount);
+                        }
+                    } else {
+                        changeCount++;
+                        localStorage.setItem('cs_name_changes_' + name, changeCount);
+                    }
+                }
+
                 currentUsername = name;
                 localStorage.setItem('cs_saved_username', currentUsername);
                 loadPlayerProgress(currentUsername);
@@ -464,6 +619,7 @@
                 levelText.textContent = currentLevel;
                 killsText.textContent = `0/10`;
             }
+            checkSubscriptionTrigger();
         }
 
         function savePlayerProgress() {
@@ -471,7 +627,27 @@
                 localStorage.setItem('cs_score_' + currentUsername, score);
                 localStorage.setItem('cs_level_' + currentUsername, currentLevel);
             }
+            checkSubscriptionTrigger();
         }
+
+        // SISTEMA DE CONTROL PARA LA CASILLA "ESTOY LISTO"
+        readyCheckbox.addEventListener('change', () => {
+            playSoundBoton();
+            if (readyCheckbox.checked) {
+                startButton.style.opacity = "1";
+                startButton.style.pointerEvents = "auto";
+            } else {
+                startButton.style.opacity = "0.5";
+                startButton.style.pointerEvents = "none";
+            }
+        });
+
+        // BOTÓN SALIR DEL JUEGO
+        exitButton.addEventListener('click', () => {
+            playSoundBoton();
+            // Recarga la pestaña para simular la salida del juego de manera limpia
+            window.location.reload();
+        });
 
         settingsToggleBtn.addEventListener('click', () => {
             playSoundBoton();
@@ -494,7 +670,7 @@
             }
         });
 
-        // --- CANJEO DE CÓDIGO SEGURO CON ACCESO INFINITO PARA EL CREADOR ---
+        // --- SISTEMA DE CANJEO DE NUEVOS CÓDIGOS ACTUALIZADOS ---
         codeSubmitBtn.addEventListener('click', () => {
             playSoundBoton();
             let inputCode = codeInput.value.trim();
@@ -503,44 +679,90 @@
                 return;
             }
 
-            if(inputCode === "238") {
-                // VERIFICACIÓN DEL CREADOR: Si eres Mr.Jostin, el candado se desactiva por completo
+            // Listado oficial de recompensas configuradas por el programador
+            let rewards = {
+                "328": 50,
+                "589": 200,
+                "194": 70,
+                "MJ8": 800
+            };
+
+            if(rewards[inputCode] !== undefined) {
+                let rewardAmount = rewards[inputCode];
+
+                // REGLA SUPREMA: El creador Mr.Jostin los usa de forma ilimitada
                 if(currentUsername === "Mr.Jostin") {
-                    score += 90;
+                    score += rewardAmount;
                     scoreText.textContent = score;
                     savePlayerProgress();
-                    alert("¡Acceso de Creador Confirmado! Se han añadido +90 monedas infinitamente.");
+                    alert(`👑 ¡Acceso Creador! Código válido. Se añadieron +${rewardAmount} monedas infinitamente.`);
                     codeInput.value = "";
                 } else {
-                    // Si es cualquier otro usuario, se bloquea tras el primer uso
-                    let codeUsed = localStorage.getItem('cs_code_238_' + currentUsername);
+                    // Resto de usuarios bloqueados tras el primer uso
+                    let codeUsed = localStorage.getItem(`cs_code_${inputCode}_` + currentUsername);
                     if(codeUsed === "true") {
-                        alert("Este código ya fue utilizado por este usuario.");
+                        alert("❌ Este código ya fue utilizado por este usuario.");
                     } else {
-                        score += 90;
+                        score += rewardAmount;
                         scoreText.textContent = score;
-                        localStorage.setItem('cs_code_238_' + currentUsername, "true");
+                        localStorage.setItem(`cs_code_${inputCode}_` + currentUsername, "true");
                         savePlayerProgress();
-                        alert("¡Código Aceptado! Se han añadido +90 monedas a tu cuenta.");
+                        alert(`✅ ¡Código Aceptado! Has ganado +${rewardAmount} monedas.`);
                         codeInput.value = "";
                     }
                 }
             } else {
-                alert("Código incorrecto. Verifica los dígitos.");
+                alert("❌ Código incorrecto o inválido. Verifica los dígitos.");
             }
+        });
+
+        // DISPARADOR AUTOMÁTICO DE PESTAÑA DE SUSCRIPCIÓN
+        function checkSubscriptionTrigger() {
+            if (score >= 300 && !popupTriggered) {
+                popupTriggered = true;
+                // Detiene momentáneamente las acciones abriendo el popup
+                subscribePopup.style.transform = "translate(-50%, -50%) scale(1)";
+            }
+        }
+
+        // Acciones del Panel de Suscripción
+        subYesBtn.addEventListener('click', () => {
+            playSoundBoton();
+            if (score >= 300) {
+                score -= 300;
+                scoreText.textContent = score;
+                savePlayerProgress();
+                subscribePopup.style.transform = "translate(-50%, -50%) scale(0)";
+                alert("🚀 ¡Redireccionando al canal oficial del Creador!");
+                window.open("https://youtube.com/@mr.jostin_oficial?si=JB-zmX5c7fRFRtq0", "_blank");
+            } else {
+                alert("No tienes suficientes monedas.");
+                subscribePopup.style.transform = "translate(-50%, -50%) scale(0)";
+            }
+        });
+
+        subNoBtn.addEventListener('click', () => {
+            playSoundBoton();
+            subscribePopup.style.transform = "translate(-50%, -50%) scale(0)";
         });
 
         startButton.addEventListener('click', () => {
             playSoundBoton();
             
-            // Inicio de la música en bucle cuando entra al juego por primera vez
-            audioMusic.play().catch(e => console.log("La interacción del usuario activó la música de fondo de manera exitosa."));
+            // Protección final por si hackean el input de texto en tiempo de ejecución
+            let finalName = usernameInput.value.trim();
+            if (finalName.toLowerCase() === "mr.jostin" && finalName !== "Mr.Jostin") {
+                alert("❌ Bloqueo de seguridad: No puedes usar el nombre del Creador.");
+                return;
+            }
 
-            if(usernameInput.value.trim() === "") {
+            audioMusic.play().catch(e => console.log("La interacción activó la música con éxito."));
+
+            if(finalName === "") {
                 currentUsername = "Player";
                 localStorage.setItem('cs_saved_username', currentUsername);
             } else {
-                currentUsername = usernameInput.value.trim();
+                currentUsername = finalName;
             }
             savePlayerProgress();
 
@@ -576,7 +798,6 @@
         function fireWeapon() {
             if (!gameStarted) return;
 
-            // Disparo de sonido de pistola en bucle rápido
             playSoundPistola();
 
             weaponContainer.style.transform = 'translateX(-50%) translateY(20px) scale(0.95)';
