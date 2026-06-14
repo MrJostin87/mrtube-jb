@@ -37,7 +37,7 @@
             background-position: center;
             will-change: transform;
         }
-        /* PANTALLA DE BIENVENIDA CON EL NOMBRE OFICIAL */
+        /* PANTALLA DE BIENVENIDA */
         #welcome-screen {
             position: absolute;
             top: 0;
@@ -69,7 +69,7 @@
             color: #ccc;
         }
         
-        /* SECCIÓN DE REGISTRO DE NOMBRE DE USUARIO */
+        /* REGISTRO DE NOMBRE DE USUARIO */
         #user-setup {
             margin-bottom: 20px;
             display: flex;
@@ -132,7 +132,7 @@
             font-weight: bold;
         }
 
-        /* PANEL DE CONFIGURACIONES DESPLEGABLE */
+        /* PANEL DE CONFIGURACIONES */
         #settings-panel {
             background: rgba(20, 20, 20, 0.95);
             border: 3px solid #ffcc00;
@@ -168,7 +168,7 @@
             text-align: center;
         }
 
-        /* SUBSECCIÓN DE CÓDIGOS DE RECOMPENSA */
+        /* CÓDIGOS DE RECOMPENSA */
         #code-section {
             border-top: 2px dashed #444;
             padding-top: 10px;
@@ -296,12 +296,10 @@
 </head>
 <body>
 
-    <!-- Pantalla de bienvenida con Nombre, Idiomas y Códigos -->
     <div id="welcome-screen">
         <h1 id="welcome-title">CHICKEN STRIKE NPC</h1>
         <p id="welcome-desc">Versión Beta Oficial en desarrollo para la plataforma MrTube.<br>Diseñado por ABG Productions® y Sprunki Animations Studios.</p>
         
-        <!-- Registro de progreso por Nombre -->
         <div id="user-setup">
             <label id="label-username" for="username-input">INGRESA TU NOMBRE DE PILOTO:</label>
             <input type="text" id="username-input" placeholder="Ej: Pepe" maxlength="15">
@@ -309,10 +307,8 @@
 
         <button id="start-button">JUGAR BETA</button>
         
-        <!-- Botón de ajustes -->
         <button id="settings-toggle-btn">⚙️ CONFIGURACIÓN</button>
 
-        <!-- Panel Desplegable -->
         <div id="settings-panel">
             <div class="setting-row">
                 <label id="label-lang">IDIOMA / LANGUAGE:</label>
@@ -333,7 +329,6 @@
                 </select>
             </div>
 
-            <!-- Caja de códigos -->
             <div id="code-section">
                 <label id="label-code">CÓDIGO DE MONEDAS (3 DÍGITOS):</label>
                 <input type="text" id="code-input" placeholder="000" maxlength="3">
@@ -376,7 +371,6 @@
         const welcomeScreen = document.getElementById('welcome-screen');
         const startButton = document.getElementById('start-button');
         
-        // Elementos nuevos
         const usernameInput = document.getElementById('username-input');
         const settingsToggleBtn = document.getElementById('settings-toggle-btn');
         const settingsPanel = document.getElementById('settings-panel');
@@ -384,7 +378,6 @@
         const codeInput = document.getElementById('code-input');
         const codeSubmitBtn = document.getElementById('code-submit-btn');
 
-        // Textos para traducciones de idiomas
         const translations = {
             "es": { title: "CHICKEN STRIKE NPC", desc: "Versión Beta Oficial en desarrollo para la plataforma MrTube.<br>Diseñado por ABG Productions® y Sprunki Animations Studios.", user: "INGRESA TU NOMBRE DE PILOTO:", play: "JUGAR BETA", uiLvl: "Nivel", uiTgt: "Objetivos" },
             "en": { title: "CHICKEN STRIKE NPC", desc: "Official Beta Version in development for the MrTube platform.<br>Designed by ABG Productions® and Sprunki Animations Studios.", user: "ENTER YOUR PILOT NAME:", play: "PLAY BETA", uiLvl: "Level", uiTgt: "Targets" },
@@ -412,14 +405,12 @@
         const maxNPCs = 10;
         const distanceBetweenNPCs = 350; 
 
-        // --- CARGAR PROGRESO INICIAL ---
         if(localStorage.getItem('cs_saved_username')) {
             currentUsername = localStorage.getItem('cs_saved_username');
             usernameInput.value = currentUsername;
             loadPlayerProgress(currentUsername);
         }
 
-        // Detectar cambio de nombre para guardar o cargar perfiles existentes
         usernameInput.addEventListener('input', () => {
             let name = usernameInput.value.trim();
             if(name !== "") {
@@ -461,7 +452,6 @@
             }
         }
 
-        // --- SISTEMA DE CONFIGURACIÓN E IDIOMAS ---
         settingsToggleBtn.addEventListener('click', () => {
             if(settingsPanel.style.display === "none" || settingsPanel.style.display === "") {
                 settingsPanel.style.display = "flex";
@@ -482,7 +472,7 @@
             }
         });
 
-        // --- CANJEO DE CÓDIGO (238) ---
+        // --- CANJEO DE CÓDIGO SEGURO CON ACCESO INFINITO PARA EL CREADOR ---
         codeSubmitBtn.addEventListener('click', () => {
             let inputCode = codeInput.value.trim();
             if(currentUsername === "") {
@@ -491,23 +481,32 @@
             }
 
             if(inputCode === "238") {
-                let codeUsed = localStorage.getItem('cs_code_238_' + currentUsername);
-                if(codeUsed === "true") {
-                    alert("Este código ya fue utilizado por este usuario.");
-                } else {
+                // VERIFICACIÓN DEL CREADOR: Si eres Mr.Jostin, el candado se desactiva por completo
+                if(currentUsername === "Mr.Jostin") {
                     score += 90;
                     scoreText.textContent = score;
-                    localStorage.setItem('cs_code_238_' + currentUsername, "true");
                     savePlayerProgress();
-                    alert("¡Código Aceptado! Se han añadido +90 monedas a tu cuenta.");
+                    alert("¡Acceso de Creador Confirmado! Se han añadido +90 monedas infinitamente.");
                     codeInput.value = "";
+                } else {
+                    // Si es cualquier otro usuario, se bloquea tras el primer uso
+                    let codeUsed = localStorage.getItem('cs_code_238_' + currentUsername);
+                    if(codeUsed === "true") {
+                        alert("Este código ya fue utilizado por este usuario.");
+                    } else {
+                        score += 90;
+                        scoreText.textContent = score;
+                        localStorage.setItem('cs_code_238_' + currentUsername, "true");
+                        savePlayerProgress();
+                        alert("¡Código Aceptado! Se han añadido +90 monedas a tu cuenta.");
+                        codeInput.value = "";
+                    }
                 }
             } else {
                 alert("Código incorrecto. Verifica los dígitos.");
             }
         });
 
-        // --- INICIAR JUEGO ---
         startButton.addEventListener('click', () => {
             if(usernameInput.value.trim() === "") {
                 currentUsername = "Player";
