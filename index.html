@@ -296,6 +296,11 @@
 </head>
 <body>
 
+    <!-- CONTROLADORES DE AUDIO NATIVOS (Archivos de la carpeta raíz) -->
+    <audio id="audio-music" src="Music.mp3" loop></audio>
+    <audio id="audio-pistola" src="Pistola.mp3"></audio>
+    <audio id="audio-boton" src="Boton.mp3"></audio>
+
     <div id="welcome-screen">
         <h1 id="welcome-title">CHICKEN STRIKE NPC</h1>
         <p id="welcome-desc">Versión Beta Oficial en desarrollo para la plataforma MrTube.<br>Diseñado por ABG Productions® y Sprunki Animations Studios.</p>
@@ -378,10 +383,26 @@
         const codeInput = document.getElementById('code-input');
         const codeSubmitBtn = document.getElementById('code-submit-btn');
 
+        // Referencias a los elementos de sonido instanciados
+        const audioMusic = document.getElementById('audio-music');
+        const audioPistola = document.getElementById('audio-pistola');
+        const audioBoton = document.getElementById('audio-boton');
+
+        // Funciones auxiliares para reproducir los efectos de sonido de forma limpia
+        function playSoundBoton() {
+            audioBoton.currentTime = 0;
+            audioBoton.play().catch(e => console.log("Audio block prevented immediate play"));
+        }
+
+        function playSoundPistola() {
+            audioPistola.currentTime = 0;
+            audioPistola.play().catch(e => console.log("Audio block prevented immediate play"));
+        }
+
         const translations = {
             "es": { title: "CHICKEN STRIKE NPC", desc: "Versión Beta Oficial en desarrollo para la plataforma MrTube.<br>Diseñado por ABG Productions® y Sprunki Animations Studios.", user: "INGRESA TU NOMBRE DE PILOTO:", play: "JUGAR BETA", uiLvl: "Nivel", uiTgt: "Objetivos" },
             "en": { title: "CHICKEN STRIKE NPC", desc: "Official Beta Version in development for the MrTube platform.<br>Designed by ABG Productions® and Sprunki Animations Studios.", user: "ENTER YOUR PILOT NAME:", play: "PLAY BETA", uiLvl: "Level", uiTgt: "Targets" },
-            "fr": { title: "CHICKEN STRIKE NPC", desc: "Version Bêta Officielle en développement pour la plateforme MrTube.<br>Conçu par ABG Productions® et Sprunki Animations Studios.", user: "ENTREZ VOTRE NOM DE PILOTE:", play: "JOUER BÊTA", uiLvl: "Niveau", uiTgt: "Cibles" },
+            "fr": { title: "CHICKEN STRIKE NPC", desc: "Version Bêta Officielle en développement pour la plateforme MrTube.<br>Conçu par ABG Productions® y Sprunki Animations Studios.", user: "ENTREZ VOTRE NOM DE PILOTE:", play: "JOUER BÊTA", uiLvl: "Niveau", uiTgt: "Cibles" },
             "pt": { title: "CHICKEN STRIKE NPC", desc: "Versão Beta Oficial em desenvolvimento para a plataforma MrTube.<br>Desenvolvido por ABG Productions® e Sprunki Animations Studios.", user: "INSIRA SEU NOME DE PILOTO:", play: "JOGAR BETA", uiLvl: "Nível", uiTgt: "Objetivos" },
             "ru": { title: "CHICKEN STRIKE NPC", desc: "Официальная бета-версия в разработке для платформы MrTube.<br>Разработано ABG Productions® и Sprunki Animations Studios.", user: "ВВЕДИТЕ ИМЯ ПИЛОТА:", play: "ИГРАТЬ В БЕТУ", uiLvl: "Уровень", uiTgt: "Цели" },
             "de": { title: "CHICKEN STRIKE NPC", desc: "Offizielle Beta-Version in Entwicklung für die MrTube-Plattform.<br>Präsentiert von ABG Productions® und Sprunki Animations Studios.", user: "PILOTENNAME EINGEBEN:", play: "BETA SPIELEN", uiLvl: "Stufe", uiTgt: "Ziele" },
@@ -390,7 +411,7 @@
             "tr": { title: "CHICKEN STRIKE NPC", desc: "MrTube platformu için geliştirilmekte olan Resmi Beta Sürümü.<br>ABG Productions® ve Sprunki Animations Studios tarafından tasarlandı.", user: "PİLOT ADINIZI GİRİN:", play: "BETA OYNA", uiLvl: "Seviye", uiTgt: "Hedefler" },
             "ar": { title: "CHICKEN STRIKE NPC", desc: "نسخة بيتا الرسمية قيد التطوير لمنصة MrTube.<br>تم التصميم بواسطة ABG Productions® وSprunki Animations Studios.", user: "أدخل اسم الطيار الخاص بك:", play: "لعب البيتا", uiLvl: "المستوى", uiTgt: "الأهداف" },
             "hi": { title: "CHICKEN STRIKE NPC", desc: "MrTube प्लेटफॉर्म के लिए विकास के चरण में आधिकारिक बीटा संस्करण।<br>ABG Productions® और Sprunki Animations Studios द्वारा डिज़ाइन किया गया।", user: "अपना पायलट नाम दर्ज करें:", play: "बीटा खेलें", uiLvl: "स्तर", uiTgt: "लक्ष्य" },
-            "ja": { title: "CHICKEN STRIKE NPC", desc: "MrTubeプラットフォーム向けに開発中の公式ベータ版。<br>ABG Productions®およびSprunki Animations Studiosによる設計。", user: "パイロット名を入力してください:", play: "ベータ版をプレイ", uiLvl: "レベル", uiTgt: "ターゲット" },
+            "ja": { title: "CHICKEN STRIKE NPC", desc: "MrTubeプラットフォーム向けに開発中の公式ベータ版。<br>ABG Productions®およびSprunki Animations Studiosによる設計。", user: "パイロット名を入力してください:", play: "ベータ版 te をプレイ", uiLvl: "レベル", uiTgt: "ターゲット" },
             "ko": { title: "CHICKEN STRIKE NPC", desc: "MrTube 플랫폼을 위해 개발 중인 공식 베타 버전.<br>ABG Productions® 및 Sprunki Animations Studios 제작.", user: "조종사 이름을 입력하세요:", play: "베타 플레이", uiLvl: "레벨", uiTgt: "목표" }
         };
 
@@ -453,6 +474,7 @@
         }
 
         settingsToggleBtn.addEventListener('click', () => {
+            playSoundBoton();
             if(settingsPanel.style.display === "none" || settingsPanel.style.display === "") {
                 settingsPanel.style.display = "flex";
             } else {
@@ -474,6 +496,7 @@
 
         // --- CANJEO DE CÓDIGO SEGURO CON ACCESO INFINITO PARA EL CREADOR ---
         codeSubmitBtn.addEventListener('click', () => {
+            playSoundBoton();
             let inputCode = codeInput.value.trim();
             if(currentUsername === "") {
                 alert("Por favor, introduce un nombre primero antes de usar un código.");
@@ -508,6 +531,11 @@
         });
 
         startButton.addEventListener('click', () => {
+            playSoundBoton();
+            
+            // Inicio de la música en bucle cuando entra al juego por primera vez
+            audioMusic.play().catch(e => console.log("La interacción del usuario activó la música de fondo de manera exitosa."));
+
             if(usernameInput.value.trim() === "") {
                 currentUsername = "Player";
                 localStorage.setItem('cs_saved_username', currentUsername);
@@ -547,6 +575,9 @@
 
         function fireWeapon() {
             if (!gameStarted) return;
+
+            // Disparo de sonido de pistola en bucle rápido
+            playSoundPistola();
 
             weaponContainer.style.transform = 'translateX(-50%) translateY(20px) scale(0.95)';
             setTimeout(() => {
