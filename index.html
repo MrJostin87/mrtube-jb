@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MrTube - Chicken Gun Niveles Beta</title>
+    <title>MrTube - Chicken Gun FPS Balance Beta</title>
     <style>
         * {
             box-sizing: border-box;
@@ -27,10 +27,10 @@
             height: 100vh;
             overflow: hidden;
         }
-        /* Escenario automático */
+        /* Escenario automático de fondo */
         #stage {
             position: absolute;
-            width: 500vw;
+            width: 600vw;
             height: 100vh;
             left: 0;
             background-image: url('Fondo.PNG');
@@ -38,7 +38,53 @@
             background-position: center;
             will-change: transform;
         }
-        /* Panel Superior de la Interfaz (UI) */
+        /* PANTALLA DE BIENVENIDA (MODAL BETA) */
+        #welcome-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+        }
+        #welcome-screen h1 {
+            color: #ffcc00;
+            font-size: 32px;
+            margin-bottom: 10px;
+            text-shadow: 3px 3px #000;
+        }
+        #welcome-screen p {
+            font-size: 18px;
+            max-width: 80%;
+            line-height: 1.4;
+            margin-bottom: 30px;
+            color: #ccc;
+        }
+        #start-button {
+            background: #00ff00;
+            color: #000;
+            border: 4px solid #fff;
+            padding: 15px 40px;
+            font-size: 22px;
+            font-family: 'Arial Black', sans-serif;
+            border-radius: 15px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,255,0,0.4);
+            transition: transform 0.1s ease;
+            pointer-events: auto;
+        }
+        #start-button:active {
+            transform: scale(0.95);
+        }
+        /* Interfaz de Usuario */
         #ui-header {
             position: absolute;
             top: 15px;
@@ -56,7 +102,7 @@
             border-radius: 20px;
             border: 3px solid #ffcc00;
             color: #fff;
-            font-size: 20px;
+            font-size: 18px;
             text-shadow: 2px 2px #000;
             display: flex;
             align-items: center;
@@ -67,17 +113,17 @@
             margin-right: 8px;
             animation: spin 4s linear infinite;
         }
-        /* Letrero de Recompensa/Nivel en grande */
+        /* Anuncios de Nivel */
         #announcement {
             position: absolute;
             top: 30%;
             left: 50%;
             transform: translate(-50%, -50%) scale(0);
             color: #fff;
-            font-size: 40px;
+            font-size: 35px;
             text-align: center;
             text-shadow: 4px 4px #000;
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.85);
             padding: 20px 40px;
             border-radius: 15px;
             border: 5px solid #00ff00;
@@ -85,7 +131,7 @@
             transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             pointer-events: none;
         }
-        /* Objetivos (NPC) */
+        /* OBJETIVOS (NPC) EN LÍNEA RECTA */
         .target {
             position: absolute;
             width: 110px;
@@ -94,7 +140,7 @@
             z-index: 3;
             pointer-events: none;
         }
-        /* Mira Bloqueada */
+        /* Mira Fija */
         #crosshair {
             position: absolute;
             top: 50%;
@@ -108,7 +154,7 @@
             pointer-events: none !important;
             z-index: 8;
         }
-        /* Botón de la Pistola (Manos) */
+        /* Pistola (Manos) */
         #weapon-container {
             position: absolute;
             bottom: 0;
@@ -134,11 +180,18 @@
 </head>
 <body>
 
+    <!-- Pantalla de bienvenida / Versión Beta -->
+    <div id="welcome-screen">
+        <h1>¡BIENVENIDO A MRTUBE!</h1>
+        <p>Esta es una versión Beta Oficial en desarrollo.<br>Diseñado para ABG Productions® y Sprunki Animations Studios.</p>
+        <button id="start-button">JUGAR BETA</button>
+    </div>
+
     <div id="game-container">
         <!-- Fondo móvil -->
         <div id="stage"></div>
 
-        <!-- Interfaz de Usuario -->
+        <!-- Interfaz -->
         <div id="ui-header">
             <div class="ui-box" id="ui-score">
                 <img src="Moneda.PNG" alt="Moneda">
@@ -152,13 +205,9 @@
             </div>
         </div>
 
-        <!-- Cartel de Premios -->
         <div id="announcement"></div>
-
-        <!-- Mira fija -->
         <div id="crosshair"></div>
 
-        <!-- Disparador -->
         <div id="weapon-container">
             <img id="weapon" src="Manos.PNG" alt="Arma">
         </div>
@@ -171,25 +220,45 @@
         const killsText = document.getElementById('kills-text');
         const announcement = document.getElementById('announcement');
         const weaponContainer = document.getElementById('weapon-container');
+        const welcomeScreen = document.getElementById('welcome-screen');
+        const startButton = document.getElementById('start-button');
         
         let score = 0;
         let kills = 0;
         let currentLevel = 1;
         let stageX = 0;
+        let gameStarted = false;
         
-        const scrollSpeed = 2; 
+        const scrollSpeed = 2.5; 
         const maxNPCs = 10;
+        // Distancia en píxeles entre cada enemigo para dejar un espacio vacío de balance
+        const distanceBetweenNPCs = 350; 
 
-        // --- MOVIMIENTO DE CÁMARA AUTOMÁTICO ---
+        // Activar el juego al presionar el botón de la Beta
+        startButton.addEventListener('click', () => {
+            welcomeScreen.style.display = 'none';
+            gameStarted = true;
+            // Generar los 10 personajes en fila india espaciada
+            for(let i = 0; i < maxNPCs; i++) {
+                spawnNPC(i);
+            }
+        });
+
+        // --- SISTEMA DE MOVIMIENTO AUTOMÁTICO ---
         function updateCamera() {
+            if (!gameStarted) {
+                requestAnimationFrame(updateCamera);
+                return;
+            }
+            
             stageX -= scrollSpeed;
             
-            if (stageX <= -window.innerWidth * 3) {
+            if (stageX <= -window.innerWidth * 4) {
                 stageX = 0;
                 const targets = document.querySelectorAll('.target');
                 targets.forEach(npc => {
                     let currentLeft = parseFloat(npc.style.left);
-                    npc.style.left = (currentLeft - window.innerWidth * 3) + 'px';
+                    npc.style.left = (currentLeft - window.innerWidth * 4) + 'px';
                 });
             }
             
@@ -199,8 +268,10 @@
         requestAnimationFrame(updateCamera);
 
 
-        // --- SISTEMA DE DISPARO MANUAL ---
+        // --- DISPARAR CON LA PISTOLA ---
         function fireWeapon() {
+            if (!gameStarted) return;
+
             weaponContainer.style.transform = 'translateX(-50%) translateY(20px) scale(0.95)';
             setTimeout(() => {
                 weaponContainer.style.transform = 'translateX(-50%) translateY(0) scale(1)';
@@ -227,23 +298,19 @@
         weaponContainer.addEventListener('touchstart', (e) => { e.stopPropagation(); e.preventDefault(); fireWeapon(); });
 
 
-        // --- MOTOR DE ENEMIGOS E INFRAESTRUCTURA ---
-        function spawnNPC(isInitial = false) {
+        // --- NUEVO MOTOR BALANCEADO EN LÍNEA RECTA ---
+        function spawnNPC(index) {
             const npc = document.createElement('img');
             npc.src = 'NPC.PNG';
             npc.className = 'target';
 
             const screenOffset = -stageX;
             
-            let spawnX;
-            if (isInitial) {
-                spawnX = screenOffset + (Math.random() * (window.innerWidth * 2));
-            } else {
-                // Aparece de inmediato saliendo justo por el borde derecho de la pantalla
-                spawnX = screenOffset + window.innerWidth + 50;
-            }
+            // BALANCE DE ESPACIO: Se alinean uno detrás del otro usando el "index" multiplicado por la distancia fija
+            const spawnX = screenOffset + window.innerWidth + 100 + (index * distanceBetweenNPCs);
             
-            const spawnY = Math.random() * (window.innerHeight - 300) + 150;
+            // LÍNEA RECTA PERFECTA: Colocados exactamente a la altura media de la pantalla
+            const spawnY = window.innerHeight / 2 + 30; 
 
             npc.style.left = spawnX + 'px';
             npc.style.top = spawnY + 'px';
@@ -255,7 +322,8 @@
                 if (rect.right < 0) {
                     clearInterval(npc.checkBounds);
                     npc.remove();
-                    spawnNPC(false); // Si se escapa, reaparece otro inmediatamente atrás
+                    // Si se pasa de largo, se vuelve a formar al final de la fila de 10
+                    spawnNPC(maxNPCs - 1); 
                 }
             }, 1000);
         }
@@ -266,57 +334,42 @@
 
             npc.src = 'Disparado.PNG';
             
-            // Sumar monedas base (+5)
             score += 5;
             scoreText.textContent = score;
 
-            // Avanzar contador de misiones
             if (currentLevel === 1) {
                 kills++;
                 killsText.textContent = `${kills}/10`;
                 
-                // VERIFICACIÓN DEL NIVEL 1 COMPLETADO
                 if (kills === 10) {
                     triggerLevelReward();
                 }
             } else {
-                // En el nivel 2 el contador se vuelve infinito
                 kills++;
                 killsText.textContent = `${kills}`;
             }
 
-            // Desaparece rápido y mete el reemplazo al instante
             setTimeout(() => {
                 npc.remove();
-                spawnNPC(false); 
-            }, 250);
+                // Reaparece ordenadamente al final de la fila activa
+                spawnNPC(maxNPCs - 1); 
+            }, 300);
         }
 
-        // --- GRAN RECOMPENSA DE NIVEL ---
         function triggerLevelReward() {
             currentLevel = 2;
-            
-            // Otorgar bono de monedas brutal
             score += 100; 
             
-            // Actualizar textos en la pantalla
             scoreText.textContent = score;
             levelText.textContent = currentLevel;
-            killsText.textContent = `${kills}`; // Deja de pedir límite
+            killsText.textContent = `${kills}`; 
             
-            // Mostrar letrero de victoria en pantalla
             announcement.innerHTML = "¡NIVEL 1 COMPLETADO!<br><span style='color: #ffcc00;'>🎁 RECOMPENSA: +100 MONEDAS</span>";
             announcement.style.transform = "translate(-50%, -50%) scale(1)";
             
-            // Quitar el letrero después de 3 segundos
             setTimeout(() => {
                 announcement.style.transform = "translate(-50%, -50%) scale(0)";
             }, 3000);
-        }
-
-        // Crear los 10 NPCs iniciales para comenzar el combate
-        for(let i = 0; i < maxNPCs; i++) {
-            spawnNPC(true);
         }
 
         document.addEventListener('gesturestart', function (e) { e.preventDefault(); });
