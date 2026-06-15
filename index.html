@@ -878,30 +878,46 @@
         }
 
         usernameInput.addEventListener('input', () => {
-            let name = usernameInput.value.trim();
-            
-            if (name.toLowerCase() === "mr.jostin" && name !== "Mr.Jostin") {
-                alert("❌ ¡Este nombre tiene derechos de autor del Creador!");
-                usernameInput.value = "";
-                currentUsername = "";
-                return;
-            }
+    let name = usernameInput.value.trim();
+    
+    // Protección del nombre del Creador
+    if (name.toLowerCase() === "mr.jostin" && name !== "Mr.Jostin") {
+        alert("❌ ¡Este nombre tiene derechos de autor del Creador!");
+        usernameInput.value = "";
+        currentUsername = "";
+        return;
+    }
 
-            if(name !== "") {
-                let oldName = localStorage.getItem('cs_saved_username') || "";
-                if (oldName !== "" && oldName !== name && name !== "Mr.Jostin") {
-                    let changeCount = parseInt(localStorage.getItem('cs_name_changes_' + oldName) || "0");
-                    if (changeCount >= 1) {
-                        if (score < 1000) {
-                            alert("❌ Necesitas 1000 monedas para cambiar tu nombre de usuario de nuevo.");
-                            usernameInput.value = oldName;
-                            return;
-                        } else {
-                            score -= 1000;
-                            scoreText.textContent = score;
-                            alert("💰 Se han descontado 1000 monedas por cambio de nombre.");
-                            changeCount++;
-                            localStorage.setItem('cs_name_changes_' + name, changeCount);
+    if(name !== "") {
+        let oldName = localStorage.getItem('cs_saved_username') || "";
+
+        // Solo cobramos si ya existía un nombre previo y es diferente al nuevo
+        if (oldName !== "" && oldName !== name) {
+            let changeCount = parseInt(localStorage.getItem('cs_name_changes_' + oldName) || "0");
+            
+            if (changeCount >= 1) {
+                if (score < 1000) {
+                    alert("❌ Necesitas 1000 monedas para cambiar tu nombre de usuario de nuevo.");
+                    usernameInput.value = oldName;
+                    return;
+                } else {
+                    score -= 1000;
+                    scoreText.textContent = score;
+                    alert("💰 Se han descontado 1000 monedas por cambio de nombre.");
+                    localStorage.setItem('cs_name_changes_' + name, changeCount + 1);
+                }
+            } else {
+                localStorage.setItem('cs_name_changes_' + name, changeCount + 1);
+            }
+        }
+
+        // Guardamos el nombre y cargamos progreso
+        currentUsername = name;
+        localStorage.setItem('cs_saved_username', currentUsername);
+        loadPlayerProgress(currentUsername);
+    }
+});
+
                         }
                     } else {
                         changeCount++;
