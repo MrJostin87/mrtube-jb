@@ -2,1502 +2,1427 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Chicken Strike NPC - Beta</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MrTube - El canal de Mr.Jostin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Rubik:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        * {
-            box-sizing: border-box;
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            user-select: none;
-            touch-action: none;
+        /* VARIABLES PARA CAMBIO DE TEMA Y ESTILOS */
+        :root {
+            --bg-color: #0f0f0f;
+            --text-color: #ffffff;
+            --card-bg: #1a1a1a;
+            --border-color: #2f2f2f;
+            --btn-sub-bg: #f1f1f1;
+            --btn-sub-text: #0f0f0f;
+            --shadow-style: 0 4px 15px rgba(0,0,0,0.5);
+            --transition-speed: 0.3s;
+            --logo-bg-color: #ff0000; /* Color inicial del logo */
+            --web-font: Arial, sans-serif; /* Fuente por defecto */
         }
-        body, html {
+
+        .light-theme {
+            --bg-color: #f9f9f9;
+            --text-color: #0f0f0f;
+            --card-bg: #ffffff;
+            --border-color: #e5e5e5;
+            --btn-sub-bg: #0f0f0f;
+            --btn-sub-text: #ffffff;
+            --shadow-style: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        /* NUEVO TEMA ADICIONAL: GRIS */
+        .gray-theme {
+            --bg-color: #444444;
+            --text-color: #ffffff;
+            --card-bg: #555555;
+            --border-color: #666666;
+            --btn-sub-bg: #222222;
+            --btn-sub-text: #ffffff;
+            --shadow-style: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        /* CLASES DE FUENTES CONFIGURABLES */
+        .font-montserrat { --web-font: 'Montserrat', sans-serif !important; }
+        .font-rubik { --web-font: 'Rubik', sans-serif !important; }
+        .font-arno { --web-font: 'Arno Pro', 'Georgia', serif !important; }
+
+        /* CLASE MODO ESCRITORIO SIMULADO (VC) */
+        .pc-version-mode {
+            max-width: 1400px !important;
+            padding: 20px 50px !important;
+        }
+        .pc-version-mode .video-grid {
+            grid-template-columns: repeat(4, 1fr) !important; /* Forza grilla grande de PC */
+        }
+
+        /* MODO ADE - MENOS RECURSOS */
+        .ade-mode {
+            --shadow-style: none !important;
+            --transition-speed: 0s !important;
+        }
+        .ade-mode * {
+            box-shadow: none !important;
+            text-shadow: none !important;
+            transition: none !important;
+        }
+
+        /* MODO URS - ULTRA RENDIMIENTO SUPREMO */
+        .urs-mode {
+            --shadow-style: none !important;
+            --transition-speed: 0s !important;
+            background: #000000 !important;
+        }
+        .urs-mode .thumbnail {
+            background-image: none !important;
+            background-color: #222 !important;
+            border: 1px dashed #444 !important;
+        }
+        .urs-mode img {
+            content-visibility: auto;
+        }
+
+        body {
+            font-family: var(--web-font);
+            background-color: var(--bg-color);
+            color: var(--text-color);
             margin: 0;
             padding: 0;
+            transition: background-color var(--transition-speed), color var(--transition-speed);
+        }
+
+        /* PANTALLA DE BIENVENIDA */
+        #welcome-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
-            overflow: hidden;
-            background-color: #000;
-            font-family: 'Arial Black', sans-serif;
-        }
-        #game-container {
-            position: relative;
-            width: 100vw;
-            height: 100vh;
-            overflow: hidden;
-        }
-        #stage {
-            position: absolute;
-            width: 600vw;
-            height: 100vh;
-            left: 0;
-            background-image: url('Fondo.PNG');
-            background-size: repeat-x;
-            background-position: center;
-            will-change: transform;
-        }
-        /* PANTALLA DE BIENVENIDA Y MENÚ PRINCIPAL */
-        #welcome-screen {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background-image: url('Fondo.PNG'); 
-            background-size: cover;
-            background-position: center;
+            background-color: #0f0f0f;
+            color: #ffffff;
+            z-index: 9999;
             display: flex;
             flex-direction: column;
+            align-items: center;
             justify-content: flex-start;
-            align-items: center;
-            z-index: 100;
-            color: #fff;
+            padding: 40px 20px;
+            box-sizing: border-box;
+            overflow-y: auto;
             text-align: center;
-            padding: 20px;
-            overflow-y: auto; 
-            touch-action: pan-y; 
         }
-        #welcome-screen::before {
-            content: "";
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.45);
-            z-index: -1;
+        .welcome-content {
+            max-width: 600px;
+            margin: auto;
         }
-        #welcome-screen h1 {
-            color: #ffcc00;
-            font-size: 34px;
-            margin-top: 20px;
-            margin-bottom: 5px;
-            text-shadow: 3px 3px #000;
-            letter-spacing: 1px;
-        }
-        #welcome-screen p {
-            font-size: 16px;
-            max-width: 85%;
-            line-height: 1.4;
-            margin-bottom: 20px;
-            color: #fff;
-            text-shadow: 2px 2px 4px #000;
-        }
-        
-        /* REGISTRO DE NOMBRE DE USUARIO */
-        #user-setup {
-            margin-bottom: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-        }
-        #user-setup label {
-            font-size: 14px;
-            color: #00ff00;
-            text-shadow: 1px 1px #000;
-        }
-        #username-input {
-            background: #222;
-            border: 3px solid #ffcc00;
-            color: #fff;
-            padding: 10px 15px;
-            font-size: 16px;
-            border-radius: 10px;
-            text-align: center;
-            font-family: 'Arial', sans-serif;
+        .welcome-logo {
+            font-size: 40px;
             font-weight: bold;
-            pointer-events: auto;
-            width: 220px;
-        }
-        #username-input:focus {
-            outline: none;
-            border-color: #00ff00;
-        }
-
-        /* SECCIÓN DE VERIFICACIÓN (ESTOY LISTO) */
-        #ready-container {
-            background: rgba(0, 0, 0, 0.6);
-            border: 2px solid #ffcc00;
-            padding: 12px;
-            border-radius: 10px;
             margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            pointer-events: auto;
         }
-        #ready-checkbox {
-            width: 22px;
-            height: 22px;
-            cursor: pointer;
-        }
-        #ready-label {
-            font-size: 16px;
+        .welcome-logo span {
+            background-color: var(--logo-bg-color);
             color: #fff;
-            font-weight: bold;
-            cursor: pointer;
+            padding: 4px 12px;
+            border-radius: 8px;
+            margin-left: 4px;
         }
-
-        /* BOTONES DEL MENÚ PRINCIPAL */
-        .menu-btn {
-            color: #000;
-            border: 4px solid #fff;
-            padding: 12px 35px;
-            font-size: 20px;
-            font-family: 'Arial Black', sans-serif;
+        .welcome-box {
+            background-color: #1a1a1a;
+            border: 1px solid #303030;
             border-radius: 15px;
-            cursor: pointer;
-            transition: transform 0.1s ease;
-            pointer-events: auto;
-            margin-bottom: 12px;
-            width: 260px;
-            text-align: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-        }
-        .menu-btn:active {
-            transform: scale(0.95);
-        }
-        #start-button {
-    background: #00ff00;
-    box-shadow: 0 5px 15px rgba(0,255,0,0.4);
-    opacity: 0.5;
-    pointer-events: none;
-    transition: opacity 0.15s ease;
-}
-
-#start-button.btn-active {
-    opacity: 1;
-    pointer-events: auto;
-}
-
-        }
-        #exit-button {
-            background: #ff3333;
-            box-shadow: 0 5px 15px rgba(255,51,51,0.4);
-        }
-
-        /* MENÚ INTERMEDIO DE JUEGO (REPRESENTANDO IMAGE_16.PNG) */
-        #play-menu-screen {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background-image: linear-gradient(to bottom, #00bfff, #b0e0e6);
-            display: none;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 110;
-            text-align: center;
-            padding: 20px;
-        }
-        #play-menu-screen h1 {
-            color: #ffcc00;
-            font-size: 42px;
+            padding: 25px;
             margin-bottom: 30px;
-            text-shadow: 4px 4px #000;
-            letter-spacing: 1px;
-        }
-        .large-game-btn {
-            width: 85%;
-            max-width: 340px;
-            padding: 18px;
-            font-size: 28px;
-            font-family: 'Arial Black', sans-serif;
-            border-radius: 20px;
-            border: 4px solid #fff;
-            cursor: pointer;
-            margin-bottom: 15px;
-            box-shadow: 0 6px 15px rgba(0,0,0,0.4);
-            transition: transform 0.1s ease;
-            pointer-events: auto;
-        }
-        .large-game-btn:active {
-            transform: scale(0.95);
-        }
-        #jugar-main-btn {
-            background: #00ff00;
-            color: #000;
-        }
-        #tienda-main-btn {
-            background: #ffcc00;
-            color: #000;
-            box-shadow: 0 5px 15px rgba(255,204,0,0.4);
-        }
-        #salir-main-btn {
-            background: #ff3333;
-            color: #fff;
-            font-size: 22px;
-            padding: 12px;
-        }
-
-        /* PANEL DE LA TIENDA OFICIAL TIMECHICKEN */
-        #shop-screen {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(10, 10, 10, 0.95);
-            display: none;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 130;
-            padding: 20px;
-        }
-        #shop-screen h2 {
-            color: #ffcc00;
-            font-size: 36px;
-            margin-bottom: 5px;
-            text-shadow: 3px 3px #000;
-        }
-        #shop-screen p.shop-subtitle {
-            color: #fff;
-            font-size: 14px;
-            margin-bottom: 20px;
-            font-family: sans-serif;
-        }
-        .shop-container {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            width: 100%;
-            max-width: 380px;
-            margin-bottom: 20px;
-        }
-        .shop-item {
-            background: #222;
-            border: 3px solid #ffcc00;
-            border-radius: 12px;
-            padding: 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 10px;
-        }
-        .shop-item-info {
+            box-shadow: var(--shadow-style);
             text-align: left;
         }
-        .shop-item-title {
-            color: #00ff00;
-            font-size: 16px;
-            margin-bottom: 4px;
+        .welcome-box h2 {
+            color: #ff4444;
+            margin-top: 0;
+            text-align: center;
         }
-        .shop-item-desc {
+        .welcome-box p {
+            font-size: 15px;
+            line-height: 1.6;
             color: #ccc;
-            font-size: 11px;
-            font-family: sans-serif;
-            line-height: 1.3;
         }
-        .shop-buy-btn {
-            background: #ffcc00;
-            color: #000;
-            border: 2px solid #fff;
-            font-family: 'Arial Black', sans-serif;
-            font-size: 14px;
-            padding: 10px 14px;
-            border-radius: 8px;
+        .continue-btn {
+            background-color: #ffffff;
+            color: #0f0f0f;
+            border: none;
+            padding: 15px 40px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 30px;
             cursor: pointer;
-            min-width: 110px;
+            margin-bottom: 40px;
         }
-        .shop-buy-btn.owned {
-            background: #555;
-            color: #888;
-            border-color: #444;
-            cursor: not-allowed;
+
+        /* BARRA DE NAVEGACIÓN */
+        nav {
+            background-color: var(--bg-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--border-color);
+            transition: background-color var(--transition-speed), border-color var(--transition-speed);
+        }
+        .logo {
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--text-color);
+            cursor: pointer;
+            user-select: none;
+        }
+        .logo span {
+            background-color: var(--logo-bg-color);
+            color: #fff;
+            padding: 2px 8px;
+            border-radius: 6px;
+            margin-left: 4px;
+        }
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
         }
         
-        /* BOTÓN DE REINICIAR COMPRAS */
-        #reset-shop-btn {
-            background: #ff9900;
-            color: #000;
-            border: 3px solid #fff;
-            padding: 8px 20px;
-            font-size: 14px;
-            font-family: 'Arial Black', sans-serif;
-            border-radius: 10px;
+        /* ENGRANAJE DE CONFIGURACIÓN */
+        .settings-btn {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 24px;
             cursor: pointer;
-            margin-bottom: 15px;
-            box-shadow: 0 4px 8px rgba(255,153,0,0.3);
-            transition: transform 0.1s;
-        }
-        #reset-shop-btn:active {
-            transform: scale(0.95);
+            padding: 5px;
         }
 
-        #close-shop-btn {
-            background: #ff3333;
-            color: #fff;
-            border: 3px solid #fff;
-            padding: 10px 30px;
-            font-size: 18px;
+        /* VENTANA FLOTANTE DE AJUSTES */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-content {
+            background-color: var(--card-bg);
+            border: 2px solid var(--border-color);
+            color: var(--text-color);
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: var(--shadow-style);
+            max-height: 85vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        .close-modal-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 20px;
+            cursor: pointer;
+        }
+        .settings-section {
+            margin-bottom: 25px;
+            text-align: left;
+        }
+        .settings-section h3 {
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 8px;
+            margin-bottom: 12px;
+            color: #ff4444;
+        }
+        .config-btn {
+            background-color: #ff0000;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        .config-btn.active {
+            background-color: #00aa00;
+        }
+        
+        /* BOTONES DE CONFIGURACIÓN DE COLORES */
+        .color-picker-btn {
+            border: 2px solid transparent;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            color: white;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+        .color-picker-btn:hover {
+            border-color: var(--text-color);
+        }
+
+        .lang-select {
+            width: 100%;
+            padding: 10px;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 15px;
+            cursor: pointer;
+        }
+
+        /* CONTENEDOR PRINCIPAL Y REPRODUCTOR */
+        .main-container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 15px;
+            transition: max-width var(--transition-speed);
+        }
+        .main-player {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16/9;
             border-radius: 12px;
-            cursor: pointer;
+            overflow: hidden;
+            border: 2px solid var(--border-color);
+            background-color: #000;
         }
-
-        /* PANEL DE SELECCIÓN DE NIVEL */
-        #level-selection-screen {
+        .main-player iframe {
             position: absolute;
             top: 0;
             left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(0, 0, 0, 0.9);
-            display: none;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 120;
-            padding: 20px;
-        }
-        #level-selection-screen h2 {
-            color: #ffcc00;
-            font-size: 28px;
-            margin-bottom: 25px;
-            text-shadow: 2px 2px #000;
-        }
-        .levels-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 140px);
-            gap: 15px;
-            justify-content: center;
-            margin-bottom: 25px;
-        }
-        .level-select-btn {
-            background: #333;
-            color: #fff;
-            border: 3px solid #ffcc00;
-            padding: 15px;
-            font-size: 18px;
-            font-family: 'Arial Black', sans-serif;
-            border-radius: 12px;
-            cursor: pointer;
-            pointer-events: auto;
-            text-align: center;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-            transition: all 0.2s ease;
-        }
-        .level-select-btn.locked {
-            background: #1a1a1a;
-            border-color: #555;
-            color: #777;
-            cursor: not-allowed;
-            opacity: 0.6;
-        }
-        #back-to-menu-btn {
-            background: #888;
-            color: #000;
-            border: 3px solid #fff;
-            padding: 10px 25px;
-            font-size: 16px;
-            border-radius: 10px;
-            cursor: pointer;
-            pointer-events: auto;
-        }
-
-        /* CONFIGURACIÓN */
-        #settings-toggle-btn {
-            background: #444;
-            color: #fff;
-            border: 2px solid #bbb;
-            padding: 8px 16px;
-            font-size: 16px;
-            border-radius: 8px;
-            cursor: pointer;
-            pointer-events: auto;
-            font-family: sans-serif;
-            font-weight: bold;
-            margin-top: 10px;
-            margin-bottom: 15px;
-            z-index: 10;
-        }
-
-        /* PANEL DE CONFIGURACIONES */
-        #settings-panel {
-            background: rgba(20, 20, 20, 0.95);
-            border: 3px solid #ffcc00;
-            border-radius: 15px;
-            padding: 15px;
-            margin-bottom: 25px;
-            width: 290px;
-            display: none;
-            flex-direction: column;
-            gap: 12px;
-            align-items: center;
-        }
-        .setting-row {
-            display: flex;
-            flex-direction: column;
             width: 100%;
-            gap: 5px;
-            align-items: center;
-        }
-        .setting-row label {
-            font-size: 13px;
-            color: #ffcc00;
-        }
-        .setting-select {
-            background: #333;
-            color: #fff;
-            border: 2px solid #555;
-            padding: 6px;
-            border-radius: 6px;
-            width: 90%;
-            font-size: 13px;
-            pointer-events: auto;
-            text-align: center;
-        }
-
-        /* CÓDIGOS DE RECOMPENSA */
-        #code-section {
-            border-top: 2px dashed #444;
-            padding-top: 10px;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 6px;
-        }
-        #code-input {
-            background: #000;
-            border: 2px solid #00ff00;
-            color: #00ff00;
-            padding: 6px;
-            font-size: 15px;
-            border-radius: 6px;
-            width: 70%;
-            text-align: center;
-            letter-spacing: 3px;
-            font-family: monospace;
-            pointer-events: auto;
-        }
-        #code-submit-btn {
-            background: #00ff00;
-            color: #000;
+            height: 100%;
             border: none;
-            padding: 6px 15px;
-            font-size: 12px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-            pointer-events: auto;
         }
-
-        /* INTERFAZ (UI) */
-        #ui-header {
-            position: absolute;
-            top: 15px;
-            left: 15px;
-            right: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 10;
-            pointer-events: none;
+        .video-info {
+            margin-top: 15px;
+            text-align: left;
         }
-        .ui-box {
-            background: rgba(0, 0, 0, 0.65);
-            padding: 8px 16px;
-            border-radius: 20px;
-            border: 3px solid #ffcc00;
-            color: #fff;
-            font-size: 18px;
-            text-shadow: 2px 2px #000;
-            display: flex;
-            align-items: center;
-        }
-        #ui-score img {
-            width: 30px;
-            height: 30px;
-            margin-right: 8px;
-            animation: spin 4s linear infinite;
-        }
-
-        /* VENTANA FLOTANTE DE SUSCRIPCIÓN */
-        #subscribe-popup {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(0);
-            width: 310px;
-            background: rgba(15, 15, 15, 0.98);
-            border: 4px solid #ff0000;
-            border-radius: 20px;
-            color: #fff;
-            padding: 20px;
-            text-align: center;
-            z-index: 150;
-            box-shadow: 0 0 25px rgba(255,0,0,0.7);
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            pointer-events: auto;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 15px;
-        }
-        #subscribe-popup h2 {
-            color: #ff0000;
-            margin: 0;
+        .video-title {
             font-size: 22px;
-            text-shadow: 2px 2px #000;
+            margin: 0 0 10px 0;
+            font-weight: bold;
         }
-        #subscribe-popup p {
-            font-size: 14px;
-            margin: 0;
-            line-height: 1.4;
-            font-family: sans-serif;
-        }
-        .popup-btn-container {
+        .channel-row {
             display: flex;
-            gap: 15px;
-            width: 100%;
-            justify-content: center;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 15px;
         }
-        .popup-btn {
-            padding: 10px 25px;
-            font-size: 16px;
-            font-family: 'Arial Black', sans-serif;
-            border-radius: 10px;
-            border: 2px solid #fff;
+        
+        /* CANAL Y AVATAR */
+        .channel-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .avatar-img {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1px solid var(--border-color);
+            background-color: #1a1a1a;
+        }
+        
+        /* BOTONES DE SUSCRIPCIÓN */
+        .subscribe-btn {
+            background-color: var(--btn-sub-bg);
+            color: var(--btn-sub-text);
+            border: none;
+            padding: 10px 20px;
+            font-weight: bold;
+            border-radius: 20px;
             cursor: pointer;
         }
-        #sub-yes-btn {
-            background: #00ff00;
-            color: #000;
-        }
-        #sub-no-btn {
-            background: #ff3333;
-            color: #fff;
+        .subscribe-btn.subscribed {
+            background-color: #303030;
+            color: #aaa;
         }
 
-        /* CARTEL DE RECOMPENSA */
-        #announcement {
-            position: absolute;
-            top: 30%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(0);
-            color: #fff;
-            font-size: 32px;
-            text-align: center;
-            text-shadow: 4px 4px #000;
-            background: rgba(0, 0, 0, 0.85);
-            padding: 20px 40px;
-            border-radius: 15px;
-            border: 5px solid #00ff00;
-            z-index: 15;
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            pointer-events: none;
+        /* ESTILO PARA EL DESCARGADOR DE VIDEOS (DV) */
+        .download-container {
+            margin-top: 15px;
+            margin-bottom: 10px;
         }
-        .target {
-            position: absolute;
-            width: 110px;
-            height: auto;
-            transform: translate(-50%, -50%);
-            z-index: 3;
-            pointer-events: none;
-        }
-        #crosshair {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 60px;
-            height: 60px;
-            background-image: url('Mira.PNG');
-            background-size: contain;
-            background-repeat: no-repeat;
-            transform: translate(-50%, -50%);
-            pointer-events: none !important;
-            z-index: 8;
-        }
-        #weapon-container {
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 280px;
-            height: auto;
-            pointer-events: auto;
+        .download-btn {
+            background-color: #00aa00;
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 20px;
             cursor: pointer;
-            z-index: 9;
-            transition: transform 0.05s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 10px rgba(0, 170, 0, 0.2);
+            transition: transform 0.2s;
         }
-        #weapon {
+        .download-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* ESTILO PARA EL BUSCADOR DE VIDEOS (BV) */
+        .search-container {
+            margin: 25px 0 10px 0;
+            display: flex;
+            justify-content: flex-start;
+        }
+        .search-input {
             width: 100%;
-            height: auto;
-            display: block;
-            pointer-events: none;
+            max-width: 400px;
+            padding: 12px 20px;
+            font-size: 15px;
+            border-radius: 25px;
+            border: 2px solid var(--border-color);
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            outline: none;
+            transition: border-color 0.3s;
         }
-        @keyframes spin {
-            100% { transform: rotate(360deg); }
+        .search-input:focus {
+            border-color: var(--logo-bg-color);
+        }
+
+        /* RECOMENDADOS Y HISTORIAL */
+        .section-title {
+            font-size: 20px;
+            margin: 30px 0 15px 0;
+            text-align: left;
+        }
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        .video-card {
+            text-align: left;
+            cursor: pointer;
+        }
+        .thumbnail {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: #777;
+            border: 1px solid var(--border-color);
+            font-weight: bold;
+            background-size: cover;
+            background-position: center;
+        }
+        .card-info {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .card-text h4 {
+            margin: 0 0 5px 0;
+            font-size: 14px;
+        }
+        .card-text p {
+            margin: 0;
+            font-size: 12px;
+            color: #aaa;
+        }
+
+        /* ELEMENTOS DEL HISTORIAL DE VIDEOS (HV) */
+        .empty-history-msg {
+            color: #888;
+            font-style: italic;
+            grid-column: 1 / -1;
+            text-align: left;
+            margin-top: 5px;
+        }
+        .clear-history-btn {
+            background-color: transparent;
+            color: #ff4444;
+            border: 1px solid #ff4444;
+            padding: 6px 12px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+            float: right;
+            margin-top: -5px;
+        }
+        .clear-history-btn:hover {
+            background-color: rgba(255, 68, 68, 0.1);
+        }
+
+        /* BOTÓN DIRECTO DE YOUTUBE */
+        .youtube-box {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            margin-top: 20px;
+            margin-bottom: 5px;
+            box-shadow: var(--shadow-style);
+        }
+        .youtube-channel-btn {
+            background-color: #ff0000;
+            color: #ffffff;
+            border: none;
+            padding: 15px 35px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 30px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 4px 10px rgba(255,0,0,0.3);
         }
     </style>
 </head>
 <body>
 
-    <audio id="audio-music" src="Music.mp3" loop></audio>
-    <audio id="audio-pistola" src="Pistola.mp3"></audio>
-    <audio id="audio-boton" src="Boton.mp3"></audio>
+    <div id="welcome-screen">
+        <div class="welcome-content">
+            <div class="welcome-logo">Mr<span id="welcome-span">Tube</span></div>
+            
+            <div class="welcome-box">
+                <h2 id="beta-title">⚠️ ¡Bienvenido a la Version Beta de Prueba!</h2>
+                <p id="beta-p1">Hola a todos los seguidores y visitantes. Estas ingresando oficialmente a la fase de pruebas tecnicas y optimizacion de la plataforma independiente <strong>MrTube</strong>.</p>
+                <p id="beta-p2">Por favor, ten en cuenta lo siguiente antes de continuar:</p>
+                <p id="beta-p3">• <strong>Videos Faltantes:</strong> Por el momento, la grilla esta en mantenimiento. Veras que varios apartados del sitio tienen la etiqueta de "Proximamente" mientras se indexan los archivos correspondientes.</p>
+                <p id="beta-p4">• <strong>Errores Temporales:</strong> Debido a que estamos probando las conexiones y los reproductores integrados, algunas funciones de interfaz de usuario podrian presentar retrasos leves d carga en dispositivos moviles.</p>
+                <p id="beta-p5">Agradecemos profundamente tu paciencia, reporte de fallas y apoyo continuo para expandir nuestras producciones a toda la comunidad.</p>
+            </div>
 
-    <div id="subscribe-popup">
-        <h2>📢 ¡SÚPER PROMO!</h2>
-        <p>¡Suscríbete al canal oficial de <b>Mr.Jostin</b>!<br>Cuesta exactamente <b>300 monedas</b> del juego.</p>
-        <div class="popup-btn-container">
-            <button id="sub-yes-btn" class="popup-btn">SÍ</button>
-            <button id="sub-no-btn" class="popup-btn">NO</button>
+            <p id="scroll-text" style="color: #666; font-size: 14px; margin-bottom: 10px;">Desliza hacia abajo para continuar</p>
+            <button id="btn-continue" class="continue-btn" onclick="entrarAMrTube()">Continuar</button>
         </div>
     </div>
 
-    <!-- PANTALLA 1: LOGEO Y REGISTRO -->
-    <div id="welcome-screen">
-        <button id="settings-toggle-btn">⚙️ CONFIGURACIÓN</button>
+    <nav>
+        <div class="logo" onclick="recargarPagina()">Mr<span class="logo-text-box">Tube</span></div>
+        <div class="nav-right">
+            <button class="settings-btn" onclick="abrirAjustes()">⚙️</button>
+        </div>
+    </nav>
 
-        <div id="settings-panel">
-            <div class="setting-row">
-                <label id="label-lang">IDIOMA / LANGUAGE:</label>
-                <select id="lang-select" class="setting-select">
+    <div id="settings-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="close-modal-btn" onclick="cerrarAjustes()">✕</button>
+            <h2 id="modal-settings-title" style="margin-top:0; text-align: left;">Configuracion</h2>
+            
+            <div class="settings-section">
+                <h3 id="font-section-title">CF (Cambiar Fuente)</h3>
+                <button class="config-btn" style="background-color: #333;" onclick="cambiarFuente('montserrat')">1: Montserrat</button>
+                <button class="config-btn" style="background-color: #333;" onclick="cambiarFuente('rubik')">2: Rubik</button>
+                <button class="config-btn" style="background-color: #333;" onclick="cambiarFuente('arno')">3: Arno</button>
+            </div>
+
+            <div class="settings-section">
+                <h3 id="theme-section-title">Tema Visual</h3>
+                <button class="config-btn" onclick="cambiarTema('oscuro')">Negro</button>
+                <button class="config-btn" style="background-color:#ccc; color:#000;" onclick="cambiarTema('claro')">Blanco</button>
+                <button class="config-btn" style="background-color:#888888; color:#fff;" onclick="cambiarTema('gris')">Gris</button>
+            </div>
+
+            <div class="settings-section">
+                <h3 id="logo-section-title">Color del Logo</h3>
+                <button class="color-picker-btn" style="background-color: #ff0000;" onclick="cambiarColorLogo('#ff0000')">Rojo</button>
+                <button class="color-picker-btn" style="background-color: #00bfff;" onclick="cambiarColorLogo('#00bfff')">Celeste</button>
+                <button class="color-picker-btn" style="background-color: #8b4513;" onclick="cambiarColorLogo('#8b4513')">Café</button>
+                <button class="color-picker-btn" style="background-color: #ff6600;" onclick="cambiarColorLogo('#ff6600')">Anaranjado</button>
+                <button class="color-picker-btn" style="background-color: #ffcc00; color: #000;" onclick="cambiarColorLogo('#ffcc00')">Amarillo</button>
+                <button class="color-picker-btn" style="background-color: #00aa00;" onclick="cambiarColorLogo('#00aa00')">Verde</button>
+                <button class="color-picker-btn" style="background-color: #0000ff;" onclick="cambiarColorLogo('#0000ff')">Azul</button>
+                <button class="color-picker-btn" style="background-color: #800080;" onclick="cambiarColorLogo('#800080')">Morado</button>
+                <button class="color-picker-btn" style="background-color: #ffc0cb; color: #000;" onclick="cambiarColorLogo('#ffc0cb')">Rosa</button>
+                <button class="color-picker-btn" style="background-color: #ff00ff;" onclick="cambiarColorLogo('#ff00ff')">Fuchsia</button>
+                <button class="color-picker-btn" style="background-color: #ff9999; color: #000;" onclick="cambiarColorLogo('#ff9999')">Rojo Blanco</button>
+                <button class="color-picker-btn" style="background-color: #4a0000;" onclick="cambiarColorLogo('#4a0000')">Rojo Negro</button>
+                <button class="color-picker-btn" style="background-color: #000000; border: 1px solid #555;" onclick="cambiarColorLogo('#000000')">Negro</button>
+            </div>
+
+            <div class="settings-section">
+                <h3 id="pc-section-title">VC (Versión de Computadora)</h3>
+                <button id="vc-btn" class="config-btn" style="background-color: #00aa00; width: 100%;" onclick="toggleVersionComputadora()">Activar Modo Escritorio 💻</button>
+            </div>
+
+            <div class="settings-section">
+                <h3 id="ade-section-title">Rendimiento (ADE)</h3>
+                <button id="ade-btn" class="config-btn" onclick="toggleADE()">ADE: Apagado</button>
+                <button id="urs-btn" class="config-btn" style="background-color: #ff00aa;" onclick="toggleURS()">URS: Apagado</button>
+                <p id="ade-desc" style="font-size:12px; color:#aaa; margin-top:5px;">Activalo para consumir menos recursos y hacer la navegacion muy fluida.</p>
+            </div>
+
+            <div class="settings-section">
+                <h3 id="lang-section-title">Idioma de la Interfaz</h3>
+                <select id="lang-select-box" class="lang-select" onchange="cambiarIdioma(this.value)">
                     <option value="es">Español</option>
-                    <option value="en">English (Inglés)</option>
+                    <option value="ultra_emoji">🔥 Ultra Emoji 😎💥</option>
+                    <option value="epanola">ePaÑoLa</option>
+                    <option value="en">English</option>
                     <option value="fr">Français (Francés)</option>
-                    <option value="pt">Português (Portugués)</option>
-                    <option value="ru">Русский (Ruso)</option>
                     <option value="de">Deutsch (Alemán)</option>
-                    <option value="es-la">Español Latinoamericano</option>
-                    <option value="es-es">Español de España</option>
-                    <option value="tr">Türkçe (Turco)</option>
+                    <option value="id">Bahasa Indonesia (Indonesia)</option>
+                    <option value="it">Italiano (Italiano)</option>
+                    <option value="zh_mv">💡 中文 (Chino Mandarín)</option>
                     <option value="ar">العربية (Árabe)</option>
-                    <option value="hi">हिन्दी (Indio)</option>
+                    <option value="morse">Código Morse (• —)</option>
+                    <option value="af">Afrikaans (África)</option>
+                    <option value="ru">Русский (Ruso)</option>
+                    <option value="pt">Português (Portugués)</option>
+                    <option value="zh">中文 (Chino)</option>
                     <option value="ja">日本語 (Japonés)</option>
                     <option value="ko">한국어 (Coreano)</option>
+                    <option value="es_es">Español (España)</option>
+                    <option value="es_la">Español (Latinoamerica)</option>
                 </select>
             </div>
-
-            <div id="code-section">
-                <label id="label-code">CÓDIGO DE MONEDAS (3 DÍGITOS):</label>
-                <input type="text" id="code-input" placeholder="000" maxlength="3">
-                <button id="code-submit-btn">ACEPTAR</button>
-            </div>
         </div>
-
-        <h1 id="welcome-title">CHICKEN STRIKE NPC</h1>
-        <p id="welcome-desc">¡Bienvenido! Esta es una versión beta oficial del juego, por lo que podría contener algunos errores y bugs en el mapa durante el desarrollo en la plataforma MrTube.<br>Diseñado por ABG Productions® y Sprunki Animations Studios.</p>
-        
-        <div id="user-setup">
-            <label id="label-username" for="username-input">INGRESA TU NOMBRE DE PILOTO:</label>
-            <input type="text" id="username-input" placeholder="Ej: Pepe" maxlength="15">
-        </div>
-
-        <div id="ready-container">
-            <input type="checkbox" id="ready-checkbox">
-            <label for="ready-checkbox" id="ready-label">Estoy listo</label>
-        </div>
-
-        <button id="start-button" class="menu-btn">EMPEZAR A PROBAR</button>
-        <button id="exit-button" class="menu-btn">SALIR DEL JUEGO</button>
     </div>
 
-    <!-- PANTALLA 2: MENÚ INTERMEDIO DE JUEGO (ESTILO IMAGE_16.PNG) -->
-    <div id="play-menu-screen">
-        <h1>CHICKEN STRIKE<br>NPC</h1>
-        <button id="jugar-main-btn" class="large-game-btn">Jugar</button>
-        <button id="tienda-main-btn" class="large-game-btn">Tienda</button>
-        <button id="salir-main-btn" class="large-game-btn">Salir del Juego</button>
-    </div>
-
-    <!-- PANEL DE LA TIENDA OFICIAL: TIMECHICKEN -->
-    <div id="shop-screen">
-        <h2>TimeChicken</h2>
-        <p class="shop-subtitle">Decoraciones de Armas y Súper Mejoras Especiales</p>
-        
-        <div class="shop-container">
-            <!-- MEJORA 1 -->
-            <div class="shop-item">
-                <div class="shop-item-info">
-                    <div class="shop-item-title">Mejora 10.1 (Decorar Arma)</div>
-                    <div class="shop-item-desc">Dispara ráfagas continuas de balas muy rápido. Además activa Mejora 20 en Nivel 4 (NPCs se duplican por más monedas).</div>
-                </div>
-                <button id="buy-upgrade-1" class="shop-buy-btn" onclick="buyUpgrade(1, 100)">100 Monedas</button>
-            </div>
-
-            <!-- MEJORA 2 -->
-            <div class="shop-item">
-                <div class="shop-item-info">
-                    <div class="shop-item-title">Mejora 20.2 (Decorar Arma)</div>
-                    <div class="shop-item-desc">En el Nivel 2, la ganancia base de 7 monedas se multiplica por 7 (49 monedas por baja).</div>
-                </div>
-                <button id="buy-upgrade-2" class="shop-buy-btn" onclick="buyUpgrade(2, 200)">200 Monedas</button>
-            </div>
-
-            <!-- MEJORA 3 -->
-            <div class="shop-item">
-                <div class="shop-item-info">
-                    <div class="shop-item-title">Mejora 30.3 (Decorar Arma)</div>
-                    <div class="shop-item-desc">Último nivel: NPCs veloces en grupos de 3. ¡Si disparas a uno, mueren los 3 y te da 500 monedas!</div>
-                </div>
-                <button id="buy-upgrade-3" class="shop-buy-btn" onclick="buyUpgrade(3, 300)">300 Monedas</button>
-            </div>
+    <div id="main-web-container" class="main-container">
+        <div class="main-player">
+            <iframe id="main-iframe" src="https://www.youtube.com/embed/qvhFdTaMyCs" title="MrTube Player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
         </div>
         
-        <!-- BOTÓN NUEVO SOLICITADO: REINICIAR TIENDA -->
-        <button id="reset-shop-btn" onclick="resetShopUpgrades()">🔄 REINICIAR COMPRAS</button>
-        <button id="close-shop-btn">VOLVER AL MENÚ</button>
-    </div>
-
-    <!-- PANTALLA 3: SELECCIÓN DE NIVELES -->
-    <div id="level-selection-screen">
-        <h2>SELECCIONA UN NIVEL</h2>
-        <div class="levels-grid">
-            <button class="level-select-btn" data-lvl="1">Nivel 1</button>
-            <button class="level-select-btn locked" data-lvl="2" disabled>Nivel 2</button>
-            <button class="level-select-btn locked" data-lvl="3" disabled>Nivel 3</button>
-            <button class="level-select-btn locked" data-lvl="4" disabled>Nivel 4</button>
-            <button class="level-select-btn locked" data-lvl="5" disabled>Nivel 5</button>
-            <button class="level-select-btn locked" data-lvl="6" disabled>Nivel 6</button>
-        </div>
-        <button id="back-to-menu-btn">VOLVER AL MENÚ</button>
-    </div>
-
-    <!-- JUEGO PRINCIPAL -->
-    <div id="game-container">
-        <div id="stage"></div>
-
-        <div id="ui-header">
-            <div class="ui-box" id="ui-score">
-                <img src="Moneda.PNG" alt="Moneda">
-                <span id="score-text">0</span>
+        <div class="video-info">
+            <h1 id="main-video-title" class="video-title">Sprunki Animado T4 E5</h1>
+            <div class="channel-row">
+                <div class="channel-profile">
+                    <img class="avatar-img" src="avatar.PNG" alt="Mr.Jostin Avatar">
+                    <div>
+                        <strong style="font-size: 16px;">Mr.Jostin</strong>
+                        <span id="sub-count" style="font-size: 12px; color: #aaa; display: block;">0 suscriptores • ABG Productions®</span>
+                    </div>
+                </div>
+                <button id="btn-sub" class="subscribe-btn" onclick="alternarSuscripcion()">Suscribirse</button>
             </div>
-            <div class="ui-box" id="ui-level">
-                <span id="label-ui-level">Nivel</span>: <span id="level-text">1</span>
-            </div>
-            <div class="ui-box" id="ui-kills">
-                <span id="label-ui-targets">Objetivos</span>: <span id="kills-text">0/5</span>
+            
+            <div class="download-container">
+                <button id="download-video-btn" class="download-btn" onclick="descargarVideoActual()">📥 DV: Descargar Video Seguro</button>
             </div>
         </div>
 
-        <div id="announcement"></div>
-        <div id="crosshair"></div>
+        <div class="search-container">
+            <input type="text" id="video-search-bar" class="search-input" onkeyup="filtrarVideos()" placeholder="🔍 BV: Buscar videos en la grilla (Ej: Chicken Gun)...">
+        </div>
 
-        <div id="weapon-container">
-            <img id="weapon" src="Manos.PNG" alt="Arma">
+        <h2 id="recommended-title" class="section-title">Videos Recomendados</h2>
+        
+        <div id="recommended-video-grid" class="video-grid">
+            <div class="video-card" onclick="cargarVideo('https://www.youtube.com/embed/1lA4Bh5HT0o', 'Sprunki Animado T4 E6')">
+                <div class="thumbnail" style="background-image: url('https://img.youtube.com/vi/1lA4Bh5HT0o/mqdefault.jpg'); text-indent: -9999px;">VIDEO</div>
+                <div class="card-info">
+                    <img class="avatar-img" style="width:30px; height:30px;" src="avatar.PNG">
+                    <div class="card-text">
+                        <h4>Sprunki Animado T4 E6</h4>
+                        <p>Sprunki Animations Studios®</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="video-card" onclick="cargarVideo('https://www.youtube.com/embed/qvhFdTaMyCs', 'Sprunki Animado T4 E5')">
+                <div class="thumbnail" style="background-image: url('https://img.youtube.com/vi/qvhFdTaMyCs/mqdefault.jpg'); text-indent: -9999px;">VIDEO</div>
+                <div class="card-info">
+                    <img class="avatar-img" style="width:30px; height:30px;" src="avatar.PNG">
+                    <div class="card-text">
+                        <h4>Sprunki Animado T4 E5</h4>
+                        <p>Sprunki Animations Studios®</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="video-card" onclick="cargarVideo('https://www.youtube.com/embed/33VtpYpcw6A', 'Promoción de la Web 📡 💻')">
+                <div class="thumbnail" style="background-image: url('https://img.youtube.com/vi/33VtpYpcw6A/mqdefault.jpg'); text-indent: -9999px;">VIDEO</div>
+                <div class="card-info">
+                    <img class="avatar-img" style="width:30px; height:30px;" src="avatar.PNG">
+                    <div class="card-text">
+                        <h4>Promoción de la Web 📡 💻</h4>
+                        <p>ABG Productions®</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="video-card" onclick="cargarVideo('https://www.youtube.com/embed/CAL4Or5iwC8', 'Jugando Minecraft con mi Primito Tavito 🎮')">
+                <div class="thumbnail" style="background-image: url('https://img.youtube.com/vi/CAL4Or5iwC8/mqdefault.jpg'); text-indent: -9999px;">VIDEO</div>
+                <div class="card-info">
+                    <img class="avatar-img" style="width:30px; height:30px;" src="avatar.PNG">
+                    <div class="card-text">
+                        <h4>Jugando con mi Primito Tavito 🎮</h4>
+                        <p>ABG Productions®</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="video-card" onclick="cargarVideo('https://www.youtube.com/embed/xs7MKyHpRh0', 'El Misterio De Chicken Gun T2 E2')">
+                <div class="thumbnail" style="background-image: url('https://img.youtube.com/vi/xs7MKyHpRh0/mqdefault.jpg'); text-indent: -9999px;">VIDEO</div>
+                <div class="card-info">
+                    <img class="avatar-img" style="width:30px; height:30px;" src="avatar.PNG">
+                    <div class="card-text">
+                        <h4>El Misterio De Chicken Gun T2 E2</h4>
+                        <p>ABG Productions®</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="video-card" onclick="cargarVideo('https://www.youtube.com/embed/-e9bjdtB8AI', 'Dandy’s World Show T2 E5')">
+                <div class="thumbnail" style="background-image: url('https://img.youtube.com/vi/-e9bjdtB8AI/mqdefault.jpg'); text-indent: -9999px;">VIDEO</div>
+                <div class="card-info">
+                    <img class="avatar-img" style="width:30px; height:30px;" src="avatar.PNG">
+                    <div class="card-text">
+                        <h4>Dandy’s World Show T2 E5</h4>
+                        <p>Sprunki Animations Studios®</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="video-card" onclick="cargarVideo('https://www.youtube.com/embed/cMsKefgHhpk', '2econd 2ight 2eer || DW')">
+                <div class="thumbnail" style="background-image: url('https://img.youtube.com/vi/cMsKefgHhpk/mqdefault.jpg'); text-indent: -9999px;">VIDEO</div>
+                <div class="card-info">
+                    <img class="avatar-img" style="width:30px; height:30px;" src="avatar.PNG">
+                    <div class="card-text">
+                        <h4>2econd 2ight 2eer || DW</h4>
+                        <p>Sprunki Animations Studios®</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="video-card" onclick="cargarVideo('https://www.youtube.com/embed/TRX_s4ly49M', 'Sprunki Animado T4 E4')">
+                <div class="thumbnail" style="background-image: url('https://img.youtube.com/vi/TRX_s4ly49M/mqdefault.jpg'); text-indent: -9999px;">VIDEO</div>
+                <div class="card-info">
+                    <img class="avatar-img" style="width:30px; height:30px;" src="avatar.PNG">
+                    <div class="card-text">
+                        <h4>Sprunki Animado T4 E4</h4>
+                        <p>Sprunki Animations Studios®</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="video-card" onclick="cargarVideo('https://www.youtube.com/embed/e-WLd80odDo', '3 IDEAS QUE CAMBIARÍAN CG PARA SIEMPRE 😱🔥')">
+                <div class="thumbnail" style="background-image: url('https://img.youtube.com/vi/e-WLd80odDo/mqdefault.jpg'); text-indent: -9999px;">VIDEO</div>
+                <div class="card-info">
+                    <img class="avatar-img" style="width:30px; height:30px;" src="avatar.PNG">
+                    <div class="card-text">
+                        <h4>3 IDEAS QUE CAMBIARÍAN CG PARA SIEMPRE 😱🔥</h4>
+                        <p>ABG Productions®</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="video-card" onclick="cargarVideo('https://www.youtube.com/embed/Py7_RP2tXH0', 'El Misterio De Chicken Gun T2 E1')">
+                <div class="thumbnail" style="background-image: url('https://img.youtube.com/vi/Py7_RP2tXH0/mqdefault.jpg'); text-indent: -9999px;">VIDEO</div>
+                <div class="card-info">
+                    <img class="avatar-img" style="width:30px; height:30px;" src="avatar.PNG">
+                    <div class="card-text">
+                        <h4>El Misterio De Chicken Gun T2 E1</h4>
+                        <p>ABG Productions®</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="video-card dynamic-coming-soon">
+                <div class="thumbnail">Próximamente</div>
+                <div class="card-info">
+                    <img class="avatar-img" style="width:30px; height:30px;" src="avatar.PNG">
+                    <div class="card-text">
+                        <h4 class="coming-soon-text">Próximamente</h4>
+                        <p>ABG Productions®</p>
+                    </div>
+                </div>
+            </div>
+            <div class="video-card dynamic-coming-soon">
+                <div class="thumbnail">Próximamente</div>
+                <div class="card-info">
+                    <img class="avatar-img" style="width:30px; height:30px;" src="avatar.PNG">
+                    <div class="card-text">
+                        <h4 class="coming-soon-text">Próximamente</h4>
+                        <p>ABG Productions®</p>
+                    </div>
+                </div>
+            </div>
+            <div class="video-card dynamic-coming-soon">
+                <div class="thumbnail">Próximamente</div>
+                <div class="card-info">
+                    <img class="avatar-img" style="width:30px; height:30px;" src="avatar.PNG">
+                    <div class="card-text">
+                        <h4 class="coming-soon-text">Próximamente</h4>
+                        <p>ABG Productions®</p>
+                    </div>
+                </div>
+            </div>
+            <div class="video-card dynamic-coming-soon">
+                <div class="thumbnail">Próximamente</div>
+                <div class="card-info">
+                    <img class="avatar-img" style="width:30px; height:30px;" src="avatar.PNG">
+                    <div class="card-text">
+                        <h4 class="coming-soon-text">Próximamente</h4>
+                        <p>ABG Productions®</p>
+                    </div>
+                </div>
+            </div>
+            <div class="video-card dynamic-coming-soon">
+                <div class="thumbnail">Próximamente</div>
+                <div class="card-info">
+                    <img class="avatar-img" style="width:30px; height:30px;" src="avatar.PNG">
+                    <div class="card-text">
+                        <h4 class="coming-soon-text">Próximamente</h4>
+                        <p>ABG Productions®</p>
+                    </div>
+                </div>
+            </div>
+            <div class="video-card dynamic-coming-soon">
+                <div class="thumbnail">Próximamente</div>
+                <div class="card-info">
+                    <img class="avatar-img" style="width:30px; height:30px;" src="avatar.PNG">
+                    <div class="card-text">
+                        <h4 class="coming-soon-text">Próximamente</h4>
+                        <p>ABG Productions®</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div style="clear: both; overflow: hidden; margin-top: 20px;">
+            <button id="btn-clear-history" class="clear-history-btn" onclick="borrarHistorial()">Borrar HV</button>
+            <h2 id="history-title" class="section-title">HV (Historial de Videos)</h2>
+        </div>
+        <div id="history-grid" class="video-grid"></div>
+
+        <div class="youtube-box">
+            <h3 id="yt-box-title" style="margin-top:0;">¿Quieres ver mas contenido oficial y original?</h3>
+            <p id="yt-box-desc" style="color:#aaa; font-size:14px; margin-bottom:20px;">¡Apoya las producciones originales de nuestro canal directamente en YouTube!</p>
+            <a href="https://youtube.com/@mr.jostin_oficial?si=wDrRGvnlRJUFWfWN" target="_blank" id="yt-main-btn-text" class="youtube-channel-btn">Suscribirse en YouTube</a>
         </div>
     </div>
 
     <script>
-        const stage = document.getElementById('stage');
-        const scoreText = document.getElementById('score-text');
-        const levelText = document.getElementById('level-text');
-        const killsText = document.getElementById('kills-text');
-        const announcement = document.getElementById('announcement');
-        const weaponContainer = document.getElementById('weapon-container');
-        const weaponImage = document.getElementById('weapon');
-        
-        const welcomeScreen = document.getElementById('welcome-screen');
-        const playMenuScreen = document.getElementById('play-menu-screen');
-        const shopScreen = document.getElementById('shop-screen');
-        const levelSelectionScreen = document.getElementById('level-selection-screen');
-        
-        const startButton = document.getElementById('start-button');
-        const exitButton = document.getElementById('exit-button');
-        const readyCheckbox = document.getElementById('ready-checkbox');
-        
-        const jugarMainBtn = document.getElementById('jugar-main-btn');
-        const tiendaMainBtn = document.getElementById('tienda-main-btn');
-        const salirMainBtn = document.getElementById('salir-main-btn');
-        const closeShopBtn = document.getElementById('close-shop-btn');
-        const backToMenuBtn = document.getElementById('back-to-menu-btn');
-        const levelButtons = document.querySelectorAll('.level-select-btn');
-
-        const subscribePopup = document.getElementById('subscribe-popup');
-        const subYesBtn = document.getElementById('sub-yes-btn');
-        const subNoBtn = document.getElementById('sub-no-btn');
-        
-        const usernameInput = document.getElementById('username-input');
-        const settingsToggleBtn = document.getElementById('settings-toggle-btn');
-        const settingsPanel = document.getElementById('settings-panel');
-        const langSelect = document.getElementById('lang-select');
-        const codeInput = document.getElementById('code-input');
-        const codeSubmitBtn = document.getElementById('code-submit-btn');
-
-        const audioMusic = document.getElementById('audio-music');
-        const audioPistola = document.getElementById('audio-pistola');
-        const audioBoton = document.getElementById('audio-boton');
-
-        const levelsConfig = {
-            1: { targets: 5, speed: 1.8, coinsPerKill: 1, reward: 25 },
-            2: { targets: 10, speed: 2.6, coinsPerKill: 7, reward: 50 },
-            3: { targets: 15, speed: 3.2, coinsPerKill: 10, reward: 100 },
-            4: { targets: 20, speed: 3.8, coinsPerKill: 20, reward: 200 },
-            5: { targets: 25, speed: 4.4, coinsPerKill: 30, reward: 300 },
-            6: { targets: 40, speed: 5.2, coinsPerKill: 40, reward: 500 }
+        // TRADUCCIONES COMPLETAS CORREGIDAS MAS LOS NUEVOS IDIOMAS
+        const traducciones = {
+            ultra_emoji: {
+                beta_title: "⚠️🔥 ¡BIENVENIDO AL BETA SUPER EXTREMO! 💥😎",
+                beta_p1: "👋 ¡Hola, cracks y leyendas! 🌟 Están entrando al laboratorio tecnológico de optimización masiva de la plataforma independiente 🚀 <strong>MrTube</strong> 🎮Flux!",
+                beta_p2: "⚡ ¡MIRA ESTO ANTES DE SEGUIR, CRACK! 👇🔥:",
+                beta_p3: "• 🎬 <strong>Falta Contenido:</strong> ¡La grilla está que arde en mantenimiento! 🛠️ Verás carteles locos mientras indexamos todo a máxima velocidad! 🌐💥",
+                beta_p4: "• 👾 <strong>Errores Locos:</strong> ¡Probamos reproductores al límite! 🔥 Algunas cosas podrían ir lentas si tu dispositivo no tiene el poder! 📱💨",
+                beta_p5: "🙏 ¡Millones de gracias por el aguante y por apoyar las animaciones de los mejores estudios! 🎬💥✨",
+                scroll_text: "👇 ¡Baja por completo para desbloquear el poder! 👇",
+                btn_continue: "🚀 ¡ENTRAR A MRTUBE AHORA! 💥",
+                recommended_title: "🔥 VIDEOS RECOMENDADOS DE HOY 😎🎬",
+                coming_soon: "🚀 PRÓXIMAMENTE DISPONIBLE 💥",
+                sub_text: "🔴 SUSCRIBIRSE AL CANAL 🔥",
+                subbed_text: "✅ ¡YA ERES MIEMBRO CRACK! 😎",
+                sub_count_suffix: "🔥 suscriptores premium • ABG Productions® 🎬✨",
+                settings_title: "⚙️ CONFIGURACIÓN SUPREMA 🛠️",
+                theme_title: "🎨 ESTILO VISUAL DE LA WEB 💥",
+                logo_title: "🌈 COLOR DEL LOGO INCREÍBLE 🔥",
+                ade_title: "⚡ RENDIMIENTO ULTRA (ADE) 🚀",
+                ade_on: "🚀 ADE: PRENDIDÍSIMO 🔥",
+                ade_off: "❌ ADE: APAGADO 😴",
+                ade_desc: "⚡ ¡Prende el ADE o el URS para que tu iPhone o Android corra a nivel Dios! 📱💨",
+                lang_title: "🗣️ IDIOMA DE LA INTERFAZ 🌍",
+                yt_title: "📺 ¿QUIERES VER MÁS CONTENIDO OFICIAL? 🔥🎬",
+                yt_desc: "💥 Apoya los proyectos y animaciones originales directamente en el canal oficial de YouTube! 🚀⚡",
+                yt_btn: "🔴 SUSCRIBIRSE EN YOUTUBE AHORA 💥🎬",
+                history_title: "👑 HV (HISTORIAL DE PODER REAL) 📊🎬",
+                history_empty: "❌ ¡No has visto ningún video todavía, crack! 🎬🍿",
+                history_clear: "🗑️ LIMPIAR HISTORIAL HV 💥",
+                cf_title: "🔤 CF (FUENTES DEL CANAL)",
+                vc_title: "💻 VC (SISTEMA DE ESCRITORIO)",
+                vc_btn_on: "📳 Cambiar a Modo Celular",
+                vc_btn_off: "💻 Cambiar a Modo Computadora",
+                dv_btn_text: "📥 DV: Descargar Video Seguro"
+            },
+            epanola: {
+                beta_title: "⚠️ Benbenio a las Flipantes aventura de la pajina que se me olvido el nombre xddddddddddddddddddddddd",
+                beta_p1: "Ola a tos los fologüers y bisitantes. Tas emtrando ofisialmete a las pruebas tecnicas de la pajina flama de <strong>MrTube</strong> XD.",
+                beta_p2: "Mira esto antes de toquetear nada xd:",
+                beta_p3: "• No ai bideos: Por ahora la cosa esta rota en mantemimieto. Beras que sice 'Prosimamete' mientas subimos los enlaçes xd.",
+                beta_p4: "• Errores raris: Como tamos probando los reproductores integrados, ai cositas que ban a ir re lentas en tu celupatata XD.",
+                beta_p5: "Graçias por la paçiençia y por apollar las animasiones de los estudios xd.",
+                scroll_text: "Baja para abajo para de jarte pasar xd",
+                btn_continue: "Dale akin para entrar a las Flipantes aventura de la pajina que se me olvido el nomble por 8373633836737363938 veces xdddddddddddddd osea literal denle clik de una ves xq si tengo q recordarles el nonbre d la pajina una ves mas me va a explotar la unica neurona q me queda jskajskaj xdxd rre funable mi comentario de bdd pero esq q flojera con la jente q no se aprende ni el nonbre del sitio dnde ven sus series favoritas xd de bdd q da alta peresa tener q poner un texto tan largo q casi rompe el diseño d la pajina xdxd pero bueno mentira jiji se les qre un montonaso <3 xd por sicierto muchisimas grasias por todo el apoyo incondisinal q le dan siempre a las animasiones y prolletos d bdd xd son los mas cracks de todo el planeta tierra xd d todo corason se les agradese un universo entero x aguantar mis uevadas y x estar ai siempre al pie del cañon xd enserio son la rre clave jente muchisimas gracias totales xd sigan asi d cracks xd",
+                recommended_title: "Bideos Recomendados pal man que entro a la wev xd osea literal miren estos capis xq si entraron a la pajina y no ven lo q les recomiendo d bdd q no se para que entran jskajskaj xdxd rre funable mi comentario de bdd pero esq q flojera con la jente q entra a un sitio de animasiones y se queda viendo la pantalla en blanco sin darle clik a nada xd de bdd q da alta peresa ponerles las cosas en bandeja d plata con calidad trillonaria para q al final no bean nada xdxd usen el mause o el dedo che xd pero bueno mentira jiji se les qre un montonaso <3 xd por sicierto muchisimas grasias por todo el apoyo incondisinal q le dan siempre a las animasiones y prolletos d bdd xd son los mas cracks de todo el planeta tierra xd d todo corason se les agradese un universo entero x aguantar mis uevadas y x estar ai siempre al pie del cañon xd enserio son la rre clave jente muchisimas gracias totales xd sigan asi d cracks xd",
+                coming_soon: "Prosimamete xd osea literal esperense un cacho xq las cosas buenas toman tiempo jente xdxd q flojera con la jente q quiere todo ya de inmediato como si animar con calidad trillonaria fuera soplar y aser botellas jskajskaj xd rre funable mi comentario de bdd pero esq si no tienen pasensia les va a dar un patatús xd de bdd q da alta peresa ver q preguntan cada sinto segundos cuando sale el prosimo capi o el prosimo prolleto xdxd dehen trabajar a los estudios en pas che xd pero bueno mentira jiji se les qre un montonaso <3 xd por sicierto muchisimas grasias por todo el apoyo incondisinal q le dan siempre a las animasiones y series de bdd xd son los mas cracks de todo el planeta tierra xd d todo corason se les agradese un universo entero x aguantar mis uevadas y x estar ai siempre firmes al pie del cañon xd enserio son la rre clave jente muchisimas gracias totales xd sigan asi d cracks xd",
+                sub_text: "Suscribise XD osea literal vayan a romper ese boton d una ves xq si entran a ver las series gratis y ni se suscriben de bdd q no tienen corason xdxd q flojera estar animando horas y horas con calidad trillonaria para jente q ve los capis y se va sin dehar su lay jskajskaj xd rre funable pero sicierto xd de bdd q si no se suscriben les va a caer la maldision del lag eterno en el cel xdxd pero bueno mentira jiji se les qre un monton <3 xd por sicierto muchisimas grasias por todo el apoyo incondisinal q le dan siempre a los prolletos y a los canales xd son los mas cracks d todo el planeta tierra d bdd xd d todo corason se les agradese un universo entero x aguantar mis uevadas y x estar ai siempre firmes xd son la rre clave jente enserio xd muchisimas gracias totales xd sigan asi d cracks xd",
+                subbed_text: "Ya tas Suscrito xd osea oviamente si ya le diste clik antes ya eres parte del bando d los cracks xd aunque d seguro andas dándole clik otra ves solo para ver q sale xq no tienes nada mas q aser jskajskaj xdxd rre funable el comentario d bdd pero esq q flojera con la jente q le da clik a lo tonto a los botones q ya estan activados xd de bdd q me da una peresa trillonaria ver q intentan romper el sistema xdxd pero bueno mentira jiji se les qre un montonaso <3 xd de bdd muchisimas gracias por ser un suscriptor fiel y x todo el apoyo q le dan siempre a las series y animasiones xd son la rre clave de todo el multiverso jente xd d todo corason muchisimas gracias x bancarme en cada locura xd enserio se les agradese un trillon xd muchisimas gracias totales xd sigan asi d cracks xd",
+                sub_count_suffix: "suscritores • ABG Productions® Xd osea miren ese numero jente xd ay bamos subiendo de a poquitisimo xq seguro ai un monton d jente filtrada q ve los capis piratas o ni deha su lay jskajskaj xdxd rre funable pero sicierto xd q flojera con la jente q no se suscribe al canal oficial para llegar mas rapido a las placas de yutub de bdd xd q peresa trillonaria me da pensar en eso xd pero bueno mentira jiji se les qre un montonaso <3 xd de bdd muchisimas gracias a los suscritores fiels q de verdad apoyan a los estudios y se ven todas las series completitas xd son la rre clave de todo el multiverso jente xd d todo corason muchisimas gracias x bancarme en cada locura y en cada animasion xd enserio se les agradese un trillon xd muchisimas gracias totales xd sigan asi d cracks xd",
+                settings_title: "Ajutes del ćitio (pa q no te aburas aka xd) osea literal entren aki a rebisar las opsiones xq si entran a la pajina y dehan todo por defecto d bdd q son alta peresa jskajskaj xdxd rre funable mi comentario d bdd pero esq q flojera programar un panel de konfigurasion con calidad trillonaria para q la jente ni se digne a darle clik xd de bdd q si se aburren es x su culpa x no picarle a los botones xdxd usen las opsiones che xd pero bueno mentira jiji se les qre un monton <3 xd por sicierto muchisimas grasias por todo el apoyo incondisinal q le dan siempre a los prolletos y a las animasiones xd son los mas cracks d todo el planeta tierra d bdd xd d todo corason se les agradese un universo entero x aguantar mis uevadas y x estar ai siempre firmes xd son la rre clave jente enserio xd muchisimas gracias totales xd sigan asi d cracks xd",
+                theme_title: "Colo de fodo (aca puede canbiar el color a tu justo xd pero me da una peresa total xk el editor q me dise que aga esto no me pagua lo sufisiente Xd pa aser eta uevada xdxd ademas q flojera programar o diseñar para jente q seguro ni se ba a dar cuenta xd de bdd q a veses pienso q el publico no tiene ic xdxd rre funable el comentario jsnfkskd pero sicierto xd mentira jiji se les qre un monton <3 xd de bdd muchisimas gracias por el apoyo jente xd son los mejores del mundo mundial xd grasias x ver mis tonterias y bancarme siempre xd de verdad c les agradese con todo el corason xdxd sigan asi d cracks aunq canbiar este color sea un dolor d kabesa xd grasias totales xddd)",
+                logo_title: "Colo de Logo (acá tanbiën puede cambiar el color xd osea si quieren cambienlo xq a mi la bdd q me da una flojera trillonaria xdxd aparte q flojera estar dándole opciones a jente q seguro usa el color mas feo q encuentre xd el bicho lo aria mejor jskajskaj xd rre funable pero sicierto xd de bdd q si no les usta el color q viene x defecto pues lo cambian y ya xd tampoco es ciencia espacial jente xdxd de bdd muchisimas gracias por todo el apoyo incondisinal q le dan a los canaloes xd son los mas cracks del multiverso xd se les qre un montonaso <3 xd de bdd grasias x aguantar mis uevadas y x ver mis videos xd son la rre clave jente enserio xd muchisimas grasias totales xdxd sigan asi de cracks xd)",
+                ade_title: "Fluides (ADE) xd",
+                ade_on: "ADE: Predido XD",
+                ade_off: "ADE: Apagao xd",
+                ade_desc: "Prendelo para que la pajina no te explote el cel xd osea literal prendanlo xq si no su telefono tercermundista va a terminar sies pies vajo tierra del lag jskajskaj xdxd rre funable mi comentario de bdd pero esq si no lo activan la pajina les va a minar asta el alma y les va a dehar el cel mas caliente que el sol xdxd que flojera optimizar para telefonos q parecesen ladrillos de bdd xd mentira jiji se les qre un monton <3 xd por sicierto muchisimas grasias por todo el apoyo que le dan siempre al canal de bdd xd son los mas cracks de todo el multiverso xd de todo corason muchisimas gracias x aguantar mis uevadas y x estar ai al pie del cañon xd enserio se les agradese un trillon xdxd son la rre clave jente xd muchisimas gracias totales xd sigan asi de cracks xd.",
+                lang_title: "Idioma muy raro Xd osea literal activen esta uevada si quieren q toda la pajina se buelva un rrebolu d letras q seguro ni van a entender jskajskaj xdxd rre funable mi comentario d bdd pero esq a veses pienso q el publico no sabe ni ler y solo le dan clik a lo tonto a ber q pasa xd q flojera gastar codigo y neuronas en aser un idioma tan pro y secreto para q piensen q es un error del sistema de bdd xdxd alta peresa da la jente asi pero bueno mentira jiji se les qre un montonaso <3 xd por sicierto muchisimas grasias por todo el apoyo incondisinal q le dan siempre a los prolletos y a las series d bdd xd son los mas cracks de todo el planeta tierra xd d todo corason se les agradese un universo entero x aguantar mis uevadas y x estar ai siempre al pie del cañon xd enserio son la rre clave jente muchisimas gracias totales xd sigan asi d cracks xd",
+                yt_title: "¿Keres ber mas bideos orijinalis? XD",
+                yt_desc: "Apoya el canal de Yutub para ma capis y prolletos como ete xd osea literal vayan a suscribirse y dejen su lay porfavor xq si no apoyan no pienso subir mas capitulos d bdd xd q flojeraesforzarse... mucho gracias totales xd",
+                yt_btn: "Suscribise en Yutub XD",
+                history_title: "HV (Bideos Vistos xd)",
+                history_empty: "No as bisto ningun bideo xd pa khe pueda ver tus bideos favoritos, o lo q sea, tendra khe obligatoriamete ver los Xd...",
+                history_clear: "Limpiar HV xd",
+                cf_title: "🔤 CF (Letra de la web xd)",
+                vc_title: "💻 VC (Bersion de PC xd)",
+                vc_btn_on: "Volver al Celu xd",
+                vc_btn_off: "Poner como Compu xd",
+                dv_btn_text: "📥 DV: aki degcarga el bideo xd (aki podég decargar cualkien biedeo q se te antoje) osea literal podes bajarte el video que quieras para verlo un millon de veses xq seguro tu internet de carton no aguanta ni cargarlo en 360p de un solo golpe jskajskaj xdxd rre funable mi comentario d bdd pero esq q flojera con la jente q quiere todo en 4k pero tiene un wifi q se cae si pasa una mosca xd de bdd q da alta peresa optimizar el servidor para q descarguen a la velocidad d la lus pero lo acemos con calidad trillonaria x amor al arte xdxd pero bueno mentira jiji se les qre un montonaso <3 xd por sicierto muchisimas grasias por todo el apoyo incondisinal q le dan siempre a las animasiones y prolletos d bdd xd son los mas cracks de todo el planeta tierra xd d todo corason se les agradese un universo entero x aguantar mis uevadas y x estar ai siempre al pie del cañon xd enserio son la rre clave jente muchisimas gracias totales xd sigan asi d cracks xd"
+            },
+            es: {
+                beta_title: "⚠️ ¡Bienvenido a la Version Beta de Prueba!",
+                beta_p1: "Hola a todos los seguidores y visitantes. Estas ingresando oficialmente a la fase de pruebas tecnicas y optimizacion de la plataforma independiente MrTube.",
+                beta_p2: "Por favor, ten en cuenta lo siguiente antes de continuar:",
+                beta_p3: "• Videos Faltantes: Por el momento, la grilla esta en mantenimiento. Veras que varios apartados del sitio tienen la etiqueta de 'Proximamente' mientras se indexan los archivos correspondientes.",
+                beta_p4: "• Errores Temporales: Debido a que estamos probando las conexiones y los reproductores integrados, algunas funciones de interfaz de usuario podrian presentar retrasos leves de carga en dispositivos moviles.",
+                beta_p5: "Agradecemos profundamente tu paciencia, reporte de fallas y apoyo continuo para expandir nuestras producciones a toda la comunidad.",
+                scroll_text: "Desliza hacia abajo para continuar",
+                btn_continue: "Continuar",
+                recommended_title: "Videos Recomendados",
+                coming_soon: "Proximamente",
+                sub_text: "Suscribirse",
+                subbed_text: "Suscrito",
+                sub_count_suffix: "suscriptores • ABG Productions®",
+                settings_title: "Configuracion",
+                theme_title: "Tema Visual",
+                logo_title: "Color del Logo",
+                ade_title: "Rendimiento (ADE)",
+                ade_on: "ADE: Encendido",
+                ade_off: "ADE: Apagado",
+                ade_desc: "Activalo para consumir menos recursos y hacer la navegacion muy fluida.",
+                lang_title: "Idioma de la Interfaz",
+                yt_title: "¿Quieres ver mas contenido oficial?",
+                yt_desc: "Apoya las producciones originales del canal directamente en YouTube.",
+                yt_btn: "Suscribirse en YouTube",
+                history_title: "HV (Historial de Videos)",
+                history_empty: "¡No has visto ningun video!",
+                history_clear: "Borrar HV",
+                cf_title: "• CF (Cambiar Fuente)",
+                vc_title: "• VC (Versión de Computadora)",
+                vc_btn_on: "Volver a Modo Móvil",
+                vc_btn_off: "Activar el Modo Computadora",
+                dv_btn_text: "📥 DV: Descargar Video Seguro"
+            },
+            en: {
+                beta_title: "⚠️ Welcome to the Beta Test Version!",
+                beta_p1: "Hello to all followers and visitors. You are officially entering the technical testing phase of the independent platform MrTube.",
+                beta_p2: "Please keep the following in mind before continuing:",
+                beta_p3: "• Missing Videos: For now, the grid is undergoing maintenance.",
+                beta_p4: "• Temporary Errors: Delay might occur on mobile connections.",
+                beta_p5: "We appreciate your support to expand our productions.",
+                scroll_text: "Scroll down to continue",
+                btn_continue: "Continue",
+                recommended_title: "Recommended Videos",
+                coming_soon: "Coming Soon",
+                sub_text: "Subscribe",
+                subbed_text: "Subscribed",
+                sub_count_suffix: "subscribers • ABG Productions®",
+                settings_title: "Settings",
+                theme_title: "Visual Theme",
+                logo_title: "Logo Color",
+                ade_title: "Performance (ADE)",
+                ade_on: "ADE: ON",
+                ade_off: "ADE: OFF",
+                ade_desc: "Turn on to make browsing extremely smooth.",
+                lang_title: "Interface Language",
+                yt_title: "Want to see more official content?",
+                yt_desc: "Support original productions on YouTube.",
+                yt_btn: "Subscribe on YouTube",
+                history_title: "HV (Video History)",
+                history_empty: "You haven't watched any videos yet",
+                history_clear: "Clear HV",
+                cf_title: "• CF (Change Font)",
+                vc_title: "• VC (Computer Version)",
+                vc_btn_on: "Switch to Mobile Mode",
+                vc_btn_off: "Switch to Desktop Mode",
+                dv_btn_text: "📥 DV: Download Video Secure"
+            },
+            fr: {
+                beta_title: "⚠️ Bienvenue dans la Version Beta !",
+                beta_p1: "Bonjour à tous les abonnés et visiteurs. Vous entrez officiellement dans la phase de test de MrTube.",
+                beta_p2: "Veuillez noter les points suivants avant de continuer :",
+                beta_p3: "• Vidéos Manquantes : Pour le moment, la grille est en maintenance.",
+                beta_p4: "• Erreres Temporaires : Des ralentissements légers peuvent survenir sur mobile.",
+                beta_p5: "Merci pour votre patience et votre soutien continu.",
+                scroll_text: "Faites défiler vers le bas pour continuer",
+                btn_continue: "Continuer",
+                recommended_title: "Vidéos Recommandées",
+                coming_soon: "À venir",
+                sub_text: "S'abonner",
+                subbed_text: "Abonné",
+                sub_count_suffix: "abonnés • ABG Productions®",
+                settings_title: "Configuration",
+                theme_title: "Thème Visuel",
+                logo_title: "Couleur du Logo",
+                ade_title: "Performance (ADE)",
+                ade_on: "ADE: Activé",
+                ade_off: "ADE: Désactivé",
+                ade_desc: "Activez-le pour rendre la navigation super fluide.",
+                lang_title: "Langue de l'interface",
+                yt_title: "Voir plus de contenu officiel ?",
+                yt_desc: "Soutenez les productions originales directement sur YouTube.",
+                yt_btn: "S'abonner sur YouTube",
+                history_title: "HV (Historique Vidéo)",
+                history_empty: "Aucune vidéo vue pour le moment",
+                history_clear: "Effacer l'historique",
+                cf_title: "• CF (Changer la Police)",
+                vc_title: "• VC (Version Ordinateur)",
+                vc_btn_on: "Retour au Mode Mobile",
+                vc_btn_off: "Passer en Mode Ordinateur",
+                dv_btn_text: "📥 DV: Télécharger la Vidéo"
+            },
+            de: {
+                beta_title: "⚠️ Willkommen in der Beta-Testversion!",
+                beta_p1: "Hallo an alle Follower und Besucher. Sie betreten официально die Testphase von MrTube.",
+                beta_p2: "Bitte beachten Sie Folgendes, bevor Sie fortfahren:",
+                beta_p3: "• Fehlende Videos: Das Raster befindet sich derzeit in Wartung.",
+                beta_p4: "• Temporäre Fehler: Bei mobilen Verbindungen kann es zu Verzögerungen kommen.",
+                beta_p5: "Vielen Dank für Ihre Geduld und Unterstützung.",
+                scroll_text: "Scrollen Sie nach unten, um fortzufahren",
+                btn_continue: "Weiter",
+                recommended_title: "Empfohlene Videos",
+                coming_soon: "Demnächst",
+                sub_text: "Abonnieren",
+                subbed_text: "Abonniert",
+                sub_count_suffix: "Abonnenten • ABG Productions®",
+                settings_title: "Einstellungen",
+                theme_title: "Visuelles Thema",
+                logo_title: "Logo-Farbe",
+                ade_title: "Leistung (ADE)",
+                ade_on: "ADE: Eingeschaltet",
+                ade_off: "ADE: Ausgeschaltet",
+                ade_desc: "Aktivieren, um das Surfen extrem flüssig zu machen.",
+                lang_title: "Oberflächensprache",
+                yt_title: "Mehr offizielle Inhalte sehen?",
+                yt_desc: "Unterstützen Sie Originalproduktionen auf YouTube.",
+                yt_btn: "Auf YouTube abonnieren",
+                history_title: "HV (Video-Verlauf)",
+                history_empty: "Sie haben noch keine Videos gesehen",
+                history_clear: "Verlauf löschen",
+                cf_title: "• CF (Schriftart ändern)",
+                vc_title: "• VC (Computerversion)",
+                vc_btn_on: "Zum mobilen Modus wechseln",
+                vc_btn_off: "Zum Desktop-Modus wechseln",
+                dv_btn_text: "📥 DV: Video Sicher Herunterladen"
+            },
+            id: {
+                beta_title: "⚠️ Selamat Datang di Versi Uji Coba Beta!",
+                beta_p1: "Halo untuk semua pengikut dan pengunjung. Anda resmi memasuki fase pengujian teknis platform MrTube.",
+                beta_p2: "Harap perhatikan hal-hal berikut sebelum melanjutkan:",
+                beta_p3: "• Video Hilang: Untuk saat ini, sistem kisi sedang dalam pemeliharaan.",
+                beta_p4: "• Kesalahan Sementara: Keterlambatan ringan mungkin terjadi pada koneksi seluler.",
+                beta_p5: "Kami sangat berterima kasih atas kesabaran dan dukungan berkelanjutan Anda.",
+                scroll_text: "Gulir ke bawah para melanjutkan",
+                btn_continue: "Lanjutkan",
+                recommended_title: "Video Rekomendasi",
+                coming_soon: "Segera Hadir",
+                sub_text: "Berlangganan",
+                subbed_text: "Subscribed",
+                sub_count_suffix: "pelanggan • ABG Productions®",
+                settings_title: "Pengaturan",
+                theme_title: "Tema Visual",
+                logo_title: "Warna Logo",
+                ade_title: "Performa (ADE)",
+                ade_on: "ADE: Menyala",
+                ade_off: "ADE: Mati",
+                ade_desc: "Aktifkan untuk membuat penjelajahan menjadi sangat lancar.",
+                lang_title: "Bahasa Antarmuka",
+                yt_title: "Ingin melihat konten resmi lainnya?",
+                yt_desc: "Dukung produksi asli saluran langsung di YouTube.",
+                yt_btn: "Berlangganan di YouTube",
+                history_title: "HV (Riwayat Video)",
+                history_empty: "Anda belum menonton video apa pun",
+                history_clear: "Hapus Riwayat",
+                cf_title: "• CF (Ubah Font)",
+                vc_title: "• VC (Versi Komputer)",
+                vc_btn_on: "Kembali ke Mode Seluler",
+                vc_btn_off: "Paksa Mode Komputer",
+                dv_btn_text: "📥 DV: Unduh Video Aman"
+            },
+            it: {
+                beta_title: "⚠️ Benvenuto nella Versione Beta di Prova!",
+                beta_p1: "Ciao a tutti i follower e visitatori. Stai entrando ufficialmente nella fase di test di MrTube.",
+                beta_p2: "Si prega di tenere a mente quanto segue prima di continuare:",
+                beta_p3: "• Video Mancanti: Al momento, la griglia è in manutenzione.",
+                beta_p4: "• Errori Temporanei: Potrebbero verificarsi lievi ritardi su dispositivi mobili.",
+                beta_p5: "Grazie mille per la pazienza e il supporto continuo.",
+                scroll_text: "Scorri verso il basso per continuare",
+                btn_continue: "Continua",
+                recommended_title: "Video Consigliati",
+                coming_soon: "Prossimamente",
+                sub_text: "Iscriviti",
+                subbed_text: "Iscritto",
+                sub_count_suffix: "iscritti • ABG Productions®",
+                settings_title: "Impostazioni",
+                theme_title: "Tema Visivo",
+                logo_title: "Colore del Logo",
+                ade_title: "Prestazioni (ADE)",
+                ade_on: "ADE: Attivo",
+                ade_off: "ADE: Disattivato",
+                ade_desc: "Attivalo per rendere la navigazione super fluida.",
+                lang_title: "Lingua dell'Interfaccia",
+                yt_title: "Vuoi vedere altri contenuti ufficiali?",
+                yt_desc: "Sostieni le produzioni originali direttamente su YouTube.",
+                yt_btn: "Iscriviti su YouTube",
+                history_title: "HV (Cronologia Video)",
+                history_empty: "Non hai ancora guardato nessun video",
+                history_clear: "Cancella Cronologia",
+                cf_title: "• CF (Cambia Carattere)",
+                vc_title: "• VC (Versione Computer)",
+                vc_btn_on: "Torna alla Modalità Mobile",
+                vc_btn_off: "Passa alla Modalità Computer",
+                dv_btn_text: "📥 DV: Scarica Video Sicuro"
+            },
+            zh_mv: {
+                beta_title: "⚠️ 欢迎来到测试版本！",
+                beta_p1: "各位粉丝和访客大家好。您现在已正式进入独立平台 MrTube 的技术测试与优化阶段。",
+                beta_p2: "在继续之前，请注意以下几点：",
+                beta_p3: "• 视频缺失：目前网格系统正在维护中。在文件建立索引时，您会看到‘即将推出’的标签。",
+                beta_p4: "• 临时错误：由于正在测试连接与集成播放器，移动设备上的界面可能会有轻微加载延迟。",
+                beta_p5: "我们衷心感谢您的耐心等待、错误反馈以及对拓展社区作品的持续支持。",
+                scroll_text: "向下滚动以继续",
+                btn_continue: "继续",
+                recommended_title: "推荐视频",
+                coming_soon: "即将推出",
+                sub_text: "订阅",
+                subbed_text: "已订阅",
+                sub_count_suffix: "位订阅者 • ABG Productions®",
+                settings_title: "设置",
+                theme_title: "视觉主题",
+                logo_title: "标志颜色",
+                ade_title: "性能模式 (ADE)",
+                ade_on: "ADE: 开启",
+                ade_off: "ADE: 关闭",
+                ade_desc: "开启此功能可减少资源消耗，让浏览非常流畅。",
+                lang_title: "界面语言",
+                yt_title: "想看更多官方内容吗？",
+                yt_desc: "前往 YouTube 官方频道支持我们的原创作品。",
+                yt_btn: "在 YouTube 上订阅",
+                history_title: "HV (播放历史记录)",
+                history_empty: "您还没有看 过任何视频",
+                history_clear: "清除历史",
+                cf_title: "• CF (更改字体)",
+                vc_title: "• VC (电脑版网站)",
+                vc_btn_on: "切换回手机模式",
+                vc_btn_off: "切换到电脑模式",
+                dv_btn_text: "📥 DV: 安全下载视频"
+            },
+            ar: { beta_title: "⚠️ مرحبًا بك في النسخة التجريبية!", beta_p1: "مرحبًا بجميع المتابعين والزوار.", beta_p2: "يرجى مراعاة ما يلي:", beta_p3: "• فيديوهات مفقودة", beta_p4: "• أخطاء مؤقتة", beta_p5: "نشكركم على دعمكم.", scroll_text: "قم بالتمرير لأسفل", btn_continue: "متابعة", recommended_title: "فيديوهات مقترحة", coming_soon: "قريبًا", sub_text: "اشتراك", subbed_text: "مشترك", sub_count_suffix: "مشتركين • ABG Productions®", settings_title: "الإعدادات", theme_title: "المظهر البصري", logo_title: "لون الشعار", ade_title: "الأداء (ADE)", ade_on: "تفعيل ADE", ade_off: "إيقاف ADE", ade_desc: "اجعل التصفح سلسًا للغاية.", lang_title: "لغة الواجهة", yt_title: "المحتوى الرسمي؟", yt_desc: "ادعم القناة على YouTube.", yt_btn: "الاشتراك", history_title: "HV (سجل الفيديوهات)", history_empty: "لم تشاهد أي فيديو", history_clear: "مسح", cf_title: "CF (تغيير الخط)", vc_title: "VC (نسخة الكمبيوتر)", vc_btn_on: "تحويل إلى الهاتف", vc_btn_off: "تحويل إلى الكمبيوتر", dv_btn_text: "📥 DV: تحميل الفيديو بأمان" },
+            morse: { beta_title: "⚠️ •— •••—", beta_p1: "<strong>MrTube</strong>", beta_p2: "•——•", beta_p3: "• •••—", beta_p4: "• •——•", beta_p5: "——", scroll_text: "••—", btn_continue: "•—", recommended_title: "••—", coming_soon: "•——•", sub_text: "•••", subbed_text: "••• •—•", sub_count_suffix: "ABG Productions®", settings_title: "——", theme_title: "——", logo_title: "•—••", ade_title: "•—", ade_on: "•— •—•—•", ade_off: "—— ••—•", ade_desc: "•••", lang_title: "•—••", yt_title: "•—•", yt_desc: "•••", yt_btn: "YouTube", history_title: "HV", history_empty: "• ——", history_clear: "••—••", cf_title: "CF", vc_title: "VC", vc_btn_on: "Mobile •—", vc_btn_off: "PC —•—", dv_btn_text: "DV •—••" },
+            af: { beta_title: "⚠️ Welkom by Beta!", beta_p1: "Hallo aan alle volgelinge.", beta_p2: "Hou asseblief in gedagte:", beta_p3: "• Ontbrekende video's", beta_p4: "• Tydelike foute", beta_p5: "Ons waardeer u geduld.", scroll_text: "Rolle af", btn_continue: "Voortgaan", recommended_title: "Aanbevole Video's", coming_soon: "Binnekort", sub_text: "Teken in", subbed_text: "Ingeteken", sub_count_suffix: "intekenare • ABG Productions®", settings_title: "Instellings", theme_title: "Visuele Tema", logo_title: "Logo Kleur", ade_title: "Prestasie (ADE)", ade_on: "ADE: AAN", ade_off: "ADE: AF", ade_desc: "Blaai uiters glad te maak.", lang_title: "Koppelvlak-taal", yt_title: "Amptelike inhoud sien?", yt_desc: "Ondersteun op YouTube.", yt_btn: "Teken in", history_title: "HV (Geskiedenis)", history_empty: "Geen video's", history_clear: "Vee HV uit", cf_title: "CF (Verander Lettertipe)", vc_title: "VC (Rekenaar Weergawe)", vc_btn_on: "Skakel na Mobiel", vc_btn_off: "Skakel na Rekenaar", dv_btn_text: "📥 DV: Laai Video Veilig Af" },
+            ru: { beta_title: "⚠️ Бета-версия!", beta_p1: "Приветствуем всех.", beta_p2: "Обратите внимание:", beta_p3: "• Нет видео", beta_p4: "• Ошибки", beta_p5: "Спасибо за терпение.", scroll_text: "Прокрутите вниз", btn_continue: "Продолжить", recommended_title: "Рекомендуемые", coming_soon: "Скоро", sub_text: "Подписаться", subbed_text: "Вы подписаны", sub_count_suffix: "подписчиков • ABG Productions®", settings_title: "Настройки", theme_title: "Тема", logo_title: "Цвет лого", ade_title: "Рендеринг (ADE)", ade_on: "ADE: ВКЛ", ade_off: "ADE: ВЫКЛ", ade_desc: "Плавная работа интерфейса.", lang_title: "Язык", yt_title: "Больше контента?", yt_desc: "Поддержите на YouTube.", yt_btn: "Подписаться", history_title: "HV (История)", history_empty: "Пусто", history_clear: "Очистить", cf_title: "CF (Изменить Шрифт)", vc_title: "VC (Версия для ПК)", vc_btn_on: "Мобильный режим", vc_btn_off: "Режим ПК", dv_btn_text: "📥 DV: Скачать видео безопасно" },
+            pt: { beta_title: "⚠️ Versão Beta!", beta_p1: "Olá a todos.", beta_p2: "Lembre-se:", beta_p3: "• Vídeos Ausentes", beta_p4: "• Erros", beta_p5: "Agradecemos o apoio.", scroll_text: "Deslize para baixo", btn_continue: "Continuar", recommended_title: "Recomendados", coming_soon: "Em breve", sub_text: "Inscrever-se", subbed_text: "Inscrito", sub_count_suffix: "inscritos • ABG Productions®", settings_title: "Configurações", theme_title: "Tema", logo_title: "Cor do Logo", ade_title: "Desempenho (ADE)", ade_on: "ADE: Ligado", ade_off: "ADE: Desligado", ade_desc: "Navegar de forma super fluida.", lang_title: "Idioma", yt_title: "Conteúdo oficial?", yt_desc: "Apoie no YouTube.", yt_btn: "Inscrever-se", history_title: "HV (Histórico)", history_empty: "Vazio", history_clear: "Limpar", cf_title: "CF (Mudar Fonte)", vc_title: "VC (Versão de PC)", vc_btn_on: "Mudar para Celular", vc_btn_off: "Mudar para Computador", dv_btn_text: "📥 DV: Baixar Vídeo Seguro" },
+            zh: { beta_title: "⚠️ 测试版本！", grid_p1: "粉丝大家好。", beta_p2: "请注意：", beta_p3: "• 视频缺失", beta_p4: "• 临时错误", beta_p5: "感谢支持。", scroll_text: "向下滚动", btn_continue: "继续", recommended_title: "推荐视频", coming_soon: "即将推出", sub_text: "订阅", subbed_text: "已订阅", sub_count_suffix: "位订阅者 • ABG Productions®", settings_title: "设置", theme_title: "主题", logo_title: "标志颜色", ade_title: "性能 (ADE)", ade_on: "ADE: 开启", ade_off: "ADE: 关闭", ade_desc: "让页面流畅运行。", lang_title: "语言", yt_title: "官方内容？", yt_desc: "前往 YouTube 支持。", yt_btn: "订阅", history_title: "HV (历史)", history_empty: "无历史记录", history_clear: "清除历史", cf_title: "CF (修改字体)", vc_title: "VC (电脑模式)", vc_btn_on: "切换回手机", vc_btn_off: "切换到电脑", dv_btn_text: "📥 DV: 安全下载视频" },
+            ja: { beta_title: "⚠️ ベータ版！", beta_p1: "皆様こんにちは。", beta_p2: "ご注意：", beta_p3: "• 動画未登録", beta_p4: "• エラーの可能性", beta_p5: "ご協力感謝します。", scroll_text: "下へスクロール", btn_continue: "続行", recommended_title: "おすすめ", coming_soon: "まもなく公開", sub_text: "登録", subbed_text: "登録済み", sub_count_suffix: "人 • ABG Productions®", settings_title: "設定", theme_title: "テーマ", logo_title: "ロゴの色", ade_title: "省電力 (ADE)", ade_on: "ADE: オン", ade_off: "ADE: オフ", ade_desc: "动作を軽くします。", lang_title: "言語", yt_title: "公式動画？", yt_desc: "YouTubeで応援。", yt_btn: "登録する", history_title: "HV (再生履歴)", history_empty: "履歴なし", history_clear: "削除", cf_title: "CF (フォント変更)", vc_title: "VC (PC版サイト)", vc_btn_on: "スマホ版に戻す", vc_btn_off: "PC版に切り替え", dv_btn_text: "📥 DV: 安全に動画をダウンロード" },
+            ko: { beta_title: "⚠️ 베타 버전!", beta_p1: "안녕하세요 구독자 여러분.", beta_p2: "주의 사항:", beta_p3: "• 누락된 비디오", beta_p4: "• 로딩 지연 오류", beta_p5: "감사합니다.", scroll_text: "아래로 스크롤", btn_continue: "계속하기", recommended_title: "추천 영상", coming_soon: "개봉 박두", sub_text: "구독", subbed_text: "구독중", sub_count_suffix: "명 • ABG Productions®", settings_title: "설정", theme_title: "시각 테마", logo_title: "로고 색상", ade_title: "성능 모드 (ADE)", ade_on: "ADE: 켜짐", ade_off: "ADE: 꺼짐", ade_desc: "웹을 빠르게 만듭니다.", lang_title: "언어 설정", yt_title: "공식 콘텐츠?", yt_desc: "YouTube 응원.", yt_btn: "구독하기", history_title: "HV (시청 기록)", history_empty: "기록 없음", history_clear: "기록 삭제", cf_title: "CF (글꼴 변경)", vc_title: "VC (PC 버전)", vc_btn_on: "모바일 모드", vc_btn_off: "컴퓨터 모드", dv_btn_text: "📥 DV: 안전한 비디오 다운로드" },
+            es_es: { beta_title: "⚠️ Versión Beta!", beta_p1: "Saludos a todos.", beta_p2: "A tener en cuenta:", beta_p3: "• Parrilla en mantenimiento", beta_p4: "• Errores temporales", beta_p5: "Gracias por vuestra paciencia.", scroll_text: "Desliza abajo", btn_continue: "Continuar", recommended_title: "Recomendados", coming_soon: "Proximamente", sub_text: "Suscribirse", subbed_text: "Suscrito", sub_count_suffix: "suscriptores • ABG Productions®", settings_title: "Ajustes", theme_title: "Estilo Visual", logo_title: "Color del Logo", ade_title: "Rendimiento (ADE)", ade_on: "ADE: Activado", ade_off: "ADE: Desactivado", ade_desc: "Navegar con total fluidez.", lang_title: "Idioma", yt_title: "Contenido oficial?", yt_desc: "Apoya en YouTube.", yt_btn: "Suscribirse", history_title: "HV (Historial)", history_empty: "Sin vídeos", history_clear: "Borrar", cf_title: "CF (Cambiar Letra)", vc_title: "VC (Versión PC)", vc_btn_on: "Volver a Móvil", vc_btn_off: "Poner modo PC", dv_btn_text: "📥 DV: Descargar Vídeo Seguro" },
+            es_la: { beta_title: "⚠️ Versión Beta!", beta_p1: "Hola a todos.", beta_p2: "Ten en cuenta:", beta_p3: "• Grilla en mantenimiento", beta_p4: "• Retrasos leves", beta_p5: "Gracias por tu apoyo.", scroll_text: "Desliza abajo", btn_continue: "Continuar", recommended_title: "Recomendados", coming_soon: "Proximamente", sub_text: "Suscribirse", subbed_text: "Suscrito", sub_count_suffix: "suscriptores • ABG Productions®", settings_title: "Configuracion", theme_title: "Tema Visual", logo_title: "Color del Logo", ade_title: "Rendimiento (ADE)", ade_on: "ADE: Activado", ade_off: "ADE: Desactivado", ade_desc: "Hace que la pagina vaya super fluida.", lang_title: "Idioma", yt_title: "Contenido oficial?", yt_desc: "Apoya en YouTube.", yt_btn: "Suscribirse", history_title: "HV (Historial)", history_empty: "Sin videos", history_clear: "Borrar HV", cf_title: "CF (Cambiar Letra)", vc_title: "VC (Modo Escritorio)", vc_btn_on: "Regresar a Celular", vc_btn_off: "Forzar Modo Computadora", dv_btn_text: "📥 DV: Descargar Video Seguro" }
         };
 
-        let score = 0;
-        let kills = 0;
-        let currentLevel = 1;
-        let maxUnlockedLevel = 1;
-        let stageX = 0;
-        let gameStarted = false;
-        let currentUsername = "";
-        let popupTriggered = false; 
-        let activeNPCIntervals = [];
-        
-        let scrollSpeed = 1.8; 
-        const maxNPCs = 10;
-        const distanceBetweenNPCs = 350;
-
-        let upgradesOwned = {
-            1: false,
-            2: false,
-            3: false
-        };
-        let lastShotTime = 0;
-        let shootCooldown = 400; 
-
-        function playSoundBoton() {
-            audioBoton.currentTime = 0;
-            audioBoton.play().catch(e => console.log("Audio blocked"));
+        function entrarAMrTube() {
+            document.getElementById('welcome-screen').style.display = 'none';
         }
 
-        function playSoundPistola() {
-            audioPistola.currentTime = 0;
-            audioPistola.play().catch(e => console.log("Audio blocked"));
+        function recargarPagina() {
+            location.reload();
         }
 
-        const translations = {
-            "es": { title: "CHICKEN STRIKE NPC", desc: "¡Bienvenido! Esta es una versión beta oficial del juego, por lo que podría contener algunos errores y bugs en el mapa durante el desarrollo en la plataforma MrTube.<br>Diseñado por ABG Productions® y Sprunki Animations Studios.", user: "INGRESA TU NOMBRE DE PILOTO:", play: "EMPEZAR A PROBAR", uiLvl: "Nivel", uiTgt: "Objetivos" },
-            "en": { title: "CHICKEN STRIKE NPC", desc: "Welcome! This is an official beta version of the game, so it may contain some errors and map bugs during development on the MrTube platform.<br>Designed by ABG Productions® and Sprunki Animations Studios.", user: "ENTER YOUR PILOT NAME:", play: "START TESTING", uiLvl: "Level", uiTgt: "Targets" },
-            "fr": { title: "CHICKEN STRIKE NPC", desc: "Bienvenue ! Il s'agit d'une version bêta officielle du jeu, elle peut donc contenir des erreurs et des bugs de carte pendant le développement sur la plateforme MrTube.<br>Conçu par ABG Productions® y Sprunki Animations Studios.", user: "ENTREZ VOTRE NOM DE PILOTE:", play: "COMMENCER LE TEST", uiLvl: "Niveau", uiTgt: "Cibles" },
-            "pt": { title: "CHICKEN STRIKE NPC", desc: "Bem-vindo! Esta é uma versão beta oficial del jogo, por isso pode conter algunos erros e bugs de mapa durante o desenvolvimento na plataforma MrTube.<br>Desenvolvido por ABG Productions® e Sprunki Animations Studios.", user: "INSIRA SEU NOME DE PILOTO:", play: "INICIAR TESTE", uiLvl: "Nível", uiTgt: "Objetivos" },
-            "ru": { title: "CHICKEN STRIKE NPC", desc: "Добро пожаловать! Это официальная бета-версия игры, поэтому она может содержать некоторые ошибки и баги карты во время разработки на платформе MrTube.<br>Разработано ABG Productions® и Sprunki Animations Studios.", user: "ВВЕДИТЕ ИМЯ ПИЛОТА:", play: "НАЧАТЬ ТЕСТ", uiLvl: "Уровень", uiTgt: "Цели" },
-            "de": { title: "CHICKEN STRIKE NPC", desc: "Willkommen! Dies ist eine offizielle Beta-Version des Spiels, daher kann es während der Entwicklung auf der MrTube-Plattform einige Fehler und Karten-Bugs enthalten.<br>Präsentiert von ABG Productions® und Sprunki Animations Studios.", user: "PILOTENNAME EINGEBEN:", play: "TEST STARTEN", uiLvl: "Stufe", uiTgt: "Ziele" },
-            "es-la": { title: "CHICKEN STRIKE NPC", desc: "¡Bienvenido! Esta es una versión beta oficial del juego, por lo que podría contener algunos errores y bugs en el mapa durante el desarrollo en la plataforma MrTube.<br>Diseñado por ABG Productions® y Sprunki Animations Studios.", user: "INGRESA TU NOMBRE DE PILOTO:", play: "EMPEZAR A PROBAR", uiLvl: "Nivel", uiTgt: "Objetivos" },
-            "es-es": { title: "CHICKEN STRIKE NPC", desc: "¡Bienvenido! Esta es una versión beta oficial del juego, por lo que podría contener algunos errores y bugs en el mapa durante el desarrollo en la plataforma MrTube.<br>Diseñado por ABG Productions® y Sprunki Animations Studios.", user: "INTRODUCE TU NOMBRE DE PILOTO:", play: "EMPEZAR A PROBAR", uiLvl: "Nivel", uiTgt: "Objetivos" },
-            "tr": { title: "CHICKEN STRIKE NPC", desc: "Hoş geldiniz! Bu oyunun resmi bir beta sürümüdür, bu nedenle MrTube platformundaki geliştirme sırasında bazı hatalar ve harita hataları içerebilir.<br>ABG Productions® ve Sprunki Animations Studios tarafından tasarlandı.", user: "PİLOT ADINIZI GİRİN:", play: "TESTE BAŞLA", uiLvl: "Seviye", uiTgt: "Hedefler" },
-            "ar": { title: "CHICKEN STRIKE NPC", desc: "مرحبًا! هذه نسخة بيتا رسمية من اللعبة، لذا قد تحتوي على some الأخطاء وعيوب الخريطة أثناء التطوير على منصة MrTube.<br>تم التصميم بواسطة ABG Productions® وSprunki Animations Studios.", user: "أدخل اسم الطيار الخاص بك:", play: "بدء الاختبار", uiLvl: "المستوى", uiTgt: "الأهداف" },
-            "hi": { title: "CHICKEN STRIKE NPC", desc: "स्वागत है! यह गेम का एक आधिकारिक बीटा संस्करण है..." , user: "अपना पायलट नाम दर्ज करें:", play: "परीक्षण शुरू करें", uiLvl: "स्तर", uiTgt: "लक्ष्य" },
-            "ja": { title: "CHICKEN STRIKE NPC", desc: "歓迎！ これはゲームの公式ベータ版であるため...", user: "パイロット名を入力してください:", play: "テストを開始", uiLvl: "レベル", uiTgt: "ターゲット" },
-            "ko": { title: "CHICKEN STRIKE NPC", desc: "환영합니다! 이것은 게임의 공식 베타 버전이므로...", user: "조종사 이름을 입력하세요:", play: "테스트 시작", uiLvl: "레벨", uiTgt: "목표" }
-        };
-
-        if(localStorage.getItem('cs_saved_username')) {
-            currentUsername = localStorage.getItem('cs_saved_username');
-            usernameInput.value = currentUsername;
-            loadPlayerProgress(currentUsername);
+        function abrirAjustes() {
+            document.getElementById('settings-modal').style.display = 'flex';
         }
 
-        usernameInput.addEventListener('input', () => {
-    let name = usernameInput.value.trim();
-    
-    // Protección del nombre del Creador
-    if (name.toLowerCase() === "mr.jostin" && name !== "Mr.Jostin") {
-        alert("❌ ¡Este nombre tiene derechos de autor del Creador!");
-        usernameInput.value = "";
-        currentUsername = "";
-        return;
-    }
+        function cerrarAjustes() {
+            document.getElementById('settings-modal').style.display = 'none';
+        }
 
-    if(name !== "") {
-        let oldName = localStorage.getItem('cs_saved_username') || "";
-
-        // Solo cobramos si ya existía un nombre previo y es diferente al nuevo
-        if (oldName !== "" && oldName !== name) {
-            let changeCount = parseInt(localStorage.getItem('cs_name_changes_' + oldName) || "0");
-            
-            if (changeCount >= 1) {
-                if (score < 1000) {
-                    alert("❌ Necesitas 1000 monedas para cambiar tu nombre de usuario de nuevo.");
-                    usernameInput.value = oldName;
-                    return;
-                } else {
-                    score -= 1000;
-                    scoreText.textContent = score;
-                    alert("💰 Se han descontado 1000 monedas por cambio de nombre.");
-                    localStorage.setItem('cs_name_changes_' + name, changeCount + 1);
-                }
-            } else {
-                localStorage.setItem('cs_name_changes_' + name, changeCount + 1);
+        function cambiarTema(tema) {
+            document.body.classList.remove('light-theme', 'gray-theme');
+            if (tema === 'claro') {
+                document.body.classList.add('light-theme');
+            } else if (tema === 'gris') {
+                document.body.classList.add('gray-theme');
             }
         }
 
-        // Guardamos el nombre y cargamos progreso
-        currentUsername = name;
-        localStorage.setItem('cs_saved_username', currentUsername);
-        loadPlayerProgress(currentUsername);
-    }
-});
+        function cambiarColorLogo(color) {
+            document.documentElement.style.setProperty('--logo-bg-color', color);
+            localStorage.setItem('mrtube_logo_color', color);
+        }
 
-                        }
+        // COMANDO CF: EJECUCIÓN REAL DE CAMBIO DE FUENTE
+        function cambiarFuente(tipoFuente) {
+            document.body.classList.remove('font-montserrat', 'font-rubik', 'font-arno');
+            if (tipoFuente === 'montserrat') document.body.classList.add('font-montserrat');
+            if (tipoFuente === 'rubik') document.body.classList.add('font-rubik');
+            if (tipoFuente === 'arno') document.body.classList.add('font-arno');
+            localStorage.setItem('mrtube_font', tipoFuente);
+        }
+
+        // COMANDO VC: SIMULADOR DE ENTORNO DE ESCRITORIO
+        var modoComputadoraActivo = localStorage.getItem('mrtube_vc_mode') === 'true';
+        function toggleVersionComputadora() {
+            modoComputadoraActivo = !modoComputadoraActivo;
+            localStorage.setItem('mrtube_vc_mode', modoComputadoraActivo);
+            
+            // Forzar recarga guardando estado para mantener el historial intacto
+            location.reload();
+        }
+
+        function aplicarEstiloComputadora() {
+            var container = document.getElementById('main-web-container');
+            var btn = document.getElementById('vc-btn');
+            var t = traducciones[idiomaActual] || traducciones['es'];
+
+            if (modoComputadoraActivo) {
+                container.classList.add('pc-version-mode');
+                btn.innerText = t.vc_btn_on;
+                btn.style.backgroundColor = "#ff4444";
+            } else {
+                container.classList.remove('pc-version-mode');
+                btn.innerText = t.vc_btn_off;
+                btn.style.backgroundColor = "#00aa00";
+            }
+        }
+
+        // SISTEMA ADE
+        var adeActivo = false;
+        function toggleADE() {
+            adeActivo = !adeActivo;
+            var btn = document.getElementById('ade-btn');
+            var t = traducciones[idiomaActual];
+            
+            if (adeActivo) {
+                document.body.classList.add('ade-mode');
+                btn.classList.add('active');
+                btn.innerText = t.ade_on;
+            } else {
+                document.body.classList.remove('ade-mode');
+                btn.classList.remove('active');
+                btn.innerText = t.ade_off;
+            }
+        }
+
+        // SISTEMA URS
+        var ursActivo = false;
+        function toggleURS() {
+            ursActivo = !ursActivo;
+            var btn = document.getElementById('urs-btn');
+            
+            if (ursActivo) {
+                document.body.classList.add('urs-mode');
+                btn.classList.add('active');
+                btn.innerText = "URS: ACTIVADO 🔥";
+                if(!adeActivo) toggleADE();
+            } else {
+                document.body.classList.remove('urs-mode');
+                btn.classList.remove('active');
+                btn.innerText = "URS: Apagado";
+                if(adeActivo) toggleADE();
+            }
+        }
+
+        // LÓGICA DE DETECCIÓN Y CAMBIO DE VIDEO EN EL REPRODUCTOR
+        var urlVideoActual = 'https://www.youtube.com/embed/qvhFdTaMyCs';
+
+        function cargarVideo(urlEmbed, tituloVideo) {
+            urlVideoActual = urlEmbed; // Actualiza la URL para el descargador
+            document.getElementById('main-iframe').src = urlEmbed + "?autoplay=1";
+            document.getElementById('main-video-title').innerText = tituloVideo;
+            agregarAlHistorial(urlEmbed, tituloVideo);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // ACCIÓN DEL BOTÓN DV (DESCARGADOR DE VIDEOS DIRECTO)
+        function descargarVideoActual() {
+            // Convierte el enlace embed en un enlace estándar de YouTube de manera segura
+            var videoId = "";
+            if (urlVideoActual.includes('/embed/')) {
+                videoId = urlVideoActual.split('/embed/')[1];
+            }
+            var youtubeUrlCompleto = "https://www.youtube.com/watch?v=" + videoId;
+            
+            // Abre una pestaña de descarga segura externa basada en la URL sin anuncios intrusivos directos
+            var enlaceDescarga = "https://www.ssyoutube.com/watch?v=" + videoId;
+            window.open(enlaceDescarga, '_blank');
+        }
+
+        // ACCIÓN DEL BOTÓN BV (BUSCADOR DE VIDEOS INTEGRADO)
+        function filtrarVideos() {
+            var input = document.getElementById('video-search-bar').value.toLowerCase();
+            var grid = document.getElementById('recommended-video-grid');
+            var tarjetas = grid.getElementsByClassName('video-card');
+
+            for (var i = 0; i < tarjetas.length; i++) {
+                // Comprobamos si es tarjeta con título real o un "Próximamente"
+                var h4Element = tarjetas[i].getElementsByTagName('h4')[0];
+                if (h4Element) {
+                    var titulo = h4Element.innerText.toLowerCase();
+                    if (titulo.includes(input)) {
+                        tarjetas[i].style.display = ""; // Lo muestra
                     } else {
-                        changeCount++;
-                        localStorage.setItem('cs_name_changes_' + name, changeCount);
+                        tarjetas[i].style.display = "none"; // Lo oculta
                     }
                 }
-
-                currentUsername = name;
-                localStorage.setItem('cs_saved_username', currentUsername);
-                loadPlayerProgress(currentUsername);
             }
-        });
+        }
 
-        function loadPlayerProgress(name) {
-            if(name.toLowerCase() === "mr.jostin" && name !== "Mr.Jostin") return;
+        function obtenerHistorial() {
+            var historial = localStorage.getItem('mrtube_history');
+            return historial ? JSON.parse(historial) : [];
+        }
 
-            let savedScore = localStorage.getItem('cs_score_' + name);
-            let savedMaxLevel = localStorage.getItem('cs_max_level_' + name);
+        function agregarAlHistorial(url, titulo) {
+            var historial = obtenerHistorial();
+            historial = historial.filter(function(item) { return item.url !== url; });
+            historial.unshift({ url: url, titulo: titulo });
+            if (historial.length > 6) historial.pop();
+            localStorage.setItem('mrtube_history', JSON.stringify(historial));
+            renderizarHistorial();
+        }
+
+        function borrarHistorial() {
+            localStorage.removeItem('mrtube_history');
+            renderizarHistorial();
+        }
+
+        function renderizarHistorial() {
+            var grid = document.getElementById('history-grid');
+            var historial = obtenerHistorial();
+            var t = traducciones[idiomaActual];
+            grid.innerHTML = '';
             
-            if(savedScore !== null) {
-                score = parseInt(savedScore);
-                scoreText.textContent = score;
-            } else {
-                score = 0;
-                scoreText.textContent = score;
-            }
-
-            if(savedMaxLevel !== null) {
-                maxUnlockedLevel = parseInt(savedMaxLevel);
-            } else {
-                maxUnlockedLevel = 1;
-            }
-
-            [1, 2, 3].forEach(id => {
-                let savedUpgrade = localStorage.getItem(`cs_upgrade_${id}_` + name);
-                if (savedUpgrade === "true") {
-                    upgradesOwned[id] = true;
-                } else {
-                    upgradesOwned[id] = false;
-                }
-            });
-
-            updateLevelButtonsUI();
-            updateShopButtonsUI();
-            checkSubscriptionTrigger();
-        }
-
-        function savePlayerProgress() {
-            if(currentUsername !== "") {
-                localStorage.setItem('cs_score_' + currentUsername, score);
-                localStorage.setItem('cs_max_level_' + currentUsername, maxUnlockedLevel);
-                [1, 2, 3].forEach(id => {
-                    localStorage.setItem(`cs_upgrade_${id}_` + currentUsername, upgradesOwned[id]);
-                });
-            }
-            checkSubscriptionTrigger();
-        }
-
-        function updateLevelButtonsUI() {
-            levelButtons.forEach(btn => {
-                let lvl = parseInt(btn.dataset.lvl);
-                if(lvl <= maxUnlockedLevel) {
-                    btn.classList.remove('locked');
-                    btn.removeAttribute('disabled');
-                } else {
-                    btn.classList.add('locked');
-                    btn.setAttribute('disabled', 'true');
-                }
-            });
-        }
-
-        function updateShopButtonsUI() {
-            [1, 2, 3].forEach(id => {
-                const btn = document.getElementById(`buy-upgrade-${id}`);
-                if (btn) {
-                    if (upgradesOwned[id]) {
-                        btn.textContent = "Comprado";
-                        btn.classList.add('owned');
-                    } else {
-                        btn.classList.remove('owned');
-                        if(id === 1) btn.textContent = "100 Monedas";
-                        if(id === 2) btn.textContent = "200 Monedas";
-                        if(id === 3) btn.textContent = "300 Monedas";
-                    }
-                }
-            });
-        }
-
-        function buyUpgrade(id, cost) {
-            playSoundBoton();
-            if (currentUsername === "") {
-                alert("Por favor, ingresa tu nombre de piloto primero.");
+            if (historial.length === 0) {
+                grid.innerHTML = '<p id="history-empty-msg" class="empty-history-msg">' + t.history_empty + '</p>';
                 return;
             }
-            if (upgradesOwned[id]) {
-                alert("¡Ya compraste y decoraste tu arma con esta mejora!");
-                return;
-            }
-            if (score >= cost) {
-                score -= cost;
-                upgradesOwned[id] = true;
-                scoreText.textContent = score;
-                savePlayerProgress();
-                updateShopButtonsUI();
-                alert(`🎉 ¡Compraste la Mejora con éxito! Tu arma ha sido decorada.`);
-            } else {
-                alert("❌ No tienes suficientes monedas en tu cuenta de piloto.");
-            }
-        }
-
-        /* NUEVA LÓGICA AGREGADA: REINICIAR LAS MEJORAS Y DEVOLVER DINERO */
-        function resetShopUpgrades() {
-            playSoundBoton();
-            if (currentUsername === "") {
-                alert("Ingresa un nombre de piloto primero.");
-                return;
-            }
-
-            let totalRefund = 0;
-            if (upgradesOwned[1]) totalRefund += 100;
-            if (upgradesOwned[2]) totalRefund += 200;
-            if (upgradesOwned[3]) totalRefund += 300;
-
-            if (totalRefund === 0) {
-                alert("❌ No tienes ninguna mejora activa para reiniciar.");
-                return;
-            }
-
-            let confirmReset = confirm(`¿Quieres reiniciar tus mejoras? Se te devolverán ${totalRefund} monedas y podrás comprarlas de nuevo.`);
-            if (confirmReset) {
-                score += totalRefund;
-                scoreText.textContent = score;
+            
+            historial.forEach(function(video) {
+                var videoId = "";
+                if(video.url.includes('/embed/')) videoId = video.url.split('/embed/')[1];
+                var thumbUrl = 'https://img.youtube.com/vi/' + videoId + '/mqdefault.jpg';
                 
-                upgradesOwned[1] = false;
-                upgradesOwned[2] = false;
-                upgradesOwned[3] = false;
-                
-                weaponImage.src = 'Manos.PNG';
-                shootCooldown = 400;
-
-                savePlayerProgress();
-                updateShopButtonsUI();
-                alert("🔄 ¡Compras reiniciadas con éxito! Tus monedas han sido devueltas.");
-            }
-        }
-
-        readyCheckbox.addEventListener('change', () => {
-            playSoundBoton();
-            if (readyCheckbox.checked) {
-                startButton.style.opacity = "1";
-                startButton.style.pointerEvents = "auto";
-            } else {
-                startButton.style.opacity = "0.5";
-                startButton.style.pointerEvents = "none";
-            }
-        });
-
-        exitButton.addEventListener('click', () => {
-            playSoundBoton();
-            window.location.reload();
-        });
-
-        settingsToggleBtn.addEventListener('click', () => {
-            playSoundBoton();
-            if(settingsPanel.style.display === "none" || settingsPanel.style.display === "") {
-                settingsPanel.style.display = "flex";
-            } else {
-                settingsPanel.style.display = "none";
-            }
-        });
-
-        langSelect.addEventListener('change', () => {
-            let lang = langSelect.value;
-            if(translations[lang]) {
-                document.getElementById('welcome-title').innerHTML = translations[lang].title;
-                document.getElementById('welcome-desc').innerHTML = translations[lang].desc;
-                document.getElementById('label-username').innerHTML = translations[lang].user;
-                startButton.innerHTML = translations[lang].play;
-                document.getElementById('label-ui-level').innerHTML = translations[lang].uiLvl;
-                document.getElementById('label-ui-targets').innerHTML = translations[lang].uiTgt;
-            }
-        });
-
-        codeSubmitBtn.addEventListener('click', () => {
-            playSoundBoton();
-            let inputCode = codeInput.value.trim();
-            if(currentUsername === "") {
-                alert("Por favor, introduce un nombre primero antes de usar un código.");
-                return;
-            }
-
-            let rewards = {
-                "328": 50,
-                "589": 200,
-                "194": 70,
-                "MJ8": 800
-            };
-
-            if(rewards[inputCode] !== undefined) {
-                let rewardAmount = rewards[inputCode];
-
-                if(currentUsername === "Mr.Jostin") {
-                    score += rewardAmount;
-                    scoreText.textContent = score;
-                    savePlayerProgress();
-                    alert(`👑 ¡Acceso Creador! Código válido. Se añadieron +${rewardAmount} monedas.`);
-                    codeInput.value = "";
-                } else {
-                    let codeUsed = localStorage.getItem(`cs_code_${inputCode}_` + currentUsername);
-                    if(codeUsed === "true") {
-                        alert("❌ Este código ya fue utilizado por este usuario.");
-                    } else {
-                        score += rewardAmount;
-                        scoreText.textContent = score;
-                        localStorage.setItem(`cs_code_${inputCode}_` + currentUsername, "true");
-                        savePlayerProgress();
-                        alert(`✅ ¡Código Aceptado! Has ganado +${rewardAmount} monedas.`);
-                        codeInput.value = "";
-                    }
-                }
-            } else {
-                alert("❌ Código incorrecto.");
-            }
-        });
-
-        function checkSubscriptionTrigger() {
-            if (score >= 300 && !popupTriggered) {
-                popupTriggered = true;
-                subscribePopup.style.transform = "translate(-50%, -50%) scale(1)";
-            }
-        }
-
-        subYesBtn.addEventListener('click', () => {
-            playSoundBoton();
-            if (score >= 300) {
-                score -= 300;
-                scoreText.textContent = score;
-                savePlayerProgress();
-                subscribePopup.style.transform = "translate(-50%, -50%) scale(0)";
-                alert("🚀 ¡Redireccionando al canal oficial del Creador!");
-                window.open("https://youtube.com/@mr.jostin_oficial?si=JB-zmX5c7fRFRtq0", "_blank");
-            } else {
-                alert("No tienes suficientes monedas.");
-                subscribePopup.style.transform = "translate(-50%, -50%) scale(0)";
-            }
-        });
-
-        subNoBtn.addEventListener('click', () => {
-            playSoundBoton();
-            subscribePopup.style.transform = "translate(-50%, -50%) scale(0)";
-        });
-
-        startButton.addEventListener('click', () => {
-            playSoundBoton();
-            
-            let finalName = usernameInput.value.trim();
-            if (finalName.toLowerCase() === "mr.jostin" && finalName !== "Mr.Jostin") {
-                alert("❌ Bloqueo de seguridad: No puedes usar el nombre del Creador.");
-                return;
-            }
-
-            if (!readyCheckbox.checked) {
-                alert("❌ Debes activar la casilla 'Estoy listo' primero.");
-                return;
-            }
-
-            audioMusic.play().catch(e => console.log("Música iniciada."));
-
-            if(finalName === "") {
-                currentUsername = "Player";
-                localStorage.setItem('cs_saved_username', currentUsername);
-            } else {
-                currentUsername = finalName;
-            }
-            savePlayerProgress();
-
-            welcomeScreen.style.display = 'none';
-            playMenuScreen.style.display = 'flex'; 
-        });
-
-        jugarMainBtn.addEventListener('click', () => {
-            playSoundBoton();
-            playMenuScreen.style.display = 'none';
-            levelSelectionScreen.style.display = 'flex';
-            updateLevelButtonsUI();
-        });
-
-        tiendaMainBtn.addEventListener('click', () => {
-            playSoundBoton();
-            playMenuScreen.style.display = 'none';
-            shopScreen.style.display = 'flex';
-            updateShopButtonsUI();
-        });
-
-        closeShopBtn.addEventListener('click', () => {
-            playSoundBoton();
-            shopScreen.style.display = 'none';
-            playMenuScreen.style.display = 'flex';
-        });
-
-        salirMainBtn.addEventListener('click', () => {
-            playSoundBoton();
-            window.location.reload();
-        });
-
-        backToMenuBtn.addEventListener('click', () => {
-            playSoundBoton();
-            levelSelectionScreen.style.display = 'none';
-            playMenuScreen.style.display = 'flex';
-        });
-
-        levelButtons.forEach(btn => {
-            btn.addEventListener('click', () => {
-                playSoundBoton();
-                let selectedLvl = parseInt(btn.dataset.lvl);
-                startLevel(selectedLvl);
-            });
-        });
-
-        function startLevel(lvl) {
-            levelSelectionScreen.style.display = 'none';
-            currentLevel = lvl;
-            kills = 0;
-            
-            scrollSpeed = levelsConfig[lvl].speed;
-            
-            if (currentLevel === 6 && upgradesOwned[3]) {
-                scrollSpeed = 8.5; 
-            }
-
-            if (upgradesOwned[3]) {
-                weaponImage.src = 'Manos_Mejora3.PNG';
-            } else if (upgradesOwned[2]) {
-                weaponImage.src = 'Manos_Mejora2.PNG';
-            } else if (upgradesOwned[1]) {
-                weaponImage.src = 'Manos_Mejora1.PNG';
-            } else {
-                weaponImage.src = 'Manos.PNG';
-            }
-
-            if (upgradesOwned[1]) {
-                shootCooldown = 60; 
-            } else {
-                shootCooldown = 400; 
-            }
-            
-            levelText.textContent = currentLevel;
-            killsText.textContent = `0/${levelsConfig[lvl].targets}`;
-            
-            clearAllNPCs();
-            
-            gameStarted = true;
-            for(let i = 0; i < maxNPCs; i++) {
-                spawnNPC(i);
-            }
-        }
-
-        function clearAllNPCs() {
-            activeNPCIntervals.forEach(intervalId => clearInterval(intervalId));
-            activeNPCIntervals = [];
-            const targets = document.querySelectorAll('.target');
-            targets.forEach(t => t.remove());
-        }
-
-        function updateCamera() {
-            if (!gameStarted) {
-                requestAnimationFrame(updateCamera);
-                return;
-            }
-            
-            stageX -= scrollSpeed;
-            
-            if (stageX <= -window.innerWidth * 4) {
-                stageX = 0;
-                const targets = document.querySelectorAll('.target');
-                targets.forEach(npc => {
-                    let currentLeft = parseFloat(npc.style.left);
-                    npc.style.left = (currentLeft - window.innerWidth * 4) + 'px';
-                });
-            }
-            
-            stage.style.transform = `translateX(${stageX}px)`;
-            requestAnimationFrame(updateCamera);
-        }
-        requestAnimationFrame(updateCamera);
-
-        function fireWeapon() {
-            if (!gameStarted) return;
-
-            let currentTime = Date.now();
-            if (currentTime - lastShotTime < shootCooldown) {
-                return; 
-            }
-            lastShotTime = currentTime;
-
-            playSoundPistola();
-
-            weaponContainer.style.transform = 'translateX(-50%) translateY(20px) scale(0.95)';
-            setTimeout(() => {
-                weaponContainer.style.transform = 'translateX(-50%) translateY(0) scale(1)';
-            }, 100);
-
-            const centerX = window.innerWidth / 2;
-            const centerY = window.innerHeight / 2;
-            
-            const targets = document.querySelectorAll('.target');
-            targets.forEach((npc) => {
-                if (npc.dataset.dead === "true") return;
-
-                const rect = npc.getBoundingClientRect();
-                
-                if (centerX >= rect.left && centerX <= rect.right &&
-                    centerY >= rect.top && centerY <= rect.bottom) {
-                    
-                    if (currentLevel === 6 && upgradesOwned[3] && npc.dataset.groupId) {
-                        let gid = npc.dataset.groupId;
-                        const groupMembers = document.querySelectorAll(`.target[data-group-id='${gid}']`);
-                        groupMembers.forEach(member => {
-                            if (member.dataset.dead !== "true") {
-                                eliminateNPC(member, true);
-                            }
-                        });
-                    } else {
-                        eliminateNPC(npc, false);
-                    }
-                }
+                var card = document.createElement('div');
+                card.className = 'video-card';
+                card.onclick = function() { cargarVideo(video.url, video.titulo); };
+                card.innerHTML = 
+                    '<div class="thumbnail" style="background-image: url(\'' + thumbUrl + '\'); text-indent: -9999px;">VIDEO</div>' +
+                    '<div class="card-info">' +
+                        '<img class="avatar-img" style="width:30px; height:30px;" src="avatar.PNG">' +
+                        '<div class="card-text">' +
+                            '<h4>' + video.titulo + '</h4>' +
+                            '<p>ABG Productions®</p>' +
+                        '</div>' +
+                    '</div>';
+                grid.appendChild(card);
             });
         }
 
-        weaponContainer.addEventListener('mousedown', (e) => { e.stopPropagation(); fireWeapon(); });
-        weaponContainer.addEventListener('touchstart', (e) => { e.stopPropagation(); e.preventDefault(); fireWeapon(); });
+        var idiomaActual = localStorage.getItem('mrtube_lang') ? localStorage.getItem('mrtube_lang') : 'es';
+        document.getElementById('lang-select-box').value = idiomaActual;
 
-        function spawnNPC(index) {
-            if (!gameStarted) return;
+        var totalSuscriptores = localStorage.getItem('mrtube_subs') ? parseInt(localStorage.getItem('mrtube_subs')) : 0;
+        var estadoSuscrito = localStorage.getItem('mrtube_is_subbed') === 'true';
+
+        function actualizarPantallaSubs() {
+            var btn = document.getElementById('btn-sub');
+            var countSpan = document.getElementById('sub-count');
+            var t = traducciones[idiomaActual];
             
-            if (currentLevel === 6 && upgradesOwned[3]) {
-                let groupId = "group_" + Date.now() + "_" + index;
-                for (let k = 0; k < 3; k++) {
-                    createNPCElement(index, groupId, k * 45); 
-                }
+            if (estadoSuscrito) {
+                btn.innerText = t.subbed_text;
+                btn.classList.add('subscribed');
             } else {
-                createNPCElement(index, null, 0);
+                btn.innerText = t.sub_text;
+                btn.classList.remove('subscribed');
             }
+            countSpan.innerText = totalSuscriptores + " " + t.sub_count_suffix;
         }
 
-        function createNPCElement(index, groupId, clusterOffset) {
-            const npc = document.createElement('img');
-            npc.src = 'NPC.PNG';
-            npc.className = 'target';
-
-            if (groupId) {
-                npc.dataset.groupId = groupId;
-            }
-
-            const screenOffset = -stageX;
-            const spawnX = screenOffset + window.innerWidth + 100 + (index * distanceBetweenNPCs) + clusterOffset;
-            const spawnY = window.innerHeight / 2 + 30; 
-
-            npc.style.left = spawnX + 'px';
-            npc.style.top = spawnY + 'px';
-
-            stage.appendChild(npc);
-
-            let checkInterval = setInterval(() => {
-                const rect = npc.getBoundingClientRect();
-                if (rect.right < 0) {
-                    clearInterval(checkInterval);
-                    npc.remove();
-                    if (!groupId || clusterOffset === 0) {
-                        spawnNPC(maxNPCs - 1); 
-                    }
-                }
-            }, 1000);
-            
-            activeNPCIntervals.push(checkInterval);
-            npc.dataset.intervalIndex = activeNPCIntervals.length - 1;
+        function alternarSuscripcion() {
+            if (!estadoSuscrito) { totalSuscriptores += 1; estadoSuscrito = true; } 
+            else { totalSuscriptores -= 1; estadoSuscrito = false; }
+            localStorage.setItem('mrtube_subs', totalSuscriptores);
+            localStorage.setItem('mrtube_is_subbed', estadoSuscrito);
+            actualizarPantallaSubs();
         }
 
-        function eliminateNPC(npc, isTripleKill) {
-            npc.dataset.dead = "true";
+        // CAMBIAR IDIOMA INTEGRANDO NUEVAS ETIQUETAS DE TEXTO
+        function cambiarIdioma(lang) {
+            idiomaActual = lang;
+            localStorage.setItem('mrtube_lang', lang);
+            var t = traducciones[lang];
             
-            let idx = npc.dataset.intervalIndex;
-            if(idx !== undefined && activeNPCIntervals[idx]) {
-                clearInterval(activeNPCIntervals[idx]);
-            }
-
-            npc.src = 'Disparado.PNG';
+            document.getElementById('beta-title').innerText = t.beta_title;
+            document.getElementById('beta-p1').innerHTML = t.beta_p1.replace('MrTube', '<strong>MrTube</strong>');
+            document.getElementById('beta-p2').innerText = t.beta_p2;
+            document.getElementById('beta-p3').innerHTML = t.beta_p3;
+            document.getElementById('beta-p4').innerHTML = t.beta_p4;
+            document.getElementById('beta-p5').innerText = t.beta_p5;
+            document.getElementById('scroll-text').innerText = t.scroll_text;
+            document.getElementById('btn-continue').innerText = t.btn_continue;
             
-            let config = levelsConfig[currentLevel];
-            let rawCoins = config.coinsPerKill;
-
-            if (currentLevel === 2 && upgradesOwned[2]) {
-                rawCoins = rawCoins * 7;
-            }
-
-            if (isTripleKill) {
-                score += Math.floor(500 / 3); 
-            }
-
-            score += rawCoins;
-            scoreText.textContent = score;
+            document.getElementById('recommended-title').innerText = t.recommended_title;
+            document.getElementById('modal-settings-title').innerText = t.settings_title;
+            document.getElementById('theme-section-title').innerText = t.theme_title;
+            document.getElementById('logo-section-title').innerText = t.logo_title;
+            document.getElementById('ade-section-title').innerText = t.ade_title;
+            document.getElementById('ade-desc').innerText = t.ade_desc;
+            document.getElementById('lang-section-title').innerText = t.lang_title;
             
-            kills++;
-            killsText.textContent = `${kills}/${config.targets}`;
+            // Traducción del Botón DV
+            document.getElementById('download-video-btn').innerText = t.dv_btn_text || "📥 DV: Descargar Video Seguro";
             
-            savePlayerProgress();
+            // Traducción de opciones (CF y VC)
+            document.getElementById('font-section-title').innerText = t.cf_title || "CF (Cambiar Fuente)";
+            document.getElementById('pc-section-title').innerText = t.vc_title || "VC (Versión de Computadora)";
+            
+            var btnADE = document.getElementById('ade-btn');
+            btnADE.innerText = adeActivo ? t.ade_on : t.ade_off;
 
-            if (currentLevel === 4 && upgradesOwned[1] && !npc.dataset.wasDuplicated) {
-                setTimeout(() => {
-                    if (gameStarted) {
-                        createNPCElement(1, null, 80);
-                        createNPCElement(1, null, 160);
-                        const items = document.querySelectorAll('.target');
-                        if(items.length > 0) {
-                            items[items.length - 1].dataset.wasDuplicated = "true";
-                            if(items.length > 1) items[items.length - 2].dataset.wasDuplicated = "true";
-                        }
-                    }
-                }, 200);
-            }
+            document.getElementById('yt-box-title').innerText = t.yt_title;
+            document.getElementById('yt-box-desc').innerText = t.yt_desc;
+            document.getElementById('yt-main-btn-text').innerText = t.yt_btn;
+            
+            document.getElementById('history-title').innerText = t.history_title;
+            document.getElementById('btn-clear-history').innerText = t.history_clear;
 
-            if (kills >= config.targets) {
-                gameStarted = false;
-                setTimeout(() => {
-                    triggerLevelReward();
-                }, 150);
-            }
-
-            setTimeout(() => {
-                npc.remove();
-                if (gameStarted && (!npc.dataset.groupId || npc.dataset.groupId === "")) {
-                    spawnNPC(maxNPCs - 1);
-                }
-            }, 300);
+            var comingSoonCards = document.querySelectorAll('.dynamic-coming-soon');
+            comingSoonCards.forEach(function(card) {
+                card.querySelector('.thumbnail').innerText = t.coming_soon;
+                card.querySelector('.coming-soon-text').innerText = t.coming_soon;
+            });
+            
+            aplicarEstiloComputadora();
+            actualizarPantallaSubs();
+            renderizarHistorial();
         }
 
-        function triggerLevelReward() {
-            clearAllNPCs();
-            let currentConfig = levelsConfig[currentLevel];
-            score += currentConfig.reward;
-            scoreText.textContent = score;
-            
-            let message = `¡NIVEL ${currentLevel} COMPLETADO!<br><span style='color: #ffcc00;'>🎁 RECOMPENSA: +${currentConfig.reward} MONEDAS</span>`;
-            
-            if (currentLevel === maxUnlockedLevel && maxUnlockedLevel < 6) {
-                maxUnlockedLevel++;
-            }
-            
-            savePlayerProgress();
-            
-            announcement.innerHTML = message;
-            announcement.style.transform = "translate(-50%, -50%) scale(1)";
-            
-            setTimeout(() => {
-                announcement.style.transform = "translate(-50%, -50%) scale(0)";
-                
-                if (currentLevel === 6) {
-                    setTimeout(() => {
-                        announcement.innerHTML = "<span style='color: #00ff00; font-size: 24px;'>Próximamente vamos a añadir más niveles.</span>";
-                        announcement.style.transform = "translate(-50%, -50%) scale(1)";
-                        setTimeout(() => {
-                            announcement.style.transform = "translate(-50%, -50%) scale(0)";
-                            levelSelectionScreen.style.display = 'flex';
-                        }, 4000);
-                    }, 500);
-                } else {
-                    levelSelectionScreen.style.display = 'flex';
-                }
-            }, 3000);
-        }
+        // Cargar almacenamiento previo al iniciar la web
+        var colorLogoGuardado = localStorage.getItem('mrtube_logo_color') ? localStorage.getItem('mrtube_logo_color') : '#ff0000';
+        cambiarColorLogo(colorLogoGuardado);
 
-        document.addEventListener('gesturestart', function (e) { e.preventDefault(); });
+        var fuenteGuardada = localStorage.getItem('mrtube_font') ? localStorage.getItem('mrtube_font') : 'default';
+        cambiarFuente(fuenteGuardada);
+
+        cambiarIdioma(idiomaActual);
     </script>
 </body>
 </html>
