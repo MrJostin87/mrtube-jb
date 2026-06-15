@@ -157,10 +157,18 @@
             transform: scale(0.95);
         }
         #start-button {
-            background: #00ff00;
-            box-shadow: 0 5px 15px rgba(0,255,0,0.4);
-            opacity: 0.5; 
-            pointer-events: none;
+    background: #00ff00;
+    box-shadow: 0 5px 15px rgba(0,255,0,0.4);
+    opacity: 0.5;
+    pointer-events: none;
+    transition: opacity 0.15s ease;
+}
+
+#start-button.btn-active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
         }
         #exit-button {
             background: #ff3333;
