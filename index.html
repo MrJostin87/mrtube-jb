@@ -5,108 +5,51 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chicken Strike NPC - Beta</title>
     <style>
-        /* Reseteo para asegurar que las imágenes ocupen toda la pantalla */
-        html, body {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            font-family: Arial, sans-serif;
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-size: cover;
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; }
+        
+        /* El fondo es la imagen completa */
+        #contenedor-juego {
+            width: 100vw;
+            height: 100vh;
+            background-size: contain;
             background-position: center;
             background-repeat: no-repeat;
-            transition: background 0.5s ease;
+            position: relative;
         }
 
-        /* Gestión de fondos */
-        body.bienvenida { background-image: url('Bienve.PNG'); }
-        body.menu { background-image: url('Juego.PNG'); }
+        body.bienvenida #contenedor-juego { background-image: url('Bienve.PNG'); }
+        body.menu #contenedor-juego { background-image: url('Juego.PNG'); }
 
-        /* Contenedores para que no se encimen */
-        .pantalla {
-            width: 90%;
-            max-width: 400px;
-            padding: 20px;
-            background: rgba(0, 0, 0, 0.6);
-            border-radius: 15px;
-            color: white;
-            text-align: center;
+        /* Zonas invisibles que actúan como botones */
+        .zona-click {
+            position: absolute;
+            cursor: pointer;
+            /* background: rgba(255, 0, 0, 0.2);  DESCOMENTA ESTO PARA VER DONDE TOCAR */
         }
-
-        h1 { color: #ffcc00; text-shadow: 2px 2px 5px black; margin-top: 0; }
-
-        input, button {
-            display: block;
-            width: 100%;
-            margin: 10px 0;
-            padding: 12px;
-            border-radius: 10px;
-            font-weight: bold;
-            box-sizing: border-box;
-            border: 2px solid #f1c40f;
-        }
-
-        input { background: #000; color: #fff; text-align: center; }
-        button { background-color: #2c3e50; color: white; cursor: pointer; }
-        
-        #btn-empezar { background-color: #00ff00; color: black; border: 3px solid white; font-size: 1.2em; }
-        #btn-empezar:disabled { background-color: #555; border-color: #333; cursor: not-allowed; }
     </style>
 </head>
 <body class="bienvenida">
-
     <audio id="sonido-boton" src="Boton.mp3"></audio>
 
-    <div id="pantalla-bienvenida" class="pantalla">
-        <h1>CHICKEN STRIKE NPC</h1>
-        <p>¡Bienvenido a la Beta Oficial de ABG Productions®!</p>
-        
-        <input type="text" id="nombre-usuario" placeholder="Ingresa tu nombre">
-        <button onclick="reproducirSonido(); iniciarConGoogle()">CEG (Correo Electrónico)</button>
-        <button onclick="reproducirSonido(); generarNombreRandom()">Usar Nombre Random</button>
-        
-        <label>
-            <input type="checkbox" id="check-listo" style="display:inline; width: auto;"> Estoy listo
-        </label>
+    <div id="contenedor-juego">
+        <div id="zona-bienvenida">
+            <div class="zona-click" style="top: 75%; left: 25%; width: 50%; height: 10%;" onclick="reproducirSonido(); irAlMenu()"></div>
+        </div>
 
-        <button id="btn-empezar" disabled onclick="reproducirSonido(); irAlMenu()">EMPEZAR AHORA</button>
-    </div>
-
-    <div id="menu-principal" class="pantalla" style="display:none;">
-        <h1>MENÚ PRINCIPAL</h1>
-        <button onclick="reproducirSonido(); alert('Iniciando Juego...')">Jugar</button>
-        <button onclick="reproducirSonido(); location.reload()">Salir del Juego</button>
+        <div id="zona-menu" style="display:none;">
+            <div class="zona-click" style="top: 55%; left: 25%; width: 50%; height: 12%;" onclick="reproducirSonido(); alert('Juego iniciado')"></div>
+            <div class="zona-click" style="top: 70%; left: 25%; width: 50%; height: 12%;" onclick="reproducirSonido(); location.reload()"></div>
+        </div>
     </div>
 
     <script>
-        const checkbox = document.getElementById('check-listo');
-        const botonEmpezar = document.getElementById('btn-empezar');
         const sonidoBoton = document.getElementById('sonido-boton');
-
-        function reproducirSonido() {
-            sonidoBoton.currentTime = 0;
-            sonidoBoton.play().catch(e => console.log("Sonido esperando interacción"));
-        }
-
-        checkbox.addEventListener('change', () => {
-            botonEmpezar.disabled = !checkbox.checked;
-        });
+        function reproducirSonido() { sonidoBoton.play(); }
 
         function irAlMenu() {
             document.body.className = 'menu';
-            document.getElementById('pantalla-bienvenida').style.display = 'none';
-            document.getElementById('menu-principal').style.display = 'block';
-        }
-
-        function iniciarConGoogle() { window.open('https://accounts.google.com', '_blank'); }
-
-        function generarNombreRandom() {
-            const nombres = ["PilotoPro830", "ChickenMaster", "JostinFan"];
-            document.getElementById('nombre-usuario').value = nombres[Math.floor(Math.random() * nombres.length)];
+            document.getElementById('zona-bienvenida').style.display = 'none';
+            document.getElementById('zona-menu').style.display = 'block';
         }
     </script>
 </body>
