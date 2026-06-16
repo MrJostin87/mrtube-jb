@@ -5,43 +5,49 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chicken Strike NPC</title>
     <style>
-        body { 
-            margin: 0; padding: 0; height: 100vh;
-            display: flex; justify-content: center; align-items: center;
-            background-size: cover; background-position: center;
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; }
+        
+        /* Contenedor principal que mantiene tu diseño centrado */
+        #contenedor {
+            width: 100vw; height: 100vh;
+            background-size: contain; background-position: center;
+            background-repeat: no-repeat; position: relative;
         }
-        body.bienvenida { background-image: url('Bienve.PNG'); }
-        body.menu { background-image: url('Juego.PNG'); }
 
-        .boton-estilo {
-            background: transparent; /* Fondo invisible */
-            border: none;
-            color: transparent; /* Texto invisible */
-            padding: 20px;
-            width: 80%;
+        body.bienvenida #contenedor { background-image: url('Bienve.PNG'); }
+        body.menu #contenedor { background-image: url('Juego.PNG'); }
+
+        /* Las "zonas invisibles" que detectan el toque */
+        .boton-invisible {
+            position: absolute;
             cursor: pointer;
-            margin: 10px;
+            width: 80%; /* Ajusta el ancho de tus botones */
+            left: 10%; /* Ajusta el centrado */
         }
     </style>
 </head>
 <body class="bienvenida">
     <audio id="sonido-boton" src="Boton.mp3"></audio>
 
-    <div id="pantalla-bienvenida" style="text-align: center; width: 100%;">
-        <button class="boton-estilo" onclick="reproducirSonido(); irAlMenu()" style="height: 100px;"></button>
-    </div>
+    <div id="contenedor">
+        <div id="pantalla-bienvenida">
+            <div class="boton-invisible" style="top: 75%; height: 15%;" onclick="reproducirSonido(); irAlMenu()"></div>
+        </div>
 
-    <div id="menu-principal" style="display:none; text-align: center; width: 100%;">
-        <button class="boton-estilo" onclick="reproducirSonido(); alert('Iniciando...')"></button>
-        <button class="boton-estilo" onclick="reproducirSonido(); location.reload()"></button>
+        <div id="pantalla-menu" style="display:none;">
+            <div class="boton-invisible" style="top: 50%; height: 15%;" onclick="reproducirSonido(); alert('Iniciando Juego...')"></div>
+            <div class="boton-invisible" style="top: 70%; height: 15%;" onclick="reproducirSonido(); location.reload()"></div>
+        </div>
     </div>
 
     <script>
-        function reproducirSonido() { document.getElementById('sonido-boton').play(); }
+        const sonidoBoton = document.getElementById('sonido-boton');
+        function reproducirSonido() { sonidoBoton.currentTime = 0; sonidoBoton.play(); }
+
         function irAlMenu() {
             document.body.className = 'menu';
             document.getElementById('pantalla-bienvenida').style.display = 'none';
-            document.getElementById('menu-principal').style.display = 'block';
+            document.getElementById('pantalla-menu').style.display = 'block';
         }
     </script>
 </body>
