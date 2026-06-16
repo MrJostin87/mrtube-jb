@@ -3,53 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chicken Strike NPC - Beta</title>
+    <title>Chicken Strike NPC</title>
     <style>
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; }
-        
-        /* El fondo es la imagen completa */
-        #contenedor-juego {
-            width: 100vw;
-            height: 100vh;
-            background-size: contain;
-            background-position: center;
-            background-repeat: no-repeat;
-            position: relative;
+        body { 
+            margin: 0; padding: 0; height: 100vh;
+            display: flex; justify-content: center; align-items: center;
+            background-size: cover; background-position: center;
         }
+        body.bienvenida { background-image: url('Bienve.PNG'); }
+        body.menu { background-image: url('Juego.PNG'); }
 
-        body.bienvenida #contenedor-juego { background-image: url('Bienve.PNG'); }
-        body.menu #contenedor-juego { background-image: url('Juego.PNG'); }
-
-        /* Zonas invisibles que actúan como botones */
-        .zona-click {
-            position: absolute;
+        .boton-estilo {
+            background: transparent; /* Fondo invisible */
+            border: none;
+            color: transparent; /* Texto invisible */
+            padding: 20px;
+            width: 80%;
             cursor: pointer;
-            /* background: rgba(255, 0, 0, 0.2);  DESCOMENTA ESTO PARA VER DONDE TOCAR */
+            margin: 10px;
         }
     </style>
 </head>
 <body class="bienvenida">
     <audio id="sonido-boton" src="Boton.mp3"></audio>
 
-    <div id="contenedor-juego">
-        <div id="zona-bienvenida">
-            <div class="zona-click" style="top: 75%; left: 25%; width: 50%; height: 10%;" onclick="reproducirSonido(); irAlMenu()"></div>
-        </div>
+    <div id="pantalla-bienvenida" style="text-align: center; width: 100%;">
+        <button class="boton-estilo" onclick="reproducirSonido(); irAlMenu()" style="height: 100px;"></button>
+    </div>
 
-        <div id="zona-menu" style="display:none;">
-            <div class="zona-click" style="top: 55%; left: 25%; width: 50%; height: 12%;" onclick="reproducirSonido(); alert('Juego iniciado')"></div>
-            <div class="zona-click" style="top: 70%; left: 25%; width: 50%; height: 12%;" onclick="reproducirSonido(); location.reload()"></div>
-        </div>
+    <div id="menu-principal" style="display:none; text-align: center; width: 100%;">
+        <button class="boton-estilo" onclick="reproducirSonido(); alert('Iniciando...')"></button>
+        <button class="boton-estilo" onclick="reproducirSonido(); location.reload()"></button>
     </div>
 
     <script>
-        const sonidoBoton = document.getElementById('sonido-boton');
-        function reproducirSonido() { sonidoBoton.play(); }
-
+        function reproducirSonido() { document.getElementById('sonido-boton').play(); }
         function irAlMenu() {
             document.body.className = 'menu';
-            document.getElementById('zona-bienvenida').style.display = 'none';
-            document.getElementById('zona-menu').style.display = 'block';
+            document.getElementById('pantalla-bienvenida').style.display = 'none';
+            document.getElementById('menu-principal').style.display = 'block';
         }
     </script>
 </body>
