@@ -26,25 +26,27 @@
             width: 100vw;
             height: 100vh;
             overflow: hidden;
+            display: none; /* Oculto al inicio hasta presionar Empezar */
         }
         #stage {
             position: absolute;
             width: 600vw;
             height: 100vh;
             left: 0;
-            background-image: url('Fondo.PNG');
+            background-image: url('Juego.PNG'); /* Tu fondo de juego real */
             background-size: repeat-x;
             background-position: center;
             will-change: transform;
         }
-        /* PANTALLA DE BIENVENIDA Y MENÚ PRINCIPAL */
+
+        /* PANTALLA DE BIENVENIDA */
         #welcome-screen {
             position: absolute;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
-            background-image: url('Fondo.PNG'); /* Integración de tu fondo real */
+            background-image: url('Bienve.PNG'); /* Tu imagen corporativa de Bienvenida */
             background-size: cover;
             background-position: center;
             display: flex;
@@ -55,17 +57,19 @@
             color: #fff;
             text-align: center;
             padding: 20px;
-            overflow-y: auto; /* Permite scroll para ir hasta abajo */
-            touch-action: pan-y; /* Permite deslizar en móviles */
+            overflow-y: auto;
+            touch-action: pan-y;
         }
-        /* Capa oscura superpuesta suave para que las letras sigan viéndose perfectas sobre el fondo azul */
+
+        /* Capa oscura superpuesta suave removida o aligerada para lucir tus imágenes limpias */
         #welcome-screen::before {
             content: "";
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.45);
+            background: rgba(0, 0, 0, 0.2); /* Más clara para que resalte tu diseño */
             z-index: -1;
         }
+
         #welcome-screen h1 {
             color: #ffcc00;
             font-size: 34px;
@@ -109,10 +113,7 @@
             pointer-events: auto;
             width: 220px;
         }
-        #username-input:focus {
-            outline: none;
-            border-color: #00ff00;
-        }
+        #username-input:focus { outline: none; border-color: #00ff00; }
 
         /* SECCIÓN DE VERIFICACIÓN (ESTOY LISTO) */
         #ready-container {
@@ -126,17 +127,8 @@
             gap: 10px;
             pointer-events: auto;
         }
-        #ready-checkbox {
-            width: 22px;
-            height: 22px;
-            cursor: pointer;
-        }
-        #ready-label {
-            font-size: 16px;
-            color: #fff;
-            font-weight: bold;
-            cursor: pointer;
-        }
+        #ready-checkbox { width: 22px; height: 22px; cursor: pointer; }
+        #ready-label { font-size: 16px; color: #fff; font-weight: bold; cursor: pointer; }
 
         /* BOTONES DEL MENÚ PRINCIPAL */
         .menu-btn {
@@ -154,21 +146,16 @@
             text-align: center;
             box-shadow: 0 4px 10px rgba(0,0,0,0.5);
         }
-        .menu-btn:active {
-            transform: scale(0.95);
-        }
+        .menu-btn:active { transform: scale(0.95); }
         #start-button {
             background: #00ff00;
             box-shadow: 0 5px 15px rgba(0,255,0,0.4);
-            opacity: 0.5; /* Opaco por defecto hasta activar casilla */
+            opacity: 0.5;
             pointer-events: none;
         }
-        #exit-button {
-            background: #ff3333;
-            box-shadow: 0 5px 15px rgba(255,51,51,0.4);
-        }
+        #exit-button { background: #ff3333; box-shadow: 0 5px 15px rgba(255,51,51,0.4); }
 
-        /* CONFIGURACIÓN (ENGRANAJE EN LA PARTE SUPERIOR) */
+        /* CONFIGURACIÓN (ZONA CORREGIDA PARA QUE HAGA CASO EN MÓVILES) */
         #settings-toggle-btn {
             background: #444;
             color: #fff;
@@ -182,7 +169,7 @@
             font-weight: bold;
             margin-top: 10px;
             margin-bottom: 15px;
-            z-index: 10;
+            z-index: 110; /* Mayor para que no lo tape nada */
         }
 
         /* PANEL DE CONFIGURACIONES */
@@ -197,222 +184,54 @@
             flex-direction: column;
             gap: 12px;
             align-items: center;
+            z-index: 110;
         }
-        .setting-row {
-            display: flex;
-            flex-direction: column;
-            width: 100%;
-            gap: 5px;
-            align-items: center;
-        }
-        .setting-row label {
-            font-size: 13px;
-            color: #ffcc00;
-        }
+        .setting-row { display: flex; flex-direction: column; width: 100%; gap: 5px; align-items: center; }
+        .setting-row label { font-size: 13px; color: #ffcc00; }
         .setting-select {
-            background: #333;
-            color: #fff;
-            border: 2px solid #555;
-            padding: 6px;
-            border-radius: 6px;
-            width: 90%;
-            font-size: 13px;
-            pointer-events: auto;
-            text-align: center;
+            background: #333; color: #fff; border: 2px solid #555;
+            padding: 6px; border-radius: 6px; width: 90%; font-size: 13px;
+            pointer-events: auto; text-align: center;
         }
 
-        /* CÓDIGOS DE RECOMPENSA */
-        #code-section {
-            border-top: 2px dashed #444;
-            padding-top: 10px;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 6px;
-        }
-        #code-input {
-            background: #000;
-            border: 2px solid #00ff00;
-            color: #00ff00;
-            padding: 6px;
-            font-size: 15px;
-            border-radius: 6px;
-            width: 70%;
-            text-align: center;
-            letter-spacing: 3px;
-            font-family: monospace;
-            pointer-events: auto;
-        }
-        #code-submit-btn {
-            background: #00ff00;
-            color: #000;
-            border: none;
-            padding: 6px 15px;
-            font-size: 12px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-            pointer-events: auto;
-        }
+        #code-section { border-top: 2px dashed #444; padding-top: 10px; width: 100%; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+        #code-input { background: #000; border: 2px solid #00ff00; color: #00ff00; padding: 6px; font-size: 15px; border-radius: 6px; width: 70%; text-align: center; letter-spacing: 3px; font-family: monospace; pointer-events: auto; }
+        #code-submit-btn { background: #00ff00; color: #000; border: none; padding: 6px 15px; font-size: 12px; border-radius: 5px; cursor: pointer; font-weight: bold; pointer-events: auto; }
 
         /* INTERFAZ (UI) */
-        #ui-header {
-            position: absolute;
-            top: 15px;
-            left: 15px;
-            right: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 10;
-            pointer-events: none;
-        }
-        .ui-box {
-            background: rgba(0, 0, 0, 0.65);
-            padding: 8px 16px;
-            border-radius: 20px;
-            border: 3px solid #ffcc00;
-            color: #fff;
-            font-size: 18px;
-            text-shadow: 2px 2px #000;
-            display: flex;
-            align-items: center;
-        }
-        #ui-score img {
-            width: 30px;
-            height: 30px;
-            margin-right: 8px;
-            animation: spin 4s linear infinite;
-        }
+        #ui-header { position: absolute; top: 15px; left: 15px; right: 15px; display: flex; justify-content: space-between; align-items: center; z-index: 10; pointer-events: none; }
+        .ui-box { background: rgba(0, 0, 0, 0.65); padding: 8px 16px; border-radius: 20px; border: 3px solid #ffcc00; color: #fff; font-size: 18px; text-shadow: 2px 2px #000; display: flex; align-items: center; }
+        #ui-score img { width: 30px; height: 30px; margin-right: 8px; animation: spin 4s linear infinite; }
 
-        /* VENTANA FLOTANTE DE SUSCRIPCIÓN */
+        /* POPUP SUSCRIPCIÓN */
         #subscribe-popup {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(0);
-            width: 310px;
-            background: rgba(15, 15, 15, 0.98);
-            border: 4px solid #ff0000;
-            border-radius: 20px;
-            color: #fff;
-            padding: 20px;
-            text-align: center;
-            z-index: 150;
-            box-shadow: 0 0 25px rgba(255,0,0,0.7);
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            pointer-events: auto;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 15px;
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0);
+            width: 310px; background: rgba(15, 15, 15, 0.98); border: 4px solid #ff0000; border-radius: 20px;
+            color: #fff; padding: 20px; text-align: center; z-index: 150; box-shadow: 0 0 25px rgba(255,0,0,0.7);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); pointer-events: auto;
+            display: flex; flex-direction: column; align-items: center; gap: 15px;
         }
-        #subscribe-popup h2 {
-            color: #ff0000;
-            margin: 0;
-            font-size: 22px;
-            text-shadow: 2px 2px #000;
-        }
-        #subscribe-popup p {
-            font-size: 14px;
-            margin: 0;
-            line-height: 1.4;
-            font-family: sans-serif;
-        }
-        .popup-btn-container {
-            display: flex;
-            gap: 15px;
-            width: 100%;
-            justify-content: center;
-        }
-        .popup-btn {
-            padding: 10px 25px;
-            font-size: 16px;
-            font-family: 'Arial Black', sans-serif;
-            border-radius: 10px;
-            border: 2px solid #fff;
-            cursor: pointer;
-        }
-        #sub-yes-btn {
-            background: #00ff00;
-            color: #000;
-        }
-        #sub-no-btn {
-            background: #ff3333;
-            color: #fff;
-        }
+        #subscribe-popup h2 { color: #ff0000; margin: 0; font-size: 22px; text-shadow: 2px 2px #000; }
+        #subscribe-popup p { font-size: 14px; margin: 0; line-height: 1.4; font-family: sans-serif; }
+        .popup-btn-container { display: flex; gap: 15px; width: 100%; justify-content: center; }
+        .popup-btn { padding: 10px 25px; font-size: 16px; font-family: 'Arial Black', sans-serif; border-radius: 10px; border: 2px solid #fff; cursor: pointer; }
+        #sub-yes-btn { background: #00ff00; color: #000; }
+        #sub-no-btn { background: #ff3333; color: #fff; }
 
-        /* CARTEL DE RECOMPENSA */
-        #announcement {
-            position: absolute;
-            top: 30%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(0);
-            color: #fff;
-            font-size: 35px;
-            text-align: center;
-            text-shadow: 4px 4px #000;
-            background: rgba(0, 0, 0, 0.85);
-            padding: 20px 40px;
-            border-radius: 15px;
-            border: 5px solid #00ff00;
-            z-index: 15;
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            pointer-events: none;
-        }
-        .target {
-            position: absolute;
-            width: 110px;
-            height: auto;
-            transform: translate(-50%, -50%);
-            z-index: 3;
-            pointer-events: none;
-        }
-        #crosshair {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 60px;
-            height: 60px;
-            background-image: url('Mira.PNG');
-            background-size: contain;
-            background-repeat: no-repeat;
-            transform: translate(-50%, -50%);
-            pointer-events: none !important;
-            z-index: 8;
-        }
-        #weapon-container {
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 280px;
-            height: auto;
-            pointer-events: auto;
-            cursor: pointer;
-            z-index: 9;
-            transition: transform 0.05s ease;
-        }
-        #weapon {
-            width: 100%;
-            height: auto;
-            display: block;
-            pointer-events: none;
-        }
-        @keyframes spin {
-            100% { transform: rotate(360deg); }
-        }
+        #announcement { position: absolute; top: 30%; left: 50%; transform: translate(-50%, -50%) scale(0); color: #fff; font-size: 35px; text-align: center; text-shadow: 4px 4px #000; background: rgba(0, 0, 0, 0.85); padding: 20px 40px; border-radius: 15px; border: 5px solid #00ff00; z-index: 15; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); pointer-events: none; }
+        .target { position: absolute; width: 110px; height: auto; transform: translate(-50%, -50%); z-index: 3; pointer-events: none; }
+        #crosshair { position: absolute; top: 50%; left: 50%; width: 60px; height: 60px; background-image: url('Mira.PNG'); background-size: contain; background-repeat: no-repeat; transform: translate(-50%, -50%); pointer-events: none !important; z-index: 8; }
+        #weapon-container { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 280px; height: auto; pointer-events: auto; cursor: pointer; z-index: 9; transition: transform 0.05s ease; }
+        #weapon { width: 100%; height: auto; display: block; pointer-events: none; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
 
-    <!-- CONTROLADORES DE AUDIO NATIVOS -->
     <audio id="audio-music" src="Music.mp3" loop></audio>
     <audio id="audio-pistola" src="Pistola.mp3"></audio>
     <audio id="audio-boton" src="Boton.mp3"></audio>
 
-    <!-- VENTANA POPUP DE SUSCRIPCIÓN -->
     <div id="subscribe-popup">
         <h2>📢 ¡SÚPER PROMO!</h2>
         <p>¡Suscríbete al canal oficial de <b>Mr.Jostin</b>!<br>Cuesta exactamente <b>300 monedas</b> del juego.</p>
@@ -422,9 +241,10 @@
         </div>
     </div>
 
-    <!-- PANTALLA DE BIENVENIDA / MENÚ PRINCIPAL -->
+    <!-- PANTALLA DE BIENVENIDA -->
     <div id="welcome-screen">
-        <button id="settings-toggle-btn">⚙️ CONFIGURACIÓN</button>
+        <!-- Botón corregido con pointer-events explícito para móviles -->
+        <button id="settings-toggle-btn" style="pointer-events: auto;">⚙️ CONFIGURACIÓN</button>
 
         <div id="settings-panel">
             <div class="setting-row">
@@ -461,17 +281,16 @@
             <input type="text" id="username-input" placeholder="Ej: Pepe" maxlength="15">
         </div>
 
-        <!-- Casilla Obligatoria de Verificación -->
         <div id="ready-container">
             <input type="checkbox" id="ready-checkbox">
             <label for="ready-checkbox" id="ready-label">Estoy listo</label>
         </div>
 
-        <!-- Botones del Menú Principal -->
         <button id="start-button" class="menu-btn">EMPEZAR A PROBAR</button>
         <button id="exit-button" class="menu-btn">SALIR DEL JUEGO</button>
     </div>
 
+    <!-- EL CONTENEDOR DEL JUEGO (MENU Y STAGE UNIFICADOS) -->
     <div id="game-container">
         <div id="stage"></div>
 
@@ -504,6 +323,7 @@
         const announcement = document.getElementById('announcement');
         const weaponContainer = document.getElementById('weapon-container');
         const welcomeScreen = document.getElementById('welcome-screen');
+        const gameContainer = document.getElementById('game-container');
         
         const startButton = document.getElementById('start-button');
         const exitButton = document.getElementById('exit-button');
@@ -555,32 +375,26 @@
         let stageX = 0;
         let gameStarted = false;
         let currentUsername = "";
-        let popupTriggered = false; // Control para que la ventana de suscripción salga solo una vez
+        let popupTriggered = false; 
         
         const scrollSpeed = 2.5; 
         const maxNPCs = 10;
         const distanceBetweenNPCs = 350; 
 
-        // Cargar datos previos
         if(localStorage.getItem('cs_saved_username')) {
             currentUsername = localStorage.getItem('cs_saved_username');
             usernameInput.value = currentUsername;
             loadPlayerProgress(currentUsername);
         }
 
-        // CONTROL EXCLUSIVO DE NOMBRE DE USUARIO
         usernameInput.addEventListener('input', () => {
             let name = usernameInput.value.trim();
-            
-            // FILTRO INVICTO: Nadie más puede llamarse Mr.Jostin
             if (name.toLowerCase() === "mr.jostin" && name !== "Mr.Jostin") {
                 alert("❌ ¡Este nombre tiene derechos de autor del Creador!");
                 usernameInput.value = "";
                 return;
             }
-
             if(name !== "") {
-                // Sistema de cobro por cambio de nombre
                 let oldName = localStorage.getItem('cs_saved_username') || "";
                 if (oldName !== "" && oldName !== name && name !== "Mr.Jostin") {
                     let changeCount = parseInt(localStorage.getItem('cs_name_changes_' + oldName) || "0");
@@ -601,7 +415,6 @@
                         localStorage.setItem('cs_name_changes_' + name, changeCount);
                     }
                 }
-
                 currentUsername = name;
                 localStorage.setItem('cs_saved_username', currentUsername);
                 loadPlayerProgress(currentUsername);
@@ -611,26 +424,8 @@
         function loadPlayerProgress(name) {
             let savedScore = localStorage.getItem('cs_score_' + name);
             let savedLevel = localStorage.getItem('cs_level_' + name);
-            
-            if(savedScore !== null) {
-                score = parseInt(savedScore);
-                scoreText.textContent = score;
-            } else {
-                score = 0;
-                scoreText.textContent = score;
-            }
-
-            if(savedLevel !== null) {
-                currentLevel = parseInt(savedLevel);
-                levelText.textContent = currentLevel;
-                if(currentLevel > 1) {
-                    killsText.textContent = `${kills}`;
-                }
-            } else {
-                currentLevel = 1;
-                levelText.textContent = currentLevel;
-                killsText.textContent = `0/10`;
-            }
+            if(savedScore !== null) { score = parseInt(savedScore); scoreText.textContent = score; } else { score = 0; scoreText.textContent = score; }
+            if(savedLevel !== null) { currentLevel = parseInt(savedLevel); levelText.textContent = currentLevel; if(currentLevel > 1) { killsText.textContent = `${kills}`; } } else { currentLevel = 1; levelText.textContent = currentLevel; killsText.textContent = `0/10`; }
             checkSubscriptionTrigger();
         }
 
@@ -642,7 +437,6 @@
             checkSubscriptionTrigger();
         }
 
-        // SISTEMA DE CONTROL PARA LA CASILLA "ESTOY LISTO"
         readyCheckbox.addEventListener('change', () => {
             playSoundBoton();
             if (readyCheckbox.checked) {
@@ -654,14 +448,14 @@
             }
         });
 
-        // BOTÓN SALIR DEL JUEGO
         exitButton.addEventListener('click', () => {
             playSoundBoton();
-            // Recarga la pestaña para simular la salida del juego de manera limpia
             window.location.reload();
         });
 
-        settingsToggleBtn.addEventListener('click', () => {
+        /* CONTROLADOR DE CONFIGURACIÓN SOLUCIONADO */
+        settingsToggleBtn.addEventListener('click', (e) => {
+            e.stopPropagation(); // Evita interferencias táctiles en iOS/Android
             playSoundBoton();
             if(settingsPanel.style.display === "none" || settingsPanel.style.display === "") {
                 settingsPanel.style.display = "flex";
@@ -682,126 +476,67 @@
             }
         });
 
-        // --- SISTEMA DE CANJEO DE NUEVOS CÓDIGOS ACTUALIZADOS ---
         codeSubmitBtn.addEventListener('click', () => {
             playSoundBoton();
             let inputCode = codeInput.value.trim();
-            if(currentUsername === "") {
-                alert("Por favor, introduce un nombre primero antes de usar un código.");
-                return;
-            }
-
-            // Listado oficial de recompensas configuradas por el programador
-            let rewards = {
-                "328": 50,
-                "589": 200,
-                "194": 70,
-                "MJ8": 800
-            };
-
+            if(currentUsername === "") { alert("Por favor, introduce un nombre primero."); return; }
+            let rewards = { "328": 50, "589": 200, "194": 70, "MJ8": 800 };
             if(rewards[inputCode] !== undefined) {
                 let rewardAmount = rewards[inputCode];
-
-                // REGLA SUPREMA: El creador Mr.Jostin los usa de forma ilimitada
                 if(currentUsername === "Mr.Jostin") {
-                    score += rewardAmount;
-                    scoreText.textContent = score;
-                    savePlayerProgress();
-                    alert(`👑 ¡Acceso Creador! Código válido. Se añadieron +${rewardAmount} monedas infinitamente.`);
-                    codeInput.value = "";
+                    score += rewardAmount; scoreText.textContent = score; savePlayerProgress();
+                    alert(`👑 ¡Acceso Creador! +${rewardAmount} monedas.`); codeInput.value = "";
                 } else {
-                    // Resto de usuarios bloqueados tras el primer uso
                     let codeUsed = localStorage.getItem(`cs_code_${inputCode}_` + currentUsername);
-                    if(codeUsed === "true") {
-                        alert("❌ Este código ya fue utilizado por este usuario.");
-                    } else {
-                        score += rewardAmount;
-                        scoreText.textContent = score;
+                    if(codeUsed === "true") { alert("❌ Este código ya fue utilizado."); } else {
+                        score += rewardAmount; scoreText.textContent = score;
                         localStorage.setItem(`cs_code_${inputCode}_` + currentUsername, "true");
-                        savePlayerProgress();
-                        alert(`✅ ¡Código Aceptado! Has ganado +${rewardAmount} monedas.`);
-                        codeInput.value = "";
+                        savePlayerProgress(); alert(`✅ ¡Código Aceptado! +${rewardAmount} monedas.`); codeInput.value = "";
                     }
                 }
-            } else {
-                alert("❌ Código incorrecto o inválido. Verifica los dígitos.");
-            }
+            } else { alert("❌ Código inválido."); }
         });
 
-        // DISPARADOR AUTOMÁTICO DE PESTAÑA DE SUSCRIPCIÓN
         function checkSubscriptionTrigger() {
             if (score >= 300 && !popupTriggered) {
                 popupTriggered = true;
-                // Detiene momentáneamente las acciones abriendo el popup
                 subscribePopup.style.transform = "translate(-50%, -50%) scale(1)";
             }
         }
 
-        // Acciones del Panel de Suscripción
         subYesBtn.addEventListener('click', () => {
             playSoundBoton();
             if (score >= 300) {
-                score -= 300;
-                scoreText.textContent = score;
-                savePlayerProgress();
+                score -= 300; scoreText.textContent = score; savePlayerProgress();
                 subscribePopup.style.transform = "translate(-50%, -50%) scale(0)";
-                alert("🚀 ¡Redireccionando al canal oficial del Creador!");
                 window.open("https://youtube.com/@mr.jostin_oficial?si=JB-zmX5c7fRFRtq0", "_blank");
-            } else {
-                alert("No tienes suficientes monedas.");
-                subscribePopup.style.transform = "translate(-50%, -50%) scale(0)";
-            }
+            } else { alert("No tienes suficientes monedas."); subscribePopup.style.transform = "translate(-50%, -50%) scale(0)"; }
         });
 
-        subNoBtn.addEventListener('click', () => {
-            playSoundBoton();
-            subscribePopup.style.transform = "translate(-50%, -50%) scale(0)";
-        });
+        subNoBtn.addEventListener('click', () => { playSoundBoton(); subscribePopup.style.transform = "translate(-50%, -50%) scale(0)"; });
 
         startButton.addEventListener('click', () => {
             playSoundBoton();
-            
-            // Protección final por si hackean el input de texto en tiempo de ejecución
             let finalName = usernameInput.value.trim();
-            if (finalName.toLowerCase() === "mr.jostin" && finalName !== "Mr.Jostin") {
-                alert("❌ Bloqueo de seguridad: No puedes usar el nombre del Creador.");
-                return;
-            }
-
-            audioMusic.play().catch(e => console.log("La interacción activó la música con éxito."));
-
-            if(finalName === "") {
-                currentUsername = "Player";
-                localStorage.setItem('cs_saved_username', currentUsername);
-            } else {
-                currentUsername = finalName;
-            }
+            if (finalName.toLowerCase() === "mr.jostin" && finalName !== "Mr.Jostin") { alert("❌ Bloqueo de seguridad."); return; }
+            audioMusic.play().catch(e => console.log("Música iniciada"));
+            if(finalName === "") { currentUsername = "Player"; localStorage.setItem('cs_saved_username', currentUsername); } else { currentUsername = finalName; }
             savePlayerProgress();
-
+            
             welcomeScreen.style.display = 'none';
+            gameContainer.style.display = 'block'; // Muestra el juego real y oculta el menú limpiamente
             gameStarted = true;
-            for(let i = 0; i < maxNPCs; i++) {
-                spawnNPC(i);
-            }
+            for(let i = 0; i < maxNPCs; i++) { spawnNPC(i); }
         });
 
         function updateCamera() {
-            if (!gameStarted) {
-                requestAnimationFrame(updateCamera);
-                return;
-            }
-            
+            if (!gameStarted) { requestAnimationFrame(updateCamera); return; }
             stageX -= scrollSpeed;
-            
             if (stageX <= -window.innerWidth * 4) {
                 stageX = 0;
                 const targets = document.querySelectorAll('.target');
-                targets.forEach(npc => {
-                    let currentLeft = parseFloat(npc.style.left);
-                    npc.style.left = (currentLeft - window.innerWidth * 4) + 'px';
-                });
+                targets.forEach(npc => { let currentLeft = parseFloat(npc.style.left); npc.style.left = (currentLeft - window.innerWidth * 4) + 'px'; });
             }
-            
             stage.style.transform = `translateX(${stageX}px)`;
             requestAnimationFrame(updateCamera);
         }
@@ -809,28 +544,15 @@
 
         function fireWeapon() {
             if (!gameStarted) return;
-
             playSoundPistola();
-
             weaponContainer.style.transform = 'translateX(-50%) translateY(20px) scale(0.95)';
-            setTimeout(() => {
-                weaponContainer.style.transform = 'translateX(-50%) translateY(0) scale(1)';
-            }, 100);
-
-            const centerX = window.innerWidth / 2;
-            const centerY = window.innerHeight / 2;
-            
+            setTimeout(() => { weaponContainer.style.transform = 'translateX(-50%) translateY(0) scale(1)'; }, 100);
+            const centerX = window.innerWidth / 2; const centerY = window.innerHeight / 2;
             const targets = document.querySelectorAll('.target');
             targets.forEach((npc) => {
                 if (npc.dataset.dead === "true") return;
-
                 const rect = npc.getBoundingClientRect();
-                
-                if (centerX >= rect.left && centerX <= rect.right &&
-                    centerY >= rect.top && centerY <= rect.bottom) {
-                    
-                    eliminateNPC(npc);
-                }
+                if (centerX >= rect.left && centerX <= rect.right && centerY >= rect.top && centerY <= rect.bottom) { eliminateNPC(npc); }
             });
         }
 
@@ -838,74 +560,25 @@
         weaponContainer.addEventListener('touchstart', (e) => { e.stopPropagation(); e.preventDefault(); fireWeapon(); });
 
         function spawnNPC(index) {
-            const npc = document.createElement('img');
-            npc.src = 'NPC.PNG';
-            npc.className = 'target';
-
-            const screenOffset = -stageX;
-            const spawnX = screenOffset + window.innerWidth + 100 + (index * distanceBetweenNPCs);
-            const spawnY = window.innerHeight / 2 + 30; 
-
-            npc.style.left = spawnX + 'px';
-            npc.style.top = spawnY + 'px';
-
-            stage.appendChild(npc);
-
-            npc.checkBounds = setInterval(() => {
-                const rect = npc.getBoundingClientRect();
-                if (rect.right < 0) {
-                    clearInterval(npc.checkBounds);
-                    npc.remove();
-                    spawnNPC(maxNPCs - 1); 
-                }
-            }, 1000);
+            const npc = document.createElement('img'); npc.src = 'NPC.PNG'; npc.className = 'target';
+            const screenOffset = -stageX; const spawnX = screenOffset + window.innerWidth + 100 + (index * distanceBetweenNPCs); const spawnY = window.innerHeight / 2 + 30;
+            npc.style.left = spawnX + 'px'; npc.style.top = spawnY + 'px'; stage.appendChild(npc);
+            npc.checkBounds = setInterval(() => { const rect = npc.getBoundingClientRect(); if (rect.right < 0) { clearInterval(npc.checkBounds); npc.remove(); spawnNPC(maxNPCs - 1); } }, 1000);
         }
 
         function eliminateNPC(npc) {
-            npc.dataset.dead = "true";
-            clearInterval(npc.checkBounds);
-
-            npc.src = 'Disparado.PNG';
-            
-            score += 5;
-            scoreText.textContent = score;
-            savePlayerProgress();
-
-            if (currentLevel === 1) {
-                kills++;
-                killsText.textContent = `${kills}/10`;
-                
-                if (kills === 10) {
-                    triggerLevelReward();
-                }
-            } else {
-                kills++;
-                killsText.textContent = `${kills}`;
-            }
-
-            setTimeout(() => {
-                npc.remove();
-                spawnNPC(maxNPCs - 1); 
-            }, 300);
+            npc.dataset.dead = "true"; clearInterval(npc.checkBounds); npc.src = 'Disparado.PNG';
+            score += 5; scoreText.textContent = score; savePlayerProgress();
+            if (currentLevel === 1) { kills++; killsText.textContent = `${kills}/10`; if (kills === 10) { triggerLevelReward(); } } else { kills++; killsText.textContent = `${kills}`; }
+            setTimeout(() => { npc.remove(); spawnNPC(maxNPCs - 1); }, 300);
         }
 
         function triggerLevelReward() {
-            currentLevel = 2;
-            score += 50; 
-            
-            scoreText.textContent = score;
-            levelText.textContent = currentLevel;
-            killsText.textContent = `${kills}`; 
-            savePlayerProgress();
-            
+            currentLevel = 2; score += 50; scoreText.textContent = score; levelText.textContent = currentLevel; killsText.textContent = `${kills}`; savePlayerProgress();
             announcement.innerHTML = "¡NIVEL 1 COMPLETADO!<br><span style='color: #ffcc00;'>🎁 RECOMPENSA: +50 MONEDAS</span>";
             announcement.style.transform = "translate(-50%, -50%) scale(1)";
-            
-            setTimeout(() => {
-                announcement.style.transform = "translate(-50%, -50%) scale(0)";
-            }, 3000);
+            setTimeout(() => { announcement.style.transform = "translate(-50%, -50%) scale(0)"; }, 3000);
         }
-
         document.addEventListener('gesturestart', function (e) { e.preventDefault(); });
     </script>
 </body>
