@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Chicken Strike NPC - Beta v1.5</title>
+    <title>Chicken Strike NPC - Beta v1.5.1</title>
     <style>
         * {
             box-sizing: border-box;
@@ -68,7 +68,7 @@
         #welcome-screen h1 {
             color: #ffcc00;
             font-size: 34px;
-            margin-top: 20px;
+            margin-top: 50px;
             margin-bottom: 5px;
             text-shadow: 3px 3px #000;
             letter-spacing: 1px;
@@ -295,8 +295,8 @@
             line-height: 1.3;
         }
         .shop-buy-btn {
-            background: #ffcc00;
-            color: #000;
+            background: #b026ff;
+            color: #fff;
             border: 2px solid #fff;
             font-family: 'Arial Black', sans-serif;
             font-size: 14px;
@@ -400,35 +400,42 @@
             pointer-events: auto;
         }
 
-        /* CONFIGURACIÓN */
+        /* CONFIGURACIÓN MENÚ PRINCIPAL */
         #settings-toggle-btn {
-            background: #444;
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: rgba(0, 0, 0, 0.7);
             color: #fff;
-            border: 2px solid #bbb;
-            padding: 8px 16px;
-            font-size: 16px;
-            border-radius: 8px;
+            border: 2px solid #ffcc00;
+            font-size: 22px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
             cursor: pointer;
             pointer-events: auto;
-            font-family: sans-serif;
-            font-weight: bold;
-            margin-top: 10px;
-            margin-bottom: 15px;
-            z-index: 10;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            z-index: 110;
         }
 
         /* PANEL DE CONFIGURACIONES */
         #settings-panel {
-            background: rgba(20, 20, 20, 0.95);
+            background: rgba(20, 20, 20, 0.98);
             border: 3px solid #ffcc00;
             border-radius: 15px;
-            padding: 15px;
-            margin-bottom: 25px;
-            width: 290px;
+            padding: 20px;
+            margin-top: 60px;
+            margin-bottom: 20px;
+            width: 310px;
             display: none;
             flex-direction: column;
             gap: 12px;
             align-items: center;
+            z-index: 105;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.8);
         }
         .setting-row {
             display: flex;
@@ -440,6 +447,7 @@
         .setting-row label {
             font-size: 13px;
             color: #ffcc00;
+            font-weight: bold;
         }
         .setting-select {
             background: #333;
@@ -447,11 +455,25 @@
             border: 2px solid #555;
             padding: 6px;
             border-radius: 6px;
-            width: 90%;
+            width: 95%;
             font-size: 13px;
             pointer-events: auto;
             text-align: center;
         }
+        .music-panel-btn {
+            width: 95%;
+            padding: 8px;
+            font-size: 12px;
+            font-family: 'Arial Black', sans-serif;
+            border-radius: 6px;
+            border: 2px solid #fff;
+            cursor: pointer;
+            pointer-events: auto;
+            text-align: center;
+            margin-bottom: 2px;
+        }
+        .music-btn-active { background: #00ff00; color: #000; }
+        .music-btn-inactive { background: #444; color: #aaa; border-color: #333; }
 
         /* CÓDIGOS DE RECOMPENSA */
         #code-section {
@@ -502,19 +524,21 @@
         }
         .ui-box {
             background: rgba(0, 0, 0, 0.65);
-            padding: 8px 16px;
+            padding: 8px 14px;
             border-radius: 20px;
             border: 3px solid #ffcc00;
             color: #fff;
-            font-size: 18px;
+            font-size: 16px;
             text-shadow: 2px 2px #000;
             display: flex;
             align-items: center;
+            gap: 5px;
+        }
+        .ui-box img {
+            width: 24px;
+            height: 24px;
         }
         #ui-score img {
-            width: 30px;
-            height: 30px;
-            margin-right: 8px;
             animation: spin 4s linear infinite;
         }
 
@@ -606,21 +630,21 @@
             box-shadow: 0 3px 6px rgba(0,0,0,0.3);
         }
         .audio-active {
-            background: #00ff00; /* Activo / Sonando */
+            background: #00ff00; 
         }
         .audio-muted {
-            background: #555; /* Mutado / Apagado */
+            background: #555; 
             color: #aaa;
             border-color: #333;
         }
 
-        /* VENTANA FLOTANTE DE SUSCRIPCIÓN */
+        /* VENTANA FLOTANTE DE SUSCRIPCIÓN REBALACEADA */
         #subscribe-popup {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%) scale(0);
-            width: 310px;
+            width: 320px;
             background: rgba(15, 15, 15, 0.98);
             border: 4px solid #ff0000;
             border-radius: 20px;
@@ -741,17 +765,24 @@
 
     <div id="subscribe-popup">
         <h2>📢 ¡SÚPER PROMO!</h2>
-        <p>¡Suscríbete al canal oficial de <b>Mr.Jostin</b>!<br>Cuesta exactamente <b>300 monedas</b> del juego.</p>
+        <p>¡Suscríbete al canal oficial de <b>Mr.Jostin</b>!<br>Cuesta exactamente <b>3,600 monedas</b> y <b>3 CoinCG</b> 🟣 del juego.</p>
         <div class="popup-btn-container">
             <button id="sub-yes-btn" class="popup-btn">SÍ</button>
             <button id="sub-no-btn" class="popup-btn">NO</button>
         </div>
     </div>
 
-    <div id="welcome-screen">
-        <button id="settings-toggle-btn">⚙️ CONFIGURACIÓN</button>
+    <button id="settings-toggle-btn">⚙️</button>
 
+    <div id="welcome-screen">
         <div id="settings-panel">
+            <div class="setting-row">
+                <label>OPCIONES DE MÚSICA / AUDIO:</label>
+                <button id="music-btn-normal" class="music-panel-btn music-btn-active">Música Normal 🎵</button>
+                <button id="music-btn-2" class="music-panel-btn music-btn-inactive">Música 2.0 ⚡</button>
+                <button id="music-btn-voice" class="music-panel-btn music-btn-inactive">Música 2.0 VoiceOver 🎤</button>
+            </div>
+
             <div class="setting-row">
                 <label id="label-lang">IDIOMA / LANGUAGE:</label>
                 <select id="lang-select" class="setting-select">
@@ -779,7 +810,7 @@
         </div>
 
         <h1 id="welcome-title">CHICKEN STRIKE NPC</h1>
-        <div id="version-tag">1.5 Beta</div>
+        <div id="version-tag">1.5.1 Beta</div>
         <p id="welcome-desc">¡Bienvenido! Esta es una versión beta oficial del juego, por lo que podría contener algunos errores y bugs en el mapa durante el desarrollo en la plataforma MrTube.<br>Diseñado por ABG Productions® y Sprunki Animations Studios.</p>
         
         <div id="user-setup">
@@ -813,7 +844,7 @@
                     <div class="shop-item-title">Mejora 10.1 (Decorar Arma)</div>
                     <div class="shop-item-desc">Dispara ráfagas continuas de balas muy rápido. Además activa Mejora 20 en Nivel 4 (NPCs se duplican por más monedas).</div>
                 </div>
-                <button id="buy-upgrade-1" class="shop-buy-btn" onclick="buyUpgrade(1, 1000)">1,000 Monedas</button>
+                <button id="buy-upgrade-1" class="shop-buy-btn" onclick="buyUpgrade(1, 1)">1 CoinCG</button>
             </div>
 
             <div class="shop-item">
@@ -821,7 +852,7 @@
                     <div class="shop-item-title">Mejora 20.2 (Decorar Arma)</div>
                     <div class="shop-item-desc">En el Nivel 2, la ganancia base de 7 monedas se multiplica por 7 (49 monedas por baja).</div>
                 </div>
-                <button id="buy-upgrade-2" class="shop-buy-btn" onclick="buyUpgrade(2, 2000)">2,000 Monedas</button>
+                <button id="buy-upgrade-2" class="shop-buy-btn" onclick="buyUpgrade(2, 2)">2 CoinCG</button>
             </div>
 
             <div class="shop-item">
@@ -829,7 +860,7 @@
                     <div class="shop-item-title">Mejora 30.3 (Decorar Arma)</div>
                     <div class="shop-item-desc">Último nivel: NPCs veloces en grupos de 3. ¡Si disparas a uno, mueren los 3 y te da 500 monedas!</div>
                 </div>
-                <button id="buy-upgrade-3" class="shop-buy-btn" onclick="buyUpgrade(3, 3000)">3,000 Monedas</button>
+                <button id="buy-upgrade-3" class="shop-buy-btn" onclick="buyUpgrade(3, 3)">3 CoinCG</button>
             </div>
         </div>
         
@@ -870,9 +901,15 @@
         <div id="stage"></div>
 
         <div id="ui-header">
-            <div class="ui-box" id="ui-score">
-                <img src="Moneda.PNG" alt="Moneda">
-                <span id="score-text">0.0</span>
+            <div style="display: flex; flex-direction: column; gap: 5px;">
+                <div class="ui-box" id="ui-score">
+                    <img src="Moneda.PNG" alt="Moneda">
+                    <span id="score-text">0.0</span>
+                </div>
+                <div class="ui-box" id="ui-coincg">
+                    <img src="CoinCG.PNG" alt="CoinCG">
+                    <span id="coincg-text">0</span>
+                </div>
             </div>
             
             <button id="ingame-pause-btn">⚙️</button>
@@ -896,6 +933,7 @@
     <script>
         const stage = document.getElementById('stage');
         const scoreText = document.getElementById('score-text');
+        const coincgText = document.getElementById('coincg-text');
         const levelText = document.getElementById('level-text');
         const killsText = document.getElementById('kills-text');
         const announcement = document.getElementById('announcement');
@@ -907,7 +945,6 @@
         const shopScreen = document.getElementById('shop-screen');
         const levelSelectionScreen = document.getElementById('level-selection-screen');
         
-        // Elementos del Menú de Pausa
         const ingamePauseBtn = document.getElementById('ingame-pause-btn');
         const pauseOverlayScreen = document.getElementById('pause-overlay-screen');
         const pauseContinueBtn = document.getElementById('pause-continue-btn');
@@ -937,6 +974,11 @@
         const codeInput = document.getElementById('code-input');
         const codeSubmitBtn = document.getElementById('code-submit-btn');
 
+        // Botones del panel de música avanzada
+        const musicBtnNormal = document.getElementById('music-btn-normal');
+        const musicBtn2 = document.getElementById('music-btn-2');
+        const musicBtnVoice = document.getElementById('music-btn-voice');
+
         const audioMusic = document.getElementById('audio-music');
         const audioPistola = document.getElementById('audio-pistola');
         const audioBoton = document.getElementById('audio-boton');
@@ -955,18 +997,19 @@
         };
 
         let score = 0;
+        let coinCG = 0; // Nueva moneda morada
         let kills = 0;
         let currentLevel = 1;
         let maxUnlockedLevel = 1;
         let stageX = 0;
         let gameStarted = false;
-        let gamePaused = false; // Variable para controlar el estado de congelado
+        let gamePaused = false; 
         let currentUsername = "";
         let popupTriggered = false; 
         let activeNPCIntervals = [];
         
         let scrollSpeed = 1.8; 
-        let savedSpeedBeforePause = 1.8; // Guarda la velocidad real del nivel al pausar
+        let savedSpeedBeforePause = 1.8; 
         const maxNPCs = 10;
         const distanceBetweenNPCs = 350;
 
@@ -974,9 +1017,9 @@
         let lastShotTime = 0;
         let shootCooldown = 400; 
 
-        // Variables de estado de audio local en partida
         let isMusicMuted = false;
         let isSoundMuted = false;
+        let currentMusicTrack = "normal"; // normal, 2.0, voice
 
         function formatearMonedas(cantidad) {
             if (cantidad >= 1000000000000) {
@@ -992,19 +1035,48 @@
 
         function actualizarTextoMonedas() {
             scoreText.textContent = formatearMonedas(score);
+            coincgText.textContent = coinCG;
         }
 
         function playSoundBoton() {
-            if (isSoundMuted && gameStarted) return; // Respeta el silenciador en nivel
+            if (isSoundMuted && gameStarted) return; 
             audioBoton.currentTime = 0;
             audioBoton.play().catch(e => console.log("Audio blocked"));
         }
 
         function playSoundPistola() {
-            if (isSoundMuted && gameStarted) return; // Respeta el silenciador en nivel
+            if (isSoundMuted && gameStarted) return; 
             audioPistola.currentTime = 0;
             audioPistola.play().catch(e => console.log("Audio blocked"));
         }
+
+        function changeMusicTrack(trackType) {
+            if (trackType === "normal") {
+                audioMusic.src = "Music.mp3";
+                musicBtnNormal.className = "music-panel-btn music-btn-active";
+                musicBtn2.className = "music-panel-btn music-btn-inactive";
+                musicBtnVoice.className = "music-panel-btn music-btn-inactive";
+            } else if (trackType === "2.0") {
+                audioMusic.src = "Music3.mp3";
+                musicBtnNormal.className = "music-panel-btn music-btn-inactive";
+                musicBtn2.className = "music-panel-btn music-btn-active";
+                musicBtnVoice.className = "music-panel-btn music-btn-inactive";
+            } else if (trackType === "voice") {
+                audioMusic.src = "Music2.mp3";
+                musicBtnNormal.className = "music-panel-btn music-btn-inactive";
+                musicBtn2.className = "music-panel-btn music-btn-inactive";
+                musicBtnVoice.className = "music-panel-btn music-btn-active";
+            }
+            currentMusicTrack = trackType;
+            if (!isMusicMuted) {
+                audioMusic.currentTime = 0;
+                audioMusic.play().catch(e => console.log("Track swap blocked"));
+            }
+        }
+
+        musicBtnNormal.addEventListener('click', () => { playSoundBoton(); changeMusicTrack("normal"); });
+        musicBtn2.addEventListener('click', () => { playSoundBoton(); changeMusicTrack("2.0"); });
+        musicBtnVoice.addEventListener('click', () => { playSoundBoton(); changeMusicTrack("voice"); });
 
         if(localStorage.getItem('cs_saved_username')) {
             currentUsername = localStorage.getItem('cs_saved_username');
@@ -1053,29 +1125,24 @@
             if(name.toLowerCase() === "mr.jostin" && name !== "Mr.Jostin") return;
 
             let savedScore = localStorage.getItem('cs_score_' + name);
+            let savedCoinCG = localStorage.getItem('cs_coincg_' + name);
             let savedMaxLevel = localStorage.getItem('cs_max_level_' + name);
             
-            if(savedScore !== null) {
-                score = parseInt(savedScore);
-                actualizarTextoMonedas();
-            } else {
-                score = 0;
-                actualizarTextoMonedas();
-            }
+            if(savedScore !== null) score = parseInt(savedScore);
+            else score = 0;
 
-            if(savedMaxLevel !== null) {
-                maxUnlockedLevel = parseInt(savedMaxLevel);
-            } else {
-                maxUnlockedLevel = 1;
-            }
+            if(savedCoinCG !== null) coinCG = parseInt(savedCoinCG);
+            else coinCG = 0;
+
+            actualizarTextoMonedas();
+
+            if(savedMaxLevel !== null) maxUnlockedLevel = parseInt(savedMaxLevel);
+            else maxUnlockedLevel = 1;
 
             [1, 2, 3].forEach(id => {
                 let savedUpgrade = localStorage.getItem(`cs_upgrade_${id}_` + name);
-                if (savedUpgrade === "true") {
-                    upgradesOwned[id] = true;
-                } else {
-                    upgradesOwned[id] = false;
-                }
+                if (savedUpgrade === "true") upgradesOwned[id] = true;
+                else upgradesOwned[id] = false;
             });
 
             updateLevelButtonsUI();
@@ -1086,6 +1153,7 @@
         function savePlayerProgress() {
             if(currentUsername !== "") {
                 localStorage.setItem('cs_score_' + currentUsername, score);
+                localStorage.setItem('cs_coincg_' + currentUsername, coinCG);
                 localStorage.setItem('cs_max_level_' + currentUsername, maxUnlockedLevel);
                 [1, 2, 3].forEach(id => {
                     localStorage.setItem(`cs_upgrade_${id}_` + currentUsername, upgradesOwned[id]);
@@ -1116,10 +1184,9 @@
                         btn.classList.add('owned');
                     } else {
                         btn.classList.remove('owned');
-                        // PRECIOS ACTUALIZADOS VISUALMENTE EN LA TIENDA
-                        if(id === 1) btn.textContent = "1,000 Monedas";
-                        if(id === 2) btn.textContent = "2,000 Monedas";
-                        if(id === 3) btn.textContent = "3,000 Monedas";
+                        if(id === 1) btn.textContent = "1 CoinCG";
+                        if(id === 2) btn.textContent = "2 CoinCG";
+                        if(id === 3) btn.textContent = "3 CoinCG";
                     }
                 }
             });
@@ -1135,15 +1202,15 @@
                 alert("¡Ya compraste y decoraste tu arma con esta mejora!");
                 return;
             }
-            if (score >= cost) {
-                score -= cost;
+            if (coinCG >= cost) {
+                coinCG -= cost;
                 upgradesOwned[id] = true;
                 actualizarTextoMonedas();
                 savePlayerProgress();
                 updateShopButtonsUI();
-                alert(`🎉 ¡Compraste la Mejora con éxito! Tu arma ha sido decorada.`);
+                alert(`🎉 ¡Compraste la Mejora con éxito usando CoinCG! Tu arma ha sido decorada.`);
             } else {
-                alert("❌ No tienes suficientes monedas en tu cuenta de piloto.");
+                alert("❌ No tienes suficientes CoinCG (Monedas Moradas) en tu billetera.");
             }
         }
 
@@ -1154,20 +1221,19 @@
                 return;
             }
 
-            let totalRefund = 0;
-            // DEVOLUCIONES INTEGRADAS CON LOS NUEVOS MONTOS REESTRUCTURADOS
-            if (upgradesOwned[1]) totalRefund += 1000;
-            if (upgradesOwned[2]) totalRefund += 2000;
-            if (upgradesOwned[3]) totalRefund += 3000;
+            let refundCoinCG = 0;
+            if (upgradesOwned[1]) refundCoinCG += 1;
+            if (upgradesOwned[2]) refundCoinCG += 2;
+            if (upgradesOwned[3]) refundCoinCG += 3;
 
-            if (totalRefund === 0) {
+            if (refundCoinCG === 0) {
                 alert("❌ No tienes ninguna mejora activa para reiniciar.");
                 return;
             }
 
-            let confirmReset = confirm(`¿Quieres reiniciar tus mejoras? Se te devolverán ${totalRefund} monedas.`);
+            let confirmReset = confirm(`¿Quieres reiniciar tus mejoras? Se te devolverán ${refundCoinCG} CoinCG moradas.`);
             if (confirmReset) {
-                score += totalRefund;
+                coinCG += refundCoinCG;
                 actualizarTextoMonedas();
                 
                 upgradesOwned[1] = false;
@@ -1216,7 +1282,6 @@
                 return;
             }
 
-            // SECCIÓN ACTUALIZADA: Códigos clásicos + Nuevos códigos inyectados perfectamente (M18, 184, 900, 50M)
             let rewards = { 
                 "328": 50, "589": 200, "194": 70, "MJ8": 800,
                 "M18": 1000, "184": 500, "900": 9000, "50M": 50000000 
@@ -1250,7 +1315,8 @@
         });
 
         function checkSubscriptionTrigger() {
-            if (score >= 300 && !popupTriggered) {
+            // Umbral rebalanceado: se dispara de forma preventiva al llegar a los requisitos
+            if (score >= 3600 && coinCG >= 3 && !popupTriggered) {
                 popupTriggered = true;
                 subscribePopup.style.transform = "translate(-50%, -50%) scale(1)";
             }
@@ -1258,15 +1324,16 @@
 
         subYesBtn.addEventListener('click', () => {
             playSoundBoton();
-            if (score >= 300) {
-                score -= 300;
+            if (score >= 3600 && coinCG >= 3) {
+                score -= 3600;
+                coinCG -= 3;
                 actualizarTextoMonedas();
                 savePlayerProgress();
                 subscribePopup.style.transform = "translate(-50%, -50%) scale(0)";
                 alert("🚀 ¡Redireccionando al canal oficial del Creador!");
                 window.open("https://youtube.com/@mr.jostin_oficial?si=JB-zmX5c7fRFRtq0", "_blank");
             } else {
-                alert("No tienes suficientes monedas.");
+                alert("No cumples con los requisitos: 3,600 monedas comunes y 3 CoinCG.");
                 subscribePopup.style.transform = "translate(-50%, -50%) scale(0)";
             }
         });
@@ -1289,7 +1356,7 @@
                 return;
             }
 
-            audioMusic.play().catch(e => console.log("Música iniciada."));
+            if (!isMusicMuted) audioMusic.play().catch(e => console.log("Música iniciada."));
 
             if(finalName === "") {
                 currentUsername = "Player";
@@ -1375,7 +1442,6 @@
             
             clearAllNPCs();
             
-            // Forzar reseteo de los botones de audio al arrancar un nivel limpio
             isMusicMuted = false;
             isSoundMuted = false;
             audioMusic.muted = false;
@@ -1384,7 +1450,6 @@
             toggleSoundBtn.textContent = "Silenciar Sonido";
             toggleSoundBtn.className = "audio-toggle-btn audio-active";
 
-            // Asegurarse de que la música suene al iniciar
             audioMusic.play().catch(e => console.log("Music play pending"));
 
             gameStarted = true;
@@ -1423,7 +1488,7 @@
         requestAnimationFrame(updateCamera);
 
         function fireWeapon() {
-            if (!gameStarted || gamePaused) return; // Bloquear disparos si está pausado
+            if (!gameStarted || gamePaused) return; 
 
             let currentTime = Date.now();
             if (currentTime - lastShotTime < shootCooldown) {
@@ -1500,7 +1565,7 @@
             stage.appendChild(npc);
 
             let checkInterval = setInterval(() => {
-                if (gamePaused) return; // Detener lógica del ciclo si está en pausa
+                if (gamePaused) return; 
                 const rect = npc.getBoundingClientRect();
                 if (rect.right < 0) {
                     clearInterval(checkInterval);
@@ -1588,9 +1653,12 @@
             clearAllNPCs();
             let currentConfig = levelsConfig[currentLevel];
             score += currentConfig.reward;
+            
+            // PROGRAMACIÓN: El jugador gana 1 CoinCG morada por completar cualquier nivel
+            coinCG += 1; 
             actualizarTextoMonedas();
             
-            let message = `¡NIVEL ${currentLevel} COMPLETADO!<br><span style='color: #ffcc00;'>🎁 RECOMPENSA: +${formatearMonedas(currentConfig.reward)} MONEDAS</span>`;
+            let message = `¡NIVEL ${currentLevel} COMPLETADO!<br><span style='color: #ffcc00;'>🎁 MONEDAS: +${formatearMonedas(currentConfig.reward)}</span><br><span style='color: #b026ff;'>💜¡GANASTE 1 CoinCG!</span>`;
             
             if (currentLevel === maxUnlockedLevel && maxUnlockedLevel < 10) {
                 maxUnlockedLevel++;
@@ -1619,7 +1687,6 @@
             }, 3000);
         }
 
-        // LÓGICA DE PROGRAMACIÓN DEL NUEVO MENÚ DE PAUSA (ENGRANAJE)
         ingamePauseBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             if (!gameStarted) return;
@@ -1627,9 +1694,9 @@
             playSoundBoton();
             gamePaused = true; 
             savedSpeedBeforePause = scrollSpeed; 
-            scrollSpeed = 0; // Congelar cámara de golpe
+            scrollSpeed = 0; 
             
-            pauseOverlayScreen.style.display = "flex"; // Desplegar ventana flotante
+            pauseOverlayScreen.style.display = "flex"; 
         });
 
         pauseContinueBtn.addEventListener('click', (e) => {
@@ -1637,7 +1704,7 @@
             playSoundBoton();
             
             gamePaused = false;
-            scrollSpeed = savedSpeedBeforePause; // Devolver la velocidad real del nivel
+            scrollSpeed = savedSpeedBeforePause; 
             
             pauseOverlayScreen.style.display = "none";
         });
@@ -1645,7 +1712,6 @@
         pauseQuitBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             
-            // NORMA: El juego vuelve a la normalidad al salirse del nivel
             isMusicMuted = false;
             isSoundMuted = false;
             audioMusic.muted = false;
@@ -1655,9 +1721,8 @@
             clearAllNPCs();
             
             pauseOverlayScreen.style.display = "none";
-            levelSelectionScreen.style.display = "flex"; // Volver directamente a la rejilla
+            levelSelectionScreen.style.display = "flex"; 
             
-            // Garantizar que la música siga sonando en los menús de MrTube de forma normal
             audioMusic.play().catch(e => console.log("Audio restore error"));
         });
 
