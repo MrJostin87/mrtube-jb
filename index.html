@@ -327,7 +327,7 @@
             cursor: pointer;
         }
 
-        /* PANEL DE SELECCIÓN DE NIVEL */
+        /* PANEL DE SELECCIÓN DE NIVEL DE 10 NIVELES (Grid Mejorado) */
         #level-selection-screen {
             position: absolute;
             top: 0;
@@ -341,26 +341,27 @@
             align-items: center;
             z-index: 120;
             padding: 20px;
+            overflow-y: auto;
         }
         #level-selection-screen h2 {
             color: #ffcc00;
             font-size: 28px;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             text-shadow: 2px 2px #000;
         }
         .levels-grid {
             display: grid;
-            grid-template-columns: repeat(2, 140px);
-            gap: 15px;
+            grid-template-columns: repeat(2, 145px);
+            gap: 12px;
             justify-content: center;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
         .level-select-btn {
             background: #333;
             color: #fff;
             border: 3px solid #ffcc00;
-            padding: 15px;
-            font-size: 18px;
+            padding: 12px;
+            font-size: 16px;
             font-family: 'Arial Black', sans-serif;
             border-radius: 12px;
             cursor: pointer;
@@ -738,6 +739,8 @@
             <button class="level-select-btn locked" data-lvl="6" disabled>Nivel 6</button>
             <button class="level-select-btn locked" data-lvl="7" disabled>Nivel 7</button>
             <button class="level-select-btn locked" data-lvl="8" disabled>Nivel 8</button>
+            <button class="level-select-btn locked" data-lvl="9" disabled>Nivel 9</button>
+            <button class="level-select-btn locked" data-lvl="10" disabled>Nivel 10</button>
         </div>
         <button id="back-to-menu-btn">VOLVER AL MENÚ</button>
     </div>
@@ -748,7 +751,7 @@
         <div id="ui-header">
             <div class="ui-box" id="ui-score">
                 <img src="Moneda.PNG" alt="Moneda">
-                <span id="score-text">0</span>
+                <span id="score-text">0.0</span>
             </div>
             <div class="ui-box" id="ui-level">
                 <span id="label-ui-level">Nivel</span>: <span id="level-text">1</span>
@@ -806,7 +809,7 @@
         const audioPistola = document.getElementById('audio-pistola');
         const audioBoton = document.getElementById('audio-boton');
 
-        // MODIFICACIÓN 2: Configuración de estadísticas de Niveles 7 y 8 integrados perfectamente
+        // MODIFICACIÓN EXCLUSIVA: Integración de estadísticas para los niveles 9 y 10 (Hong Kong)
         const levelsConfig = {
             1: { targets: 5, speed: 1.8, coinsPerKill: 1, reward: 25 },
             2: { targets: 10, speed: 2.6, coinsPerKill: 7, reward: 50 },
@@ -814,8 +817,10 @@
             4: { targets: 20, speed: 3.8, coinsPerKill: 20, reward: 200 },
             5: { targets: 25, speed: 4.4, coinsPerKill: 30, reward: 300 },
             6: { targets: 40, speed: 5.2, coinsPerKill: 40, reward: 500 },
-            7: { targets: 60, speed: 6.8, coinsPerKill: 0, reward: (9600 * 100) }, // 960,000 monedas de recompensa final
-            8: { targets: 90, speed: 3.5, coinsPerKill: 0, reward: (100000 * 9000) } // 900,000,000 monedas de recompensa final
+            7: { targets: 60, speed: 6.8, coinsPerKill: 0, reward: (9600 * 100) }, 
+            8: { targets: 90, speed: 3.5, coinsPerKill: 0, reward: (100000 * 9000) },
+            9: { targets: 120, speed: 7.5, coinsPerKill: 50000, reward: 5000000000 }, // Nivel 9: Fase Hong Kong (5 Mil Millones de premio final)
+            10: { targets: 150, speed: 9.0, coinsPerKill: 1000000, reward: 10000000000000 } // Nivel 10: Gran Final Trillonario (10 Billones de premio final)
         };
 
         let score = 0;
@@ -835,6 +840,28 @@
         let upgradesOwned = { 1: false, 2: false, 3: false };
         let lastShotTime = 0;
         let shootCooldown = 400; 
+
+        // FUNCIÓN DE ABREVIACIÓN DE MONEDAS DINÁMICA (DISEÑO 1.0 M)
+        function formatearMonedas(cantidad) {
+            if (cantidad >= 1000000000000) {
+                // Escala de los Billones (T de Trillions para evitar textos excesivamente largos)
+                return (cantidad / 1000000000000).toFixed(1) + " T";
+            } else if (cantidad >= 1000000000) {
+                // Escala de los Miles de Millones (B de Billions)
+                return (cantidad / 1000000000).toFixed(1) + " B";
+            } else if (cantidad >= 1000000) {
+                // Escala de los Millones (M), como lo especificaste: 1.0 M
+                return (cantidad / 1000000).toFixed(1) + " M";
+            } else {
+                // Menos de un millón se muestra formateado con comas localizadas de manera normal
+                return cantidad.toLocaleString();
+            }
+        }
+
+        // Función auxiliar para refrescar el texto en la UI aplicando el nuevo filtro
+        function actualizarTextoMonedas() {
+            scoreText.textContent = formatearMonedas(score);
+        }
 
         function playSoundBoton() {
             audioBoton.currentTime = 0;
@@ -877,7 +904,7 @@
                             return;
                         } else {
                             score -= 1000;
-                            scoreText.textContent = score;
+                            actualizarTextoMonedas();
                             alert("💰 Se han descontado 1000 monedas por cambio de nombre.");
                             changeCount++;
                             localStorage.setItem('cs_name_changes_' + name, changeCount);
@@ -902,10 +929,10 @@
             
             if(savedScore !== null) {
                 score = parseInt(savedScore);
-                scoreText.textContent = score;
+                actualizarTextoMonedas();
             } else {
                 score = 0;
-                scoreText.textContent = score;
+                actualizarTextoMonedas();
             }
 
             if(savedMaxLevel !== null) {
@@ -982,7 +1009,7 @@
             if (score >= cost) {
                 score -= cost;
                 upgradesOwned[id] = true;
-                scoreText.textContent = score;
+                actualizarTextoMonedas();
                 savePlayerProgress();
                 updateShopButtonsUI();
                 alert(`🎉 ¡Compraste la Mejora con éxito! Tu arma ha sido decorada.`);
@@ -1011,7 +1038,7 @@
             let confirmReset = confirm(`¿Quieres reiniciar tus mejoras? Se te devolverán ${totalRefund} monedas.`);
             if (confirmReset) {
                 score += totalRefund;
-                scoreText.textContent = score;
+                actualizarTextoMonedas();
                 
                 upgradesOwned[1] = false;
                 upgradesOwned[2] = false;
@@ -1066,7 +1093,7 @@
 
                 if(currentUsername === "Mr.Jostin") {
                     score += rewardAmount;
-                    scoreText.textContent = score;
+                    actualizarTextoMonedas();
                     savePlayerProgress();
                     alert(`👑 ¡Acceso Creador! Código válido. Se añadieron +${rewardAmount} monedas.`);
                     codeInput.value = "";
@@ -1076,7 +1103,7 @@
                         alert("❌ Este código ya fue utilizado por este usuario.");
                     } else {
                         score += rewardAmount;
-                        scoreText.textContent = score;
+                        actualizarTextoMonedas();
                         localStorage.setItem(`cs_code_${inputCode}_` + currentUsername, "true");
                         savePlayerProgress();
                         alert(`✅ ¡Código Aceptado! Has ganado +${rewardAmount} monedas.`);
@@ -1099,7 +1126,7 @@
             playSoundBoton();
             if (score >= 300) {
                 score -= 300;
-                scoreText.textContent = score;
+                actualizarTextoMonedas();
                 savePlayerProgress();
                 subscribePopup.style.transform = "translate(-50%, -50%) scale(0)";
                 alert("🚀 ¡Redireccionando al canal oficial del Creador!");
@@ -1353,21 +1380,16 @@
             let config = levelsConfig[currentLevel];
             let rawCoins = config.coinsPerKill;
 
-            // MODIFICACIÓN 3: Lógica de recompensa por baja en Niveles 7 y 8
             if (currentLevel === 2 && upgradesOwned[2]) {
                 rawCoins = rawCoins * 7;
             }
             if (currentLevel === 7) {
-                // Si es el primer NPC eliminado del nivel, otorga 100 monedas extra
                 if (kills === 0) {
                     rawCoins += 100;
                 }
             }
             if (currentLevel === 8) {
-                // Cada baja otorga 300 monedas multiplicado por 30 (9,000 monedas)
                 rawCoins = 300 * 30;
-                
-                // Si el jugador mata 10 NPCs, la velocidad del nivel aumenta (¡NPCs acelerados!)
                 if (kills + 1 === 10) {
                     scrollSpeed = 5.8; 
                 }
@@ -1378,7 +1400,7 @@
             }
 
             score += rawCoins;
-            scoreText.textContent = score;
+            actualizarTextoMonedas(); // Se actualiza la UI con la abreviación del Creador
             
             kills++;
             killsText.textContent = `${kills}/${config.targets}`;
@@ -1418,12 +1440,12 @@
             clearAllNPCs();
             let currentConfig = levelsConfig[currentLevel];
             score += currentConfig.reward;
-            scoreText.textContent = score;
+            actualizarTextoMonedas();
             
-            let message = `¡NIVEL ${currentLevel} COMPLETADO!<br><span style='color: #ffcc00;'>🎁 RECOMPENSA: +${currentConfig.reward.toLocaleString()} MONEDAS</span>`;
+            let message = `¡NIVEL ${currentLevel} COMPLETADO!<br><span style='color: #ffcc00;'>🎁 RECOMPENSA: +${formatearMonedas(currentConfig.reward)} MONEDAS</span>`;
             
-            // MODIFICACIÓN 4: Desbloqueo secuencial seguro hasta el nivel 8
-            if (currentLevel === maxUnlockedLevel && maxUnlockedLevel < 8) {
+            // MODIFICACIÓN EXCLUSIVA: Desbloqueo secuencial seguro extendido hasta el Nivel 10
+            if (currentLevel === maxUnlockedLevel && maxUnlockedLevel < 10) {
                 maxUnlockedLevel++;
             }
             
@@ -1435,15 +1457,15 @@
             setTimeout(() => {
                 announcement.style.transform = "translate(-50%, -50%) scale(0)";
                 
-                // MODIFICACIÓN 5: Ventana emergente al terminar el Nivel 8 (Próximamente más niveles millonarios)
-                if (currentLevel === 8) {
+                // Evento al pasar el nivel 10 (El fin de la beta actual)
+                if (currentLevel === 10) {
                     setTimeout(() => {
-                        announcement.innerHTML = "<span style='color: #ffcc00; font-size: 20px;'>¡PRÓXIMAMENTE MÁS NIVELES!<br><br><span style='color: #00ff00; font-size: 16px;'>Añadiremos nuevos mundos que darán muchísimas más monedas que los niveles anteriores.</span></span>";
+                        announcement.innerHTML = "<span style='color: #ffcc00; font-size: 20px;'>¡BETA COMPLETADA CON ÉXITO!<br><br><span style='color: #00ff00; font-size: 16px;'>¡Felicidades, Piloto! Has dominado la economía trillonaria de MrTube de la mano de ABG Productions®.</span></span>";
                         announcement.style.transform = "translate(-50%, -50%) scale(1)";
                         setTimeout(() => {
                             announcement.style.transform = "translate(-50%, -50%) scale(0)";
                             levelSelectionScreen.style.display = 'flex';
-                        }, 5000);
+                        }, 6000);
                     }, 500);
                 } else {
                     levelSelectionScreen.style.display = 'flex';
