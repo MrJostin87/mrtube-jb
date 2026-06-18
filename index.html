@@ -846,7 +846,7 @@
 
             <div id="code-section">
                 <label id="label-code">CÓDIGO DE MONEDAS:</label>
-                <input type="text" id="code-input" placeholder="000" maxlength="3">
+                <input type="text" id="code-input" placeholder="Introduce código" maxlength="15">
                 <button id="code-submit-btn">ACEPTAR</button>
             </div>
         </div>
@@ -1255,7 +1255,7 @@
         }
 
         function savePlayerProgress() {
-            if(currentUsername !== "") {
+            if (currentUsername !== "") {
                 localStorage.setItem('cs_score_' + currentUsername, score);
                 localStorage.setItem('cs_coincg_' + currentUsername, coinCG);
                 localStorage.setItem('cs_max_level_' + currentUsername, maxUnlockedLevel);
@@ -1383,41 +1383,66 @@
 
         codeSubmitBtn.addEventListener('click', () => {
             playSoundBoton();
-            let inputCode = codeInput.value.trim();
+            // Convertir a mayúsculas para evitar problemas de escritura
+            let inputCode = codeInput.value.trim().toUpperCase();
             if(currentUsername === "") {
                 alert("Por favor, introduce un nombre primero antes de usar un código.");
                 return;
             }
 
+            // Base de datos de códigos con sus respectivos tipos de recompensa
             let rewards = { 
-                "328": 50, "589": 200, "194": 70, "MJ8": 800,
-                "M18": 1000, "184": 500, "900": 9000, "50M": 50000000 
+                "328": { amount: 50, type: "coins" }, 
+                "589": { amount: 200, type: "coins" }, 
+                "194": { amount: 70, type: "coins" }, 
+                "MJ8": { amount: 800, type: "coins" },
+                "M18": { amount: 1000, type: "coins" }, 
+                "184": { amount: 500, type: "coins" }, 
+                "900": { amount: 9000, type: "coins" }, 
+                "50M": { amount: 50000000, type: "coins" },
+                // NUEVOS CÓDIGOS PARA COINCG (NO CADUCAN)
+                "MRT": { amount: 60, type: "coincg" },
+                "ABG": { amount: 100, type: "coincg" },
+                "15A": { amount: 15, type: "coincg" },
+                "67X": { amount: 67, type: "coincg" }
             };
 
             if(rewards[inputCode] !== undefined) {
-                let rewardAmount = rewards[inputCode];
+                let rewardData = rewards[inputCode];
+                let rewardAmount = rewardData.amount;
+                let rewardType = rewardData.type;
 
                 if(currentUsername === "Mr.Jostin") {
-                    score += rewardAmount;
+                    if (rewardType === "coins") {
+                        score += rewardAmount;
+                        alert(`👑 ¡Acceso Creador! Código válido. Se añadieron +${formatearMonedas(rewardAmount)} monedas.`);
+                    } else if (rewardType === "coincg") {
+                        coinCG += rewardAmount;
+                        alert(`👑 ¡Acceso Creador! Código válido. Se añadieron +${rewardAmount} CoinCG 🟣.`);
+                    }
                     actualizarTextoMonedas();
                     savePlayerProgress();
-                    alert(`👑 ¡Acceso Creador! Código válido. Se añadieron +${formatearMonedas(rewardAmount)} monedas.`);
                     codeInput.value = "";
                 } else {
                     let codeUsed = localStorage.getItem(`cs_code_${inputCode}_` + currentUsername);
                     if(codeUsed === "true") {
                         alert("❌ Este código ya fue utilizado por este usuario.");
                     } else {
-                        score += rewardAmount;
+                        if (rewardType === "coins") {
+                            score += rewardAmount;
+                            alert(`✅ ¡Código Aceptado! Has ganado +${formatearMonedas(rewardAmount)} monedas.`);
+                        } else if (rewardType === "coincg") {
+                            coinCG += rewardAmount;
+                            alert(`✅ ¡Código Aceptado! Has ganado +${rewardAmount} CoinCG 🟣.`);
+                        }
                         actualizarTextoMonedas();
                         localStorage.setItem(`cs_code_${inputCode}_` + currentUsername, "true");
                         savePlayerProgress();
-                        alert(`✅ ¡Código Aceptado! Has ganado +${formatearMonedas(rewardAmount)} monedas.`);
                         codeInput.value = "";
                     }
                 }
             } else {
-                alert("❌ Código incorrecto.");
+                alert("❌ Código incorrecto o inválido.");
             }
         });
 
@@ -1550,7 +1575,7 @@
             
             levelText.textContent = currentLevel;
             killsText.textContent = `0/${levelsConfig[lvl].targets}`;
-            lastCoinsText.textContent = "0"; // Reiniciar texto de último NPC
+            lastCoinsText.textContent = "0"; 
             
             clearAllNPCs();
             
@@ -1729,7 +1754,6 @@
 
             score += rawCoins;
             
-            // ACTUALIZAR EL CONTADOR DE MONEDAS QUE DIO ESTE NPC EN TIEMPO REAL
             lastCoinsText.textContent = formatearMonedas(finalNPCValue);
             
             actualizarTextoMonedas(); 
