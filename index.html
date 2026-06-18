@@ -1002,11 +1002,16 @@
             
             <button id="ingame-pause-btn">⚙️</button>
 
-            <div class="ui-box" id="ui-level">
-                <span id="label-ui-level">Nivel</span>: <span id="level-text">1</span>
-            </div>
-            <div class="ui-box" id="ui-kills">
-                <span id="label-ui-targets">Objetivos</span>: <span id="kills-text">0/5</span>
+            <div style="display: flex; flex-direction: column; gap: 5px; align-items: flex-end;">
+                <div class="ui-box" id="ui-level">
+                    <span id="label-ui-level">Nivel</span>: <span id="level-text">1</span>
+                </div>
+                <div class="ui-box" id="ui-kills">
+                    <span id="label-ui-targets">Objetivos</span>: <span id="kills-text">0/5</span>
+                </div>
+                <div class="ui-box" id="ui-last-coins" style="border-color: #00ff00; font-size: 13px; padding: 4px 10px;">
+                    <span>Último NPC</span>: +<span id="last-coins-text" style="color: #00ff00;">0</span> 🟡
+                </div>
             </div>
         </div>
 
@@ -1024,6 +1029,7 @@
         const coincgText = document.getElementById('coincg-text');
         const levelText = document.getElementById('level-text');
         const killsText = document.getElementById('kills-text');
+        const lastCoinsText = document.getElementById('last-coins-text');
         const announcement = document.getElementById('announcement');
         const weaponContainer = document.getElementById('weapon-container');
         const weaponImage = document.getElementById('weapon');
@@ -1309,7 +1315,7 @@
                 updateShopButtonsUI();
                 alert(`🎉 ¡Compraste la Súper Mejora con éxito! Tu arma ha sido decorada.`);
             } else {
-                alert("❌ No tienes suficientes Monedas o CoinCG en tu billetera.");
+                alert("❌ No tienes suficientes Monedas o CoinCG in tu billetera.");
             }
         }
 
@@ -1474,7 +1480,7 @@
             playSoundBoton();
             playMenuScreen.style.display = 'none';
             levelSelectionScreen.style.display = 'flex';
-            settingsToggleBtn.style.display = 'none'; // FIX BUG: Esconder engranaje principal
+            settingsToggleBtn.style.display = 'none'; 
             updateLevelButtonsUI();
         });
 
@@ -1482,7 +1488,7 @@
             playSoundBoton();
             playMenuScreen.style.display = 'none';
             shopScreen.style.display = 'flex';
-            settingsToggleBtn.style.display = 'none'; // FIX BUG
+            settingsToggleBtn.style.display = 'none'; 
             updateShopButtonsUI();
         });
 
@@ -1490,7 +1496,7 @@
             playSoundBoton();
             shopScreen.style.display = 'none';
             playMenuScreen.style.display = 'flex';
-            settingsToggleBtn.style.display = 'flex'; // FIX BUG: Volver a mostrar
+            settingsToggleBtn.style.display = 'flex'; 
         });
 
         salirMainBtn.addEventListener('click', () => {
@@ -1502,7 +1508,7 @@
             playSoundBoton();
             levelSelectionScreen.style.display = 'none';
             playMenuScreen.style.display = 'flex';
-            settingsToggleBtn.style.display = 'flex'; // FIX BUG
+            settingsToggleBtn.style.display = 'flex'; 
         });
 
         levelButtons.forEach(btn => {
@@ -1515,7 +1521,7 @@
 
         function startLevel(lvl) {
             levelSelectionScreen.style.display = 'none';
-            settingsToggleBtn.style.display = 'none'; // Asegurar que el engranaje del menú esté oculto
+            settingsToggleBtn.style.display = 'none'; 
             currentLevel = lvl;
             kills = 0;
             gamePaused = false;
@@ -1544,6 +1550,7 @@
             
             levelText.textContent = currentLevel;
             killsText.textContent = `0/${levelsConfig[lvl].targets}`;
+            lastCoinsText.textContent = "0"; // Reiniciar texto de último NPC
             
             clearAllNPCs();
             
@@ -1713,11 +1720,18 @@
                 }
             }
 
+            let finalNPCValue = rawCoins;
             if (isTripleKill) {
-                score += Math.floor(500 / 3); 
+                let tripleBonus = Math.floor(500 / 3);
+                finalNPCValue += tripleBonus;
+                score += tripleBonus; 
             }
 
             score += rawCoins;
+            
+            // ACTUALIZAR EL CONTADOR DE MONEDAS QUE DIO ESTE NPC EN TIEMPO REAL
+            lastCoinsText.textContent = formatearMonedas(finalNPCValue);
+            
             actualizarTextoMonedas(); 
             
             kills++;
@@ -1759,7 +1773,6 @@
             let currentConfig = levelsConfig[currentLevel];
             score += currentConfig.reward;
             
-            // LÓGICA DINÁMICA: 1 CoinCG en nivel 1, 2 en nivel 2, 3 en nivel 3... hasta 10.
             let earnedCoinCG = currentLevel; 
             coinCG += earnedCoinCG;
             actualizarTextoMonedas();
@@ -1828,7 +1841,6 @@
             
             pauseOverlayScreen.style.display = "none";
             levelSelectionScreen.style.display = "flex"; 
-            settingsToggleBtn.style.display = 'none'; // Mantener el engranaje del menú principal apagado aquí
             
             actualizarTextoMonedas();
             
