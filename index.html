@@ -330,11 +330,12 @@
             color: #fff;
             border: 2px solid #fff;
             font-family: 'Arial Black', sans-serif;
-            font-size: 14px;
-            padding: 10px 14px;
+            font-size: 12px;
+            padding: 10px 12px;
             border-radius: 8px;
             cursor: pointer;
-            min-width: 110px;
+            min-width: 125px;
+            text-align: center;
         }
         .shop-buy-btn.owned {
             background: #555;
@@ -404,7 +405,7 @@
             color: #fff;
             border: 3px solid #ffcc00;
             padding: 12px;
-            font-size: 16px;
+            font-size: 14px;
             font-family: 'Arial Black', sans-serif;
             border-radius: 12px;
             cursor: pointer;
@@ -413,12 +414,22 @@
             box-shadow: 0 4px 6px rgba(0,0,0,0.3);
             transition: all 0.2s ease;
         }
+        .level-select-btn span {
+            display: block;
+            font-size: 10px;
+            color: #ffcc00;
+            font-family: sans-serif;
+            margin-top: 3px;
+        }
         .level-select-btn.locked {
             background: #1a1a1a;
             border-color: #555;
             color: #777;
             cursor: not-allowed;
             opacity: 0.6;
+        }
+        .level-select-btn.locked span {
+            color: #555;
         }
         #back-to-menu-btn {
             background: #888;
@@ -909,7 +920,7 @@
                     <div class="shop-item-title">Mejora 10.1 (Decorar Arma)</div>
                     <div class="shop-item-desc">Dispara ráfagas continuas de balas muy rápido. Además activa Mejora 20 en Nivel 4 (NPCs se duplican por más monedas).</div>
                 </div>
-                <button id="buy-upgrade-1" class="shop-buy-btn" onclick="buyUpgrade(1, 1)">1 CoinCG</button>
+                <button id="buy-upgrade-1" class="shop-buy-btn" onclick="buyUpgrade(1, 1100, 10)">1100 🟡 + 10 🟣</button>
             </div>
 
             <div class="shop-item">
@@ -917,7 +928,7 @@
                     <div class="shop-item-title">Mejora 20.2 (Decorar Arma)</div>
                     <div class="shop-item-desc">En el Nivel 2, la ganancia base de 7 monedas se multiplica por 7 (49 monedas por baja).</div>
                 </div>
-                <button id="buy-upgrade-2" class="shop-buy-btn" onclick="buyUpgrade(2, 2)">2 CoinCG</button>
+                <button id="buy-upgrade-2" class="shop-buy-btn" onclick="buyUpgrade(2, 2200, 20)">2200 🟡 + 20 🟣</button>
             </div>
 
             <div class="shop-item">
@@ -925,7 +936,7 @@
                     <div class="shop-item-title">Mejora 30.3 (Decorar Arma)</div>
                     <div class="shop-item-desc">Último nivel: NPCs veloces en grupos de 3. ¡Si disparas a uno, mueren los 3 y te da 500 monedas!</div>
                 </div>
-                <button id="buy-upgrade-3" class="shop-buy-btn" onclick="buyUpgrade(3, 3)">3 CoinCG</button>
+                <button id="buy-upgrade-3" class="shop-buy-btn" onclick="buyUpgrade(3, 3300, 30)">3300 🟡 + 30 🟣</button>
             </div>
         </div>
         
@@ -948,16 +959,16 @@
         </div>
 
         <div class="levels-grid">
-            <button class="level-select-btn" data-lvl="1">Nivel 1</button>
-            <button class="level-select-btn locked" data-lvl="2" disabled>Nivel 2</button>
-            <button class="level-select-btn locked" data-lvl="3" disabled>Nivel 3</button>
-            <button class="level-select-btn locked" data-lvl="4" disabled>Nivel 4</button>
-            <button class="level-select-btn locked" data-lvl="5" disabled>Nivel 5</button>
-            <button class="level-select-btn locked" data-lvl="6" disabled>Nivel 6</button>
-            <button class="level-select-btn locked" data-lvl="7" disabled>Nivel 7</button>
-            <button class="level-select-btn locked" data-lvl="8" disabled>Nivel 8</button>
-            <button class="level-select-btn locked" data-lvl="9" disabled>Nivel 9</button>
-            <button class="level-select-btn locked" data-lvl="10" disabled>Nivel 10</button>
+            <button class="level-select-btn" data-lvl="1">Nivel 1 <span>+1c por NPC</span></button>
+            <button class="level-select-btn locked" data-lvl="2" disabled>Nivel 2 <span>+7c por NPC</span></button>
+            <button class="level-select-btn locked" data-lvl="3" disabled>Nivel 3 <span>+10c por NPC</span></button>
+            <button class="level-select-btn locked" data-lvl="4" disabled>Nivel 4 <span>+20c por NPC</span></button>
+            <button class="level-select-btn locked" data-lvl="5" disabled>Nivel 5 <span>+30c por NPC</span></button>
+            <button class="level-select-btn locked" data-lvl="6" disabled>Nivel 6 <span>+40c por NPC</span></button>
+            <button class="level-select-btn locked" data-lvl="7" disabled>Nivel 7 <span>Varía</span></button>
+            <button class="level-select-btn locked" data-lvl="8" disabled>Nivel 8 <span>Varía</span></button>
+            <button class="level-select-btn locked" data-lvl="9" disabled>Nivel 9 <span>+50k por NPC</span></button>
+            <button class="level-select-btn locked" data-lvl="10" disabled>Nivel 10 <span>+1M por NPC</span></button>
         </div>
         <button id="back-to-menu-btn">VOLVER AL MENÚ</button>
     </div>
@@ -1074,7 +1085,7 @@
         };
 
         let score = 0;
-        let coinCG = 0; // Nueva moneda morada
+        let coinCG = 0; 
         let kills = 0;
         let currentLevel = 1;
         let maxUnlockedLevel = 1;
@@ -1111,11 +1122,9 @@
         }
 
         function actualizarTextoMonedas() {
-            // Actualizar HUD del juego activo
             scoreText.textContent = formatearMonedas(score);
             coincgText.textContent = coinCG;
 
-            // Actualizar todos los contadores de billetera de los menús principales
             const formatted = formatearMonedas(score);
             for (let i = 1; i <= 4; i++) {
                 let mScore = document.getElementById(`menu-score-text-${i}`);
@@ -1170,7 +1179,6 @@
             usernameInput.value = currentUsername;
             loadPlayerProgress(currentUsername);
         } else {
-            // Inicializar textos de billetera si el usuario es nuevo
             actualizarTextoMonedas();
         }
 
@@ -1274,15 +1282,15 @@
                         btn.classList.add('owned');
                     } else {
                         btn.classList.remove('owned');
-                        if(id === 1) btn.textContent = "1 CoinCG";
-                        if(id === 2) btn.textContent = "2 CoinCG";
-                        if(id === 3) btn.textContent = "3 CoinCG";
+                        if(id === 1) btn.textContent = "1100 🟡 + 10 🟣";
+                        if(id === 2) btn.textContent = "2200 🟡 + 20 🟣";
+                        if(id === 3) btn.textContent = "3300 🟡 + 30 🟣";
                     }
                 }
             });
         }
 
-        function buyUpgrade(id, cost) {
+        function buyUpgrade(id, costCoins, costCoinCG) {
             playSoundBoton();
             if (currentUsername === "") {
                 alert("Por favor, ingresa tu nombre de piloto primero.");
@@ -1292,15 +1300,16 @@
                 alert("¡Ya compraste y decoraste tu arma con esta mejora!");
                 return;
             }
-            if (coinCG >= cost) {
-                coinCG -= cost;
+            if (score >= costCoins && coinCG >= costCoinCG) {
+                score -= costCoins;
+                coinCG -= costCoinCG;
                 upgradesOwned[id] = true;
                 actualizarTextoMonedas();
                 savePlayerProgress();
                 updateShopButtonsUI();
-                alert(`🎉 ¡Compraste la Mejora con éxito usando CoinCG! Tu arma ha sido decorada.`);
+                alert(`🎉 ¡Compraste la Súper Mejora con éxito! Tu arma ha sido decorada.`);
             } else {
-                alert("❌ No tienes suficientes CoinCG (Monedas Moradas) en tu billetera.");
+                alert("❌ No tienes suficientes Monedas o CoinCG en tu billetera.");
             }
         }
 
@@ -1311,18 +1320,20 @@
                 return;
             }
 
+            let refundCoins = 0;
             let refundCoinCG = 0;
-            if (upgradesOwned[1]) refundCoinCG += 1;
-            if (upgradesOwned[2]) refundCoinCG += 2;
-            if (upgradesOwned[3]) refundCoinCG += 3;
+            if (upgradesOwned[1]) { refundCoins += 1100; refundCoinCG += 10; }
+            if (upgradesOwned[2]) { refundCoins += 2200; refundCoinCG += 20; }
+            if (upgradesOwned[3]) { refundCoins += 3300; refundCoinCG += 30; }
 
-            if (refundCoinCG === 0) {
+            if (refundCoinCG === 0 && refundCoins === 0) {
                 alert("❌ No tienes ninguna mejora activa para reiniciar.");
                 return;
             }
 
-            let confirmReset = confirm(`¿Quieres reiniciar tus mejoras? Se te devolverán ${refundCoinCG} CoinCG moradas.`);
+            let confirmReset = confirm(`¿Quieres reiniciar tus mejoras? Se te devolverán ${refundCoins} monedas y ${refundCoinCG} CoinCG.`);
             if (confirmReset) {
+                score += refundCoins;
                 coinCG += refundCoinCG;
                 actualizarTextoMonedas();
                 
@@ -1405,7 +1416,6 @@
         });
 
         function checkSubscriptionTrigger() {
-            // Umbral rebalanceado: se dispara de forma preventiva al llegar a los requisitos
             if (score >= 3600 && coinCG >= 3 && !popupTriggered) {
                 popupTriggered = true;
                 subscribePopup.style.transform = "translate(-50%, -50%) scale(1)";
@@ -1464,6 +1474,7 @@
             playSoundBoton();
             playMenuScreen.style.display = 'none';
             levelSelectionScreen.style.display = 'flex';
+            settingsToggleBtn.style.display = 'none'; // FIX BUG: Esconder engranaje principal
             updateLevelButtonsUI();
         });
 
@@ -1471,6 +1482,7 @@
             playSoundBoton();
             playMenuScreen.style.display = 'none';
             shopScreen.style.display = 'flex';
+            settingsToggleBtn.style.display = 'none'; // FIX BUG
             updateShopButtonsUI();
         });
 
@@ -1478,6 +1490,7 @@
             playSoundBoton();
             shopScreen.style.display = 'none';
             playMenuScreen.style.display = 'flex';
+            settingsToggleBtn.style.display = 'flex'; // FIX BUG: Volver a mostrar
         });
 
         salirMainBtn.addEventListener('click', () => {
@@ -1489,6 +1502,7 @@
             playSoundBoton();
             levelSelectionScreen.style.display = 'none';
             playMenuScreen.style.display = 'flex';
+            settingsToggleBtn.style.display = 'flex'; // FIX BUG
         });
 
         levelButtons.forEach(btn => {
@@ -1501,6 +1515,7 @@
 
         function startLevel(lvl) {
             levelSelectionScreen.style.display = 'none';
+            settingsToggleBtn.style.display = 'none'; // Asegurar que el engranaje del menú esté oculto
             currentLevel = lvl;
             kills = 0;
             gamePaused = false;
@@ -1744,11 +1759,12 @@
             let currentConfig = levelsConfig[currentLevel];
             score += currentConfig.reward;
             
-            // PROGRAMACIÓN: El jugador gana 1 CoinCG morada por completar cualquier nivel
-            coinCG += 1; 
+            // LÓGICA DINÁMICA: 1 CoinCG en nivel 1, 2 en nivel 2, 3 en nivel 3... hasta 10.
+            let earnedCoinCG = currentLevel; 
+            coinCG += earnedCoinCG;
             actualizarTextoMonedas();
             
-            let message = `¡NIVEL ${currentLevel} COMPLETADO!<br><span style='color: #ffcc00;'>🎁 MONEDAS: +${formatearMonedas(currentConfig.reward)}</span><br><span style='color: #b026ff;'>💜¡GANASTE 1 CoinCG!</span>`;
+            let message = `¡NIVEL ${currentLevel} COMPLETADO!<br><span style='color: #ffcc00;'>🎁 MONEDAS: +${formatearMonedas(currentConfig.reward)}</span><br><span style='color: #b026ff;'>💜 ¡GANASTE ${earnedCoinCG} CoinCG!</span>`;
             
             if (currentLevel === maxUnlockedLevel && maxUnlockedLevel < 10) {
                 maxUnlockedLevel++;
@@ -1812,8 +1828,8 @@
             
             pauseOverlayScreen.style.display = "none";
             levelSelectionScreen.style.display = "flex"; 
+            settingsToggleBtn.style.display = 'none'; // Mantener el engranaje del menú principal apagado aquí
             
-            // Forzar actualización al salir de un nivel interrumpido
             actualizarTextoMonedas();
             
             audioMusic.play().catch(e => console.log("Audio restore error"));
