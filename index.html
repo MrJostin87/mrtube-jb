@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Chicken Strike NPC - Beta v1.5.1</title>
+    <title>Chicken Strike NPC - Beta v1.5.2</title>
     <style>
         * {
             box-sizing: border-box;
@@ -92,6 +92,37 @@
             margin-bottom: 20px;
             color: #fff;
             text-shadow: 2px 2px 4px #000;
+        }
+
+        /* BILLETERA GLOBAL EN EL MENÚ */
+        .menu-wallet {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            z-index: 102;
+        }
+        .menu-wallet-box {
+            background: rgba(0, 0, 0, 0.75);
+            padding: 6px 12px;
+            border-radius: 15px;
+            border: 2px solid #ffcc00;
+            color: #fff;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            text-shadow: 1px 1px #000;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+        .menu-wallet-box.purple-wallet {
+            border-color: #b026ff;
+        }
+        .menu-wallet-box img {
+            width: 18px;
+            height: 18px;
+        }
+        .menu-wallet-box .coin-spin {
+            animation: spin 4s linear infinite;
         }
         
         /* REGISTRO DE NOMBRE DE USUARIO */
@@ -198,7 +229,7 @@
         #play-menu-screen h1 {
             color: #ffcc00;
             font-size: 42px;
-            margin-bottom: 30px;
+            margin-bottom: 15px;
             text-shadow: 4px 4px #000;
             letter-spacing: 1px;
         }
@@ -259,7 +290,7 @@
         #shop-screen p.shop-subtitle {
             color: #fff;
             font-size: 14px;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
             font-family: sans-serif;
         }
         .shop-container {
@@ -358,7 +389,7 @@
         #level-selection-screen h2 {
             color: #ffcc00;
             font-size: 28px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             text-shadow: 2px 2px #000;
         }
         .levels-grid {
@@ -810,9 +841,20 @@
         </div>
 
         <h1 id="welcome-title">CHICKEN STRIKE NPC</h1>
-        <div id="version-tag">1.5.1 Beta</div>
+        <div id="version-tag">1.5.2 Beta</div>
         <p id="welcome-desc">¡Bienvenido! Esta es una versión beta oficial del juego, por lo que podría contener algunos errores y bugs en el mapa durante el desarrollo en la plataforma MrTube.<br>Diseñado por ABG Productions® y Sprunki Animations Studios.</p>
         
+        <div class="menu-wallet">
+            <div class="menu-wallet-box">
+                <img src="Moneda.PNG" alt="Moneda" class="coin-spin">
+                <span id="menu-score-text-1">0</span>
+            </div>
+            <div class="menu-wallet-box purple-wallet">
+                <img src="CoinCG.PNG" alt="CoinCG">
+                <span id="menu-coincg-text-1">0</span>
+            </div>
+        </div>
+
         <div id="user-setup">
             <label id="label-username" for="username-input">INGRESA TU NOMBRE DE PILOTO:</label>
             <input type="text" id="username-input" placeholder="Ej: Pepe" maxlength="15">
@@ -829,6 +871,18 @@
 
     <div id="play-menu-screen">
         <h1>CHICKEN STRIKE<br>NPC</h1>
+
+        <div class="menu-wallet">
+            <div class="menu-wallet-box">
+                <img src="Moneda.PNG" alt="Moneda" class="coin-spin">
+                <span id="menu-score-text-2">0</span>
+            </div>
+            <div class="menu-wallet-box purple-wallet">
+                <img src="CoinCG.PNG" alt="CoinCG">
+                <span id="menu-coincg-text-2">0</span>
+            </div>
+        </div>
+
         <button id="jugar-main-btn" class="large-game-btn">Jugar</button>
         <button id="tienda-main-btn" class="large-game-btn">Tienda</button>
         <button id="salir-main-btn" class="large-game-btn">Salir del Juego</button>
@@ -838,6 +892,17 @@
         <h2>TimeChicken</h2>
         <p class="shop-subtitle">Decoraciones de Armas y Súper Mejoras Especiales</p>
         
+        <div class="menu-wallet">
+            <div class="menu-wallet-box">
+                <img src="Moneda.PNG" alt="Moneda" class="coin-spin">
+                <span id="menu-score-text-3">0</span>
+            </div>
+            <div class="menu-wallet-box purple-wallet">
+                <img src="CoinCG.PNG" alt="CoinCG">
+                <span id="menu-coincg-text-3">0</span>
+            </div>
+        </div>
+
         <div class="shop-container">
             <div class="shop-item">
                 <div class="shop-item-info">
@@ -870,6 +935,18 @@
 
     <div id="level-selection-screen">
         <h2>SELECCIONA UN NIVEL</h2>
+
+        <div class="menu-wallet">
+            <div class="menu-wallet-box">
+                <img src="Moneda.PNG" alt="Moneda" class="coin-spin">
+                <span id="menu-score-text-4">0</span>
+            </div>
+            <div class="menu-wallet-box purple-wallet">
+                <img src="CoinCG.PNG" alt="CoinCG">
+                <span id="menu-coincg-text-4">0</span>
+            </div>
+        </div>
+
         <div class="levels-grid">
             <button class="level-select-btn" data-lvl="1">Nivel 1</button>
             <button class="level-select-btn locked" data-lvl="2" disabled>Nivel 2</button>
@@ -1034,8 +1111,18 @@
         }
 
         function actualizarTextoMonedas() {
+            // Actualizar HUD del juego activo
             scoreText.textContent = formatearMonedas(score);
             coincgText.textContent = coinCG;
+
+            // Actualizar todos los contadores de billetera de los menús principales
+            const formatted = formatearMonedas(score);
+            for (let i = 1; i <= 4; i++) {
+                let mScore = document.getElementById(`menu-score-text-${i}`);
+                let mCoin = document.getElementById(`menu-coincg-text-${i}`);
+                if (mScore) mScore.textContent = formatted;
+                if (mCoin) mCoin.textContent = coinCG;
+            }
         }
 
         function playSoundBoton() {
@@ -1082,6 +1169,9 @@
             currentUsername = localStorage.getItem('cs_saved_username');
             usernameInput.value = currentUsername;
             loadPlayerProgress(currentUsername);
+        } else {
+            // Inicializar textos de billetera si el usuario es nuevo
+            actualizarTextoMonedas();
         }
 
         usernameInput.addEventListener('input', () => {
@@ -1722,6 +1812,9 @@
             
             pauseOverlayScreen.style.display = "none";
             levelSelectionScreen.style.display = "flex"; 
+            
+            // Forzar actualización al salir de un nivel interrumpido
+            actualizarTextoMonedas();
             
             audioMusic.play().catch(e => console.log("Audio restore error"));
         });
