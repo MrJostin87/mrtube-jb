@@ -2369,10 +2369,18 @@
             coinCG += earnedCoinCG;
             actualizarTextoMonedas();
             
-            let message = `¡NIVEL ${currentLevel} COMPLETADO!<br><span style='color: #ffcc00;'>🎁 MONEDAS: +${formatearMonedas(currentConfig.reward)}</span><br><span style='color: #b026ff;'>💜 ¡GANASTE ${earnedCoinCG} CoinCG!</span>`;
-            
-            if (currentLevel === maxUnlockedLevel && maxUnlockedLevel < 10) maxUnlockedLevel++;
+                        let message = `¡NIVEL ${currentLevel} COMPLETADO!<br><span style='color: #ffcc00;'>🎁 MONEDAS: +${earnedCoinCG}</span>`;
+
+            if (currentLevel >= maxUnlockedLevel && maxUnlockedLevel < 10) {
+                maxUnlockedLevel = currentLevel + 1;
+            }
             savePlayerProgress();
+            if (typeof updateLevelButtonsUI === 'function') {
+                updateLevelButtonsUI(); 
+            }
+
+
+
             
             announcement.innerHTML = message;
             announcement.style.transform = "translate(-50%, -50%) scale(1)";
@@ -2426,4 +2434,4 @@
         document.addEventListener('gesturestart', function (e) { e.preventDefault(); });
     </script>
 </body>
-</html>
+ </html>
